@@ -40,42 +40,66 @@
       know about them.  */
    enum yytokentype {
      END = 258,
-     VAR = 259,
-     IDENTIFIER = 260,
-     IF = 261,
-     READ = 262,
-     ELSE = 263,
-     THEN = 264,
-     WHILE = 265,
-     OUTPUT = 266,
-     DO = 267,
-     BEGINX = 268,
-     BOOLEAN = 269,
-     INTEGER_NUM = 270,
-     INTEGER = 271,
-     LTE = 272,
-     ASSIGNMENT = 273,
-     PROGRAM = 274
+     FALSE = 259,
+     VAR = 260,
+     IDENTIFIER = 261,
+     POW = 262,
+     IF = 263,
+     READ = 264,
+     ELSE = 265,
+     THEN = 266,
+     NE = 267,
+     MOD = 268,
+     GT = 269,
+     EQ = 270,
+     WHILE = 271,
+     OUTPUT = 272,
+     GTE = 273,
+     NOT = 274,
+     DO = 275,
+     BEGINX = 276,
+     BOOLEAN = 277,
+     INTEGER_NUM = 278,
+     TRUE = 279,
+     AND = 280,
+     INTEGER = 281,
+     LTE = 282,
+     OR = 283,
+     LT = 284,
+     ASSIGNMENT = 285,
+     PROGRAM = 286
    };
 #endif
 /* Tokens.  */
 #define END 258
-#define VAR 259
-#define IDENTIFIER 260
-#define IF 261
-#define READ 262
-#define ELSE 263
-#define THEN 264
-#define WHILE 265
-#define OUTPUT 266
-#define DO 267
-#define BEGINX 268
-#define BOOLEAN 269
-#define INTEGER_NUM 270
-#define INTEGER 271
-#define LTE 272
-#define ASSIGNMENT 273
-#define PROGRAM 274
+#define FALSE 259
+#define VAR 260
+#define IDENTIFIER 261
+#define POW 262
+#define IF 263
+#define READ 264
+#define ELSE 265
+#define THEN 266
+#define NE 267
+#define MOD 268
+#define GT 269
+#define EQ 270
+#define WHILE 271
+#define OUTPUT 272
+#define GTE 273
+#define NOT 274
+#define DO 275
+#define BEGINX 276
+#define BOOLEAN 277
+#define INTEGER_NUM 278
+#define TRUE 279
+#define AND 280
+#define INTEGER 281
+#define LTE 282
+#define OR 283
+#define LT 284
+#define ASSIGNMENT 285
+#define PROGRAM 286
 
 
 
@@ -88,7 +112,7 @@ typedef union YYSTYPE
    DLIST dlist;
 }
 /* Line 1489 of yacc.c.  */
-#line 92 "y.tab.h"
+#line 116 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

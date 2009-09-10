@@ -9,20 +9,37 @@ Body       -> BEGINX Statement list ';' END      	=> "block";
 Statement  -> Name ASSIGNMENT Expression          	=> "assign"
            -> OUTPUT '(' Expression ')'           	=> "output"
            -> IF Expression THEN Statement
-                            ELSE Statement       	=> "if"
+                            (ELSE Statement)?       	=> "if"
            -> WHILE Expression DO Statement      	=> "while"
            -> Body
 	   ->                                        	=> "<null>";
 
-Expression -> Term	                         		
+Expression -> Term
+	   -> Term GT Term				=> ">"	                         		
+	   -> Term LT Term				=> "<"
+	   -> Term GTE Term				=> ">="
+	   -> Term NE Term				=> "<>"
+	   -> Term EQ Term				=> "="
 	   -> Term LTE Term				=> "<=";
 
 Term       -> Primary 
-	   -> Primary '+' Term				=> "+";
+	   -> Primary '+' Term				=> "+"
+	   -> Primary '-' Term				=> "-"
+	   -> Primary OR Term				=> "or"
+	   -> Primary MOD Term				=> "mod"
+	   -> Primary AND Term				=> "and"
+	   -> Primary '*' Term				=> "*"
+	   -> Primary '/' Term				=> "/";
+	   
 
-Primary    -> '-' Primary                            	=> "-"
+Primary    -> NOT Primary 				=> "not"
+	   -> '+' Primary
+	   -> '-' Primary				=> "neg"
+	   -> Primary POW Primary			=> "pow"
 	   -> READ                                 	=> "read"
            -> Name
+	   -> TRUE					=> "<true>"
+	   -> FALSE					=> "<false>"
            -> INTEGER_NUM				=> "<integer>"
            -> '(' Expression ')';
 

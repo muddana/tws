@@ -9,9 +9,8 @@
 <<< CONSTRAINER >>> : Expn Processor Node <identifier>
 <<< CONSTRAINER >>> : Expn Processor Node <integer>
 <<< CONSTRAINER >>> : Stmt Processor Node while
-<<< CONSTRAINER >>> : Expn Processor Node <=
-<<< CONSTRAINER >>> : Expn Processor Node <identifier>
-<<< CONSTRAINER >>> : Expn Processor Node <integer>
+<<< CONSTRAINER >>> : Expn Processor Node not
+<<< CONSTRAINER >>> : Expn Processor Node <false>
 <<< CONSTRAINER >>> : Stmt Processor Node block
 <<< CONSTRAINER >>> : Stmt Processor Node output
 <<< CONSTRAINER >>> : Expn Processor Node read

@@ -67,42 +67,66 @@
       know about them.  */
    enum yytokentype {
      END = 258,
-     VAR = 259,
-     IDENTIFIER = 260,
-     IF = 261,
-     READ = 262,
-     ELSE = 263,
-     THEN = 264,
-     WHILE = 265,
-     OUTPUT = 266,
-     DO = 267,
-     BEGINX = 268,
-     BOOLEAN = 269,
-     INTEGER_NUM = 270,
-     INTEGER = 271,
-     LTE = 272,
-     ASSIGNMENT = 273,
-     PROGRAM = 274
+     FALSE = 259,
+     VAR = 260,
+     IDENTIFIER = 261,
+     POW = 262,
+     IF = 263,
+     READ = 264,
+     ELSE = 265,
+     THEN = 266,
+     NE = 267,
+     MOD = 268,
+     GT = 269,
+     EQ = 270,
+     WHILE = 271,
+     OUTPUT = 272,
+     GTE = 273,
+     NOT = 274,
+     DO = 275,
+     BEGINX = 276,
+     BOOLEAN = 277,
+     INTEGER_NUM = 278,
+     TRUE = 279,
+     AND = 280,
+     INTEGER = 281,
+     LTE = 282,
+     OR = 283,
+     LT = 284,
+     ASSIGNMENT = 285,
+     PROGRAM = 286
    };
 #endif
 /* Tokens.  */
 #define END 258
-#define VAR 259
-#define IDENTIFIER 260
-#define IF 261
-#define READ 262
-#define ELSE 263
-#define THEN 264
-#define WHILE 265
-#define OUTPUT 266
-#define DO 267
-#define BEGINX 268
-#define BOOLEAN 269
-#define INTEGER_NUM 270
-#define INTEGER 271
-#define LTE 272
-#define ASSIGNMENT 273
-#define PROGRAM 274
+#define FALSE 259
+#define VAR 260
+#define IDENTIFIER 261
+#define POW 262
+#define IF 263
+#define READ 264
+#define ELSE 265
+#define THEN 266
+#define NE 267
+#define MOD 268
+#define GT 269
+#define EQ 270
+#define WHILE 271
+#define OUTPUT 272
+#define GTE 273
+#define NOT 274
+#define DO 275
+#define BEGINX 276
+#define BOOLEAN 277
+#define INTEGER_NUM 278
+#define TRUE 279
+#define AND 280
+#define INTEGER 281
+#define LTE 282
+#define OR 283
+#define LT 284
+#define ASSIGNMENT 285
+#define PROGRAM 286
 
 
 
@@ -151,7 +175,7 @@ typedef union YYSTYPE
    DLIST dlist;
 }
 /* Line 187 of yacc.c.  */
-#line 155 "y.tab.c"
+#line 179 "y.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -164,7 +188,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 168 "y.tab.c"
+#line 192 "y.tab.c"
 
 #ifdef short
 # undef short
@@ -379,20 +403,20 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  5
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   59
+#define YYLAST   96
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  28
+#define YYNTOKENS  42
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  14
+#define YYNNTS  15
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  30
+#define YYNRULES  48
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  62
+#define YYNSTATES  93
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   274
+#define YYMAXUTOK   286
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -404,8 +428,8 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      24,    25,     2,    26,    23,    27,    21,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,    20,    22,
+      36,    37,    40,    38,    35,    39,    33,    41,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,    32,    34,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -427,7 +451,8 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19
+      15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
+      25,    26,    27,    28,    29,    30,    31
 };
 
 #if YYDEBUG
@@ -436,33 +461,41 @@ static const yytype_uint8 yytranslate[] =
 static const yytype_uint8 yyprhs[] =
 {
        0,     0,     3,    11,    14,    15,    16,    20,    22,    26,
-      30,    32,    34,    37,    40,    44,    48,    53,    60,    65,
-      67,    68,    70,    74,    76,    80,    83,    85,    87,    89,
-      93
+      30,    32,    34,    37,    40,    44,    48,    53,    59,    64,
+      66,    67,    68,    71,    73,    77,    81,    85,    89,    93,
+      97,    99,   103,   107,   111,   115,   119,   123,   127,   130,
+     133,   136,   140,   142,   144,   146,   148,   150,   154
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      29,     0,    -1,    19,    41,    20,    30,    35,    41,    21,
-      -1,     4,    31,    -1,    -1,    -1,    32,    22,    31,    -1,
-      33,    -1,    41,    20,    34,    -1,    41,    23,    33,    -1,
-      16,    -1,    14,    -1,    13,    36,    -1,    37,     3,    -1,
-      37,    22,    36,    -1,    41,    18,    38,    -1,    11,    24,
-      38,    25,    -1,     6,    38,     9,    37,     8,    37,    -1,
-      10,    38,    12,    37,    -1,    35,    -1,    -1,    39,    -1,
-      39,    17,    39,    -1,    40,    -1,    40,    26,    39,    -1,
-      27,    40,    -1,     7,    -1,    41,    -1,    15,    -1,    24,
-      38,    25,    -1,     5,    -1
+      43,     0,    -1,    31,    56,    32,    44,    49,    56,    33,
+      -1,     5,    45,    -1,    -1,    -1,    46,    34,    45,    -1,
+      47,    -1,    56,    32,    48,    -1,    56,    35,    47,    -1,
+      26,    -1,    22,    -1,    21,    50,    -1,    51,     3,    -1,
+      51,    34,    50,    -1,    56,    30,    53,    -1,    17,    36,
+      53,    37,    -1,     8,    53,    11,    51,    52,    -1,    16,
+      53,    20,    51,    -1,    49,    -1,    -1,    -1,    10,    51,
+      -1,    54,    -1,    54,    14,    54,    -1,    54,    29,    54,
+      -1,    54,    18,    54,    -1,    54,    12,    54,    -1,    54,
+      15,    54,    -1,    54,    27,    54,    -1,    55,    -1,    55,
+      38,    54,    -1,    55,    39,    54,    -1,    55,    28,    54,
+      -1,    55,    13,    54,    -1,    55,    25,    54,    -1,    55,
+      40,    54,    -1,    55,    41,    54,    -1,    19,    55,    -1,
+      38,    55,    -1,    39,    55,    -1,    55,     7,    55,    -1,
+       9,    -1,    56,    -1,    24,    -1,     4,    -1,    23,    -1,
+      36,    53,    37,    -1,     6,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    52,    52,   100,   137,   159,   167,   184,   209,   224,
-     241,   274,   309,   347,   370,   387,   426,   462,   526,   576,
-     589,   610,   622,   663,   675,   703,   726,   759,   771,   804,
-     818
+       0,    65,    65,   113,   150,   172,   180,   197,   222,   237,
+     254,   287,   322,   360,   383,   400,   439,   475,   528,   578,
+     591,   613,   621,   646,   658,   697,   736,   775,   814,   853,
+     894,   906,   932,   958,   997,  1036,  1075,  1101,  1129,  1165,
+    1177,  1200,  1239,  1272,  1284,  1317,  1350,  1383,  1397
 };
 #endif
 
@@ -471,12 +504,13 @@ static const yytype_uint16 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "END", "VAR", "IDENTIFIER", "IF", "READ",
-  "ELSE", "THEN", "WHILE", "OUTPUT", "DO", "BEGINX", "BOOLEAN",
-  "INTEGER_NUM", "INTEGER", "LTE", "ASSIGNMENT", "PROGRAM", "':'", "'.'",
-  "';'", "','", "'('", "')'", "'+'", "'-'", "$accept", "Tiny", "Dclns",
-  "Dclns_1", "Dcln", "Dcln_1", "Type", "Body", "Body_1", "Statement",
-  "Expression", "Term", "Primary", "Name", 0
+  "$end", "error", "$undefined", "END", "FALSE", "VAR", "IDENTIFIER",
+  "POW", "IF", "READ", "ELSE", "THEN", "NE", "MOD", "GT", "EQ", "WHILE",
+  "OUTPUT", "GTE", "NOT", "DO", "BEGINX", "BOOLEAN", "INTEGER_NUM", "TRUE",
+  "AND", "INTEGER", "LTE", "OR", "LT", "ASSIGNMENT", "PROGRAM", "':'",
+  "'.'", "';'", "','", "'('", "')'", "'+'", "'-'", "'*'", "'/'", "$accept",
+  "Tiny", "Dclns", "Dclns_1", "Dcln", "Dcln_1", "Type", "Body", "Body_1",
+  "Statement", "Statement_1", "Expression", "Term", "Primary", "Name", 0
 };
 #endif
 
@@ -487,26 +521,30 @@ static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
-      58,    46,    59,    44,    40,    41,    43,    45
+     275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
+     285,   286,    58,    46,    59,    44,    40,    41,    43,    45,
+      42,    47
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    28,    29,    30,    30,    31,    31,    32,    33,    33,
-      34,    34,    35,    36,    36,    37,    37,    37,    37,    37,
-      37,    38,    38,    39,    39,    40,    40,    40,    40,    40,
-      41
+       0,    42,    43,    44,    44,    45,    45,    46,    47,    47,
+      48,    48,    49,    50,    50,    51,    51,    51,    51,    51,
+      51,    52,    52,    53,    53,    53,    53,    53,    53,    53,
+      54,    54,    54,    54,    54,    54,    54,    54,    55,    55,
+      55,    55,    55,    55,    55,    55,    55,    55,    56
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
        0,     2,     7,     2,     0,     0,     3,     1,     3,     3,
-       1,     1,     2,     2,     3,     3,     4,     6,     4,     1,
-       0,     1,     3,     1,     3,     2,     1,     1,     1,     3,
-       1
+       1,     1,     2,     2,     3,     3,     4,     5,     4,     1,
+       0,     0,     2,     1,     3,     3,     3,     3,     3,     3,
+       1,     3,     3,     3,     3,     3,     3,     3,     2,     2,
+       2,     3,     1,     1,     1,     1,     1,     3,     1
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -514,41 +552,47 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     0,     0,    30,     0,     1,     4,     5,     0,     3,
+       0,     0,     0,    48,     0,     1,     4,     5,     0,     3,
        0,     7,     0,    20,     0,     5,     0,     0,     0,     0,
        0,    19,    12,     0,     0,     0,     6,    11,    10,     8,
-       9,    26,    28,     0,     0,     0,    21,    23,    27,     0,
-       0,    13,    20,     0,     2,     0,    25,    20,     0,     0,
-      20,     0,    14,    15,    29,     0,    22,    24,    18,    16,
-      20,    17
+       9,    45,    42,     0,    46,    44,     0,     0,     0,     0,
+      23,    30,    43,     0,     0,    13,    20,     0,     2,    38,
+       0,    39,    40,    20,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,    20,     0,
+      14,    15,    47,    21,    27,    24,    28,    26,    29,    25,
+      41,    34,    35,    33,    31,    32,    36,    37,    18,    16,
+      20,    17,    22
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
       -1,     2,     8,     9,    10,    11,    29,    21,    22,    23,
-      35,    36,    37,    38
+      91,    39,    40,    41,    42
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -47
+#define YYPACT_NINF -52
 static const yytype_int8 yypact[] =
 {
-      -9,     6,    20,   -47,     4,   -47,    26,     6,    23,   -47,
-      15,   -47,    11,    22,     6,     6,     5,     6,     2,     2,
-      14,   -47,   -47,     1,    21,    19,   -47,   -47,   -47,   -47,
-     -47,   -47,   -47,     2,     2,    33,    27,    17,   -47,    35,
-       2,   -47,    22,     2,   -47,    25,   -47,    22,     2,     2,
-      22,    28,   -47,   -47,   -47,    37,   -47,   -47,   -47,   -47,
-      22,   -47
+     -26,     3,    24,   -52,   -22,   -52,    20,     3,     6,   -52,
+      -5,   -52,   -17,    60,     3,     3,   -18,     3,    17,    17,
+       1,   -52,   -52,     8,     0,     5,   -52,   -52,   -52,   -52,
+     -52,   -52,   -52,    17,   -52,   -52,    17,    17,    17,    33,
+      45,    -6,   -52,    26,    17,   -52,    60,    17,   -52,    42,
+      13,    42,    42,    60,    17,    17,    17,    17,    17,    17,
+      17,    17,    17,    17,    17,    17,    17,    17,    60,    14,
+     -52,   -52,   -52,    44,   -52,   -52,   -52,   -52,   -52,   -52,
+      42,   -52,   -52,   -52,   -52,   -52,   -52,   -52,   -52,   -52,
+      60,   -52,   -52
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -47,   -47,   -47,    36,   -47,    31,   -47,    44,    12,   -42,
-     -18,   -46,    24,    -1
+     -52,   -52,   -52,    43,   -52,    47,   -52,    53,    16,   -51,
+     -52,   -16,    29,    10,    -1
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -558,35 +602,46 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-       4,    39,    56,    57,    41,    55,    12,     3,    58,    31,
-       1,     3,    24,    25,    12,    45,    12,    32,    61,    27,
-       5,    28,    51,    42,     6,    53,    33,     3,    18,    34,
-       7,    16,    19,    20,    17,    13,    13,    15,    40,    43,
-      44,    24,    47,    49,    48,    60,    24,    50,    30,    24,
-      54,    26,    14,    59,    52,     0,     0,     0,    46,    24
+       4,    60,    73,    43,    27,     1,    12,    61,    28,     3,
+       6,    45,    24,    25,    12,    16,    12,    88,    17,    62,
+      50,    31,    63,     3,     5,     7,    32,    13,    69,    15,
+      47,    71,    64,    65,    66,    67,    33,    44,    48,    92,
+      34,    35,    46,    49,    53,    24,    68,    51,    52,    60,
+      72,    89,    24,    36,    90,    37,    38,    54,    26,    55,
+      56,    14,    70,    57,    30,     0,     3,    24,    18,     0,
+      80,     0,    58,     0,    59,     0,    19,    20,     0,     0,
+       0,    13,     0,    74,    75,    76,    77,    78,    79,    24,
+      81,    82,    83,    84,    85,    86,    87
 };
 
 static const yytype_int8 yycheck[] =
 {
-       1,    19,    48,    49,     3,    47,     7,     5,    50,     7,
-      19,     5,    13,    14,    15,    33,    17,    15,    60,    14,
-       0,    16,    40,    22,    20,    43,    24,     5,     6,    27,
-       4,    20,    10,    11,    23,    13,    13,    22,    24,    18,
-      21,    42,     9,    26,    17,     8,    47,    12,    17,    50,
-      25,    15,     8,    25,    42,    -1,    -1,    -1,    34,    60
+       1,     7,    53,    19,    22,    31,     7,    13,    26,     6,
+      32,     3,    13,    14,    15,    32,    17,    68,    35,    25,
+      36,     4,    28,     6,     0,     5,     9,    21,    44,    34,
+      30,    47,    38,    39,    40,    41,    19,    36,    33,    90,
+      23,    24,    34,    33,    11,    46,    20,    37,    38,     7,
+      37,    37,    53,    36,    10,    38,    39,    12,    15,    14,
+      15,     8,    46,    18,    17,    -1,     6,    68,     8,    -1,
+      60,    -1,    27,    -1,    29,    -1,    16,    17,    -1,    -1,
+      -1,    21,    -1,    54,    55,    56,    57,    58,    59,    90,
+      61,    62,    63,    64,    65,    66,    67
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,    19,    29,     5,    41,     0,    20,     4,    30,    31,
-      32,    33,    41,    13,    35,    22,    20,    23,     6,    10,
-      11,    35,    36,    37,    41,    41,    31,    14,    16,    34,
-      33,     7,    15,    24,    27,    38,    39,    40,    41,    38,
-      24,     3,    22,    18,    21,    38,    40,     9,    17,    26,
-      12,    38,    36,    38,    25,    37,    39,    39,    37,    25,
-       8,    37
+       0,    31,    43,     6,    56,     0,    32,     5,    44,    45,
+      46,    47,    56,    21,    49,    34,    32,    35,     8,    16,
+      17,    49,    50,    51,    56,    56,    45,    22,    26,    48,
+      47,     4,     9,    19,    23,    24,    36,    38,    39,    53,
+      54,    55,    56,    53,    36,     3,    34,    30,    33,    55,
+      53,    55,    55,    11,    12,    14,    15,    18,    27,    29,
+       7,    13,    25,    28,    38,    39,    40,    41,    20,    53,
+      50,    53,    37,    51,    54,    54,    54,    54,    54,    54,
+      55,    54,    54,    54,    54,    54,    54,    54,    51,    37,
+      10,    52,    51
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1401,7 +1456,7 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 53 "code.y"
+#line 66 "code.y"
     {
 		DLIST r;
 		T_NODE *t;
@@ -1450,7 +1505,7 @@ yyreduce:
     break;
 
   case 3:
-#line 101 "code.y"
+#line 114 "code.y"
     {
 		DLIST r;
 		T_NODE *t;
@@ -1489,7 +1544,7 @@ yyreduce:
     break;
 
   case 4:
-#line 137 "code.y"
+#line 150 "code.y"
     {
 		DLIST r;
 		T_NODE *t;
@@ -1512,7 +1567,7 @@ yyreduce:
     break;
 
   case 5:
-#line 159 "code.y"
+#line 172 "code.y"
     {
 		DLIST r;
 
@@ -1524,7 +1579,7 @@ yyreduce:
     break;
 
   case 6:
-#line 168 "code.y"
+#line 181 "code.y"
     {
 		DLIST r;
 
@@ -1542,7 +1597,7 @@ yyreduce:
     break;
 
   case 7:
-#line 185 "code.y"
+#line 198 "code.y"
     {
 		DLIST r;
 		T_NODE *t;
@@ -1568,7 +1623,7 @@ yyreduce:
     break;
 
   case 8:
-#line 210 "code.y"
+#line 223 "code.y"
     {
 		DLIST r;
 
@@ -1586,7 +1641,7 @@ yyreduce:
     break;
 
   case 9:
-#line 225 "code.y"
+#line 238 "code.y"
     {
 		DLIST r;
 
@@ -1604,7 +1659,7 @@ yyreduce:
     break;
 
   case 10:
-#line 242 "code.y"
+#line 255 "code.y"
     {
 		DLIST r;
 		T_NODE *t;
@@ -1640,7 +1695,7 @@ yyreduce:
     break;
 
   case 11:
-#line 275 "code.y"
+#line 288 "code.y"
     {
 		DLIST r;
 		T_NODE *t;
@@ -1676,7 +1731,7 @@ yyreduce:
     break;
 
   case 12:
-#line 310 "code.y"
+#line 323 "code.y"
     {
 		DLIST r;
 		T_NODE *t;
@@ -1715,7 +1770,7 @@ yyreduce:
     break;
 
   case 13:
-#line 348 "code.y"
+#line 361 "code.y"
     {
 		DLIST r;
 
@@ -1741,7 +1796,7 @@ yyreduce:
     break;
 
   case 14:
-#line 371 "code.y"
+#line 384 "code.y"
     {
 		DLIST r;
 
@@ -1759,7 +1814,7 @@ yyreduce:
     break;
 
   case 15:
-#line 388 "code.y"
+#line 401 "code.y"
     {
 		DLIST r;
 		T_NODE *t;
@@ -1801,7 +1856,7 @@ yyreduce:
     break;
 
   case 16:
-#line 427 "code.y"
+#line 440 "code.y"
     {
 		DLIST r;
 		T_NODE *t;
@@ -1840,60 +1895,49 @@ yyreduce:
     break;
 
   case 17:
-#line 463 "code.y"
+#line 476 "code.y"
     {
 		DLIST r;
 		T_NODE *t;
 
 		InitDList(&r);
 
-		if ((yyvsp[(1) - (6)].info).makenode) {
+		if ((yyvsp[(1) - (5)].info).makenode) {
 		    T_NODE *t2;
 		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
 		    assert(t2);
-		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,(yyvsp[(1) - (6)].info).string,
-		                                TREETAG_LINE,(yyvsp[(1) - (6)].info).line,
-		                                TREETAG_COLUMN,(yyvsp[(1) - (6)].info).column,
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,(yyvsp[(1) - (5)].info).string,
+		                                TREETAG_LINE,(yyvsp[(1) - (5)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(1) - (5)].info).column,
 		                                TREETAG_DONE);
 		    DAddTail(&r,&t2->mynode);
 		}
 
-		while (DCount(&(yyvsp[(2) - (6)].dlist)) > 0)
-		    DAddTail(&r,DRemHead(&(yyvsp[(2) - (6)].dlist)));
+		while (DCount(&(yyvsp[(2) - (5)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(2) - (5)].dlist)));
 
-		if ((yyvsp[(3) - (6)].info).makenode) {
+		if ((yyvsp[(3) - (5)].info).makenode) {
 		    T_NODE *t2;
 		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
 		    assert(t2);
-		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,(yyvsp[(3) - (6)].info).string,
-		                                TREETAG_LINE,(yyvsp[(3) - (6)].info).line,
-		                                TREETAG_COLUMN,(yyvsp[(3) - (6)].info).column,
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,(yyvsp[(3) - (5)].info).string,
+		                                TREETAG_LINE,(yyvsp[(3) - (5)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(3) - (5)].info).column,
 		                                TREETAG_DONE);
 		    DAddTail(&r,&t2->mynode);
 		}
 
-		while (DCount(&(yyvsp[(4) - (6)].dlist)) > 0)
-		    DAddTail(&r,DRemHead(&(yyvsp[(4) - (6)].dlist)));
+		while (DCount(&(yyvsp[(4) - (5)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(4) - (5)].dlist)));
 
-		if ((yyvsp[(5) - (6)].info).makenode) {
-		    T_NODE *t2;
-		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
-		    assert(t2);
-		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,(yyvsp[(5) - (6)].info).string,
-		                                TREETAG_LINE,(yyvsp[(5) - (6)].info).line,
-		                                TREETAG_COLUMN,(yyvsp[(5) - (6)].info).column,
-		                                TREETAG_DONE);
-		    DAddTail(&r,&t2->mynode);
-		}
-
-		while (DCount(&(yyvsp[(6) - (6)].dlist)) > 0)
-		    DAddTail(&r,DRemHead(&(yyvsp[(6) - (6)].dlist)));
+		while (DCount(&(yyvsp[(5) - (5)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(5) - (5)].dlist)));
 
 		t = (T_NODE *)malloc(sizeof(T_NODE));
 		assert(t);
 		t->nodeptr = AllocTreeNode(TREETAG_STRING,"if",
-		                                TREETAG_LINE,(yyvsp[(1) - (6)].info).line,
-		                                TREETAG_COLUMN,(yyvsp[(1) - (6)].info).column,
+		                                TREETAG_LINE,(yyvsp[(1) - (5)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(1) - (5)].info).column,
 		                           TREETAG_DONE);
 		while (DCount(&r) > 0) {
 		    T_NODE *t3 = DRemHead(&r);
@@ -1907,7 +1951,7 @@ yyreduce:
     break;
 
   case 18:
-#line 527 "code.y"
+#line 529 "code.y"
     {
 		DLIST r;
 		T_NODE *t;
@@ -1960,7 +2004,7 @@ yyreduce:
     break;
 
   case 19:
-#line 577 "code.y"
+#line 579 "code.y"
     {
 		DLIST r;
 
@@ -1975,7 +2019,7 @@ yyreduce:
     break;
 
   case 20:
-#line 589 "code.y"
+#line 591 "code.y"
     {
 		DLIST r;
 		T_NODE *t;
@@ -1998,7 +2042,45 @@ yyreduce:
     break;
 
   case 21:
-#line 611 "code.y"
+#line 613 "code.y"
+    {
+		DLIST r;
+
+		InitDList(&r);
+
+		(yyval.dlist) = r;
+
+             }
+    break;
+
+  case 22:
+#line 622 "code.y"
+    {
+		DLIST r;
+
+		InitDList(&r);
+
+		if ((yyvsp[(1) - (2)].info).makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,(yyvsp[(1) - (2)].info).string,
+		                                TREETAG_LINE,(yyvsp[(1) - (2)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(1) - (2)].info).column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&(yyvsp[(2) - (2)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(2) - (2)].dlist)));
+
+		(yyval.dlist) = r;
+
+             }
+    break;
+
+  case 23:
+#line 647 "code.y"
     {
 		DLIST r;
 
@@ -2012,8 +2094,218 @@ yyreduce:
              }
     break;
 
-  case 22:
-#line 623 "code.y"
+  case 24:
+#line 659 "code.y"
+    {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&(yyvsp[(1) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(1) - (3)].dlist)));
+
+		if ((yyvsp[(2) - (3)].info).makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,(yyvsp[(2) - (3)].info).string,
+		                                TREETAG_LINE,(yyvsp[(2) - (3)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(2) - (3)].info).column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&(yyvsp[(3) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(3) - (3)].dlist)));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,">",
+		                                TREETAG_LINE,(yyvsp[(2) - (3)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(2) - (3)].info).column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		(yyval.dlist) = r;
+
+             }
+    break;
+
+  case 25:
+#line 698 "code.y"
+    {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&(yyvsp[(1) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(1) - (3)].dlist)));
+
+		if ((yyvsp[(2) - (3)].info).makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,(yyvsp[(2) - (3)].info).string,
+		                                TREETAG_LINE,(yyvsp[(2) - (3)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(2) - (3)].info).column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&(yyvsp[(3) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(3) - (3)].dlist)));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"<",
+		                                TREETAG_LINE,(yyvsp[(2) - (3)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(2) - (3)].info).column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		(yyval.dlist) = r;
+
+             }
+    break;
+
+  case 26:
+#line 737 "code.y"
+    {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&(yyvsp[(1) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(1) - (3)].dlist)));
+
+		if ((yyvsp[(2) - (3)].info).makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,(yyvsp[(2) - (3)].info).string,
+		                                TREETAG_LINE,(yyvsp[(2) - (3)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(2) - (3)].info).column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&(yyvsp[(3) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(3) - (3)].dlist)));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,">=",
+		                                TREETAG_LINE,(yyvsp[(2) - (3)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(2) - (3)].info).column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		(yyval.dlist) = r;
+
+             }
+    break;
+
+  case 27:
+#line 776 "code.y"
+    {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&(yyvsp[(1) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(1) - (3)].dlist)));
+
+		if ((yyvsp[(2) - (3)].info).makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,(yyvsp[(2) - (3)].info).string,
+		                                TREETAG_LINE,(yyvsp[(2) - (3)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(2) - (3)].info).column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&(yyvsp[(3) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(3) - (3)].dlist)));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"<>",
+		                                TREETAG_LINE,(yyvsp[(2) - (3)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(2) - (3)].info).column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		(yyval.dlist) = r;
+
+             }
+    break;
+
+  case 28:
+#line 815 "code.y"
+    {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&(yyvsp[(1) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(1) - (3)].dlist)));
+
+		if ((yyvsp[(2) - (3)].info).makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,(yyvsp[(2) - (3)].info).string,
+		                                TREETAG_LINE,(yyvsp[(2) - (3)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(2) - (3)].info).column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&(yyvsp[(3) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(3) - (3)].dlist)));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"=",
+		                                TREETAG_LINE,(yyvsp[(2) - (3)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(2) - (3)].info).column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		(yyval.dlist) = r;
+
+             }
+    break;
+
+  case 29:
+#line 854 "code.y"
     {
 		DLIST r;
 		T_NODE *t;
@@ -2054,8 +2346,8 @@ yyreduce:
              }
     break;
 
-  case 23:
-#line 664 "code.y"
+  case 30:
+#line 895 "code.y"
     {
 		DLIST r;
 
@@ -2069,8 +2361,8 @@ yyreduce:
              }
     break;
 
-  case 24:
-#line 676 "code.y"
+  case 31:
+#line 907 "code.y"
     {
 		DLIST r;
 		T_NODE *t;
@@ -2098,16 +2390,19 @@ yyreduce:
              }
     break;
 
-  case 25:
-#line 704 "code.y"
+  case 32:
+#line 933 "code.y"
     {
 		DLIST r;
 		T_NODE *t;
 
 		InitDList(&r);
 
-		while (DCount(&(yyvsp[(2) - (2)].dlist)) > 0)
-		    DAddTail(&r,DRemHead(&(yyvsp[(2) - (2)].dlist)));
+		while (DCount(&(yyvsp[(1) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(1) - (3)].dlist)));
+
+		while (DCount(&(yyvsp[(3) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(3) - (3)].dlist)));
 
 		t = (T_NODE *)malloc(sizeof(T_NODE));
 		assert(t);
@@ -2124,8 +2419,314 @@ yyreduce:
              }
     break;
 
-  case 26:
-#line 727 "code.y"
+  case 33:
+#line 959 "code.y"
+    {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&(yyvsp[(1) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(1) - (3)].dlist)));
+
+		if ((yyvsp[(2) - (3)].info).makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,(yyvsp[(2) - (3)].info).string,
+		                                TREETAG_LINE,(yyvsp[(2) - (3)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(2) - (3)].info).column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&(yyvsp[(3) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(3) - (3)].dlist)));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"or",
+		                                TREETAG_LINE,(yyvsp[(2) - (3)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(2) - (3)].info).column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		(yyval.dlist) = r;
+
+             }
+    break;
+
+  case 34:
+#line 998 "code.y"
+    {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&(yyvsp[(1) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(1) - (3)].dlist)));
+
+		if ((yyvsp[(2) - (3)].info).makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,(yyvsp[(2) - (3)].info).string,
+		                                TREETAG_LINE,(yyvsp[(2) - (3)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(2) - (3)].info).column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&(yyvsp[(3) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(3) - (3)].dlist)));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"mod",
+		                                TREETAG_LINE,(yyvsp[(2) - (3)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(2) - (3)].info).column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		(yyval.dlist) = r;
+
+             }
+    break;
+
+  case 35:
+#line 1037 "code.y"
+    {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&(yyvsp[(1) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(1) - (3)].dlist)));
+
+		if ((yyvsp[(2) - (3)].info).makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,(yyvsp[(2) - (3)].info).string,
+		                                TREETAG_LINE,(yyvsp[(2) - (3)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(2) - (3)].info).column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&(yyvsp[(3) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(3) - (3)].dlist)));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"and",
+		                                TREETAG_LINE,(yyvsp[(2) - (3)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(2) - (3)].info).column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		(yyval.dlist) = r;
+
+             }
+    break;
+
+  case 36:
+#line 1076 "code.y"
+    {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&(yyvsp[(1) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(1) - (3)].dlist)));
+
+		while (DCount(&(yyvsp[(3) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(3) - (3)].dlist)));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"*",
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		(yyval.dlist) = r;
+
+             }
+    break;
+
+  case 37:
+#line 1102 "code.y"
+    {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&(yyvsp[(1) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(1) - (3)].dlist)));
+
+		while (DCount(&(yyvsp[(3) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(3) - (3)].dlist)));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"/",
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		(yyval.dlist) = r;
+
+             }
+    break;
+
+  case 38:
+#line 1130 "code.y"
+    {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		if ((yyvsp[(1) - (2)].info).makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,(yyvsp[(1) - (2)].info).string,
+		                                TREETAG_LINE,(yyvsp[(1) - (2)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(1) - (2)].info).column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&(yyvsp[(2) - (2)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(2) - (2)].dlist)));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"not",
+		                                TREETAG_LINE,(yyvsp[(1) - (2)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(1) - (2)].info).column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		(yyval.dlist) = r;
+
+             }
+    break;
+
+  case 39:
+#line 1166 "code.y"
+    {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&(yyvsp[(2) - (2)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(2) - (2)].dlist)));
+
+		(yyval.dlist) = r;
+
+             }
+    break;
+
+  case 40:
+#line 1178 "code.y"
+    {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&(yyvsp[(2) - (2)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(2) - (2)].dlist)));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"neg",
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		(yyval.dlist) = r;
+
+             }
+    break;
+
+  case 41:
+#line 1201 "code.y"
+    {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&(yyvsp[(1) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(1) - (3)].dlist)));
+
+		if ((yyvsp[(2) - (3)].info).makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,(yyvsp[(2) - (3)].info).string,
+		                                TREETAG_LINE,(yyvsp[(2) - (3)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(2) - (3)].info).column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&(yyvsp[(3) - (3)].dlist)) > 0)
+		    DAddTail(&r,DRemHead(&(yyvsp[(3) - (3)].dlist)));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"pow",
+		                                TREETAG_LINE,(yyvsp[(2) - (3)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(2) - (3)].info).column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		(yyval.dlist) = r;
+
+             }
+    break;
+
+  case 42:
+#line 1240 "code.y"
     {
 		DLIST r;
 		T_NODE *t;
@@ -2160,8 +2761,8 @@ yyreduce:
              }
     break;
 
-  case 27:
-#line 760 "code.y"
+  case 43:
+#line 1273 "code.y"
     {
 		DLIST r;
 
@@ -2175,8 +2776,80 @@ yyreduce:
              }
     break;
 
-  case 28:
-#line 772 "code.y"
+  case 44:
+#line 1285 "code.y"
+    {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		if ((yyvsp[(1) - (1)].info).makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,(yyvsp[(1) - (1)].info).string,
+		                                TREETAG_LINE,(yyvsp[(1) - (1)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(1) - (1)].info).column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"<true>",
+		                                TREETAG_LINE,(yyvsp[(1) - (1)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(1) - (1)].info).column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		(yyval.dlist) = r;
+
+             }
+    break;
+
+  case 45:
+#line 1318 "code.y"
+    {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		if ((yyvsp[(1) - (1)].info).makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,(yyvsp[(1) - (1)].info).string,
+		                                TREETAG_LINE,(yyvsp[(1) - (1)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(1) - (1)].info).column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"<false>",
+		                                TREETAG_LINE,(yyvsp[(1) - (1)].info).line,
+		                                TREETAG_COLUMN,(yyvsp[(1) - (1)].info).column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		(yyval.dlist) = r;
+
+             }
+    break;
+
+  case 46:
+#line 1351 "code.y"
     {
 		DLIST r;
 		T_NODE *t;
@@ -2211,8 +2884,8 @@ yyreduce:
              }
     break;
 
-  case 29:
-#line 805 "code.y"
+  case 47:
+#line 1384 "code.y"
     {
 		DLIST r;
 
@@ -2226,8 +2899,8 @@ yyreduce:
              }
     break;
 
-  case 30:
-#line 819 "code.y"
+  case 48:
+#line 1398 "code.y"
     {
 		DLIST r;
 		T_NODE *t;
@@ -2264,7 +2937,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 2268 "y.tab.c"
+#line 2941 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
