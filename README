@@ -1,0 +1,8 @@
+To install the TWS:
+
+1. Edit pgen/Makefile.  All but one of lines 12-16 should be
+   commented.  For Linux machines, uncomment line 12.   For CISE Sun
+   machines, uncomment line 15.
+
+2. While in 'tws' directory, simply type 'make'.
+
