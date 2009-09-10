@@ -1,0 +1,22 @@
+program copy:
+
+ {  Adds up numbers from the input until the sum exceeds 25,
+    or until the number of numbers read is nine.  Prints the sum,
+    in either case.  }
+
+var int, identifier, count: integer;
+begin
+    identifier := 1;
+    count := 0;
+    while (identifier <= 10) do
+       begin
+	  if count <= 25 then
+	  begin
+	     int := read;
+	     count := count + int
+          end
+	  else ;
+          identifier := identifier + 1
+       end;
+    output (count)
+end copy.

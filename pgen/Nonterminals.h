@@ -1,0 +1,18 @@
+enum {    
+    t_spec = 2000,
+    t_defs,
+    t_def,
+    t_nlist,
+    t_yid,
+    t_rules,
+    t_rule,
+    t_or,
+    t_rbody ,
+    t_rexp,
+    t_term,
+    t_fact,
+    t_prim,
+    t_rop,
+    t_empty,
+    t_catenate,
+};

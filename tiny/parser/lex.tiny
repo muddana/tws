@@ -1,0 +1,94 @@
+%{
+#include <stdio.h>
+#include <string.h>
+#include <assert.h>
+#include <Tokenizer.h>
+#include "y.tab.h"
+
+static int line = 1;
+static int column = 1;
+int rule(int token);
+int node(int token);
+void yyerror(char* message);
+int debug_tokenizer = 0;
+
+%}
+%x COMM1
+COMM2   #.*\n
+IDENT	[_a-zA-Z][_a-zA-Z0-9]*
+INT	[0-9]+
+WHITE   [ \t\v\f]*
+LIT     '[^\']+'
+STR     \"[^\"]+\"
+%%
+
+{WHITE}    	{ column += yyleng; }
+\n         	{ column = 1; line++; }
+"program"    	{ return rule(PROGRAM); }
+"var" 		{ return rule(VAR); }
+"integer" 	{ return rule(INTEGER); }
+"boolean" 	{ return rule(BOOLEAN); }
+"begin" 	{ return rule(BEGINX); }
+"end" 		{ return rule(END); }
+":=" 		{ return rule(ASSIGNMENT); }
+"output" 	{ return rule(OUTPUT); }
+"if" 		{ return rule(IF); }
+"then" 		{ return rule(THEN); }
+"else" 		{ return rule(ELSE); }
+"while" 	{ return rule(WHILE); }
+"do" 		{ return rule(DO); }
+"<=" 		{ return rule(LTE); }
+"read" 		{ return rule(READ); }
+{INT}		{ return node(INTEGER_NUM); }
+{IDENT}		{ return node(IDENTIFIER); }
+"{"		{ column += yyleng; BEGIN( COMM1 ); }
+<COMM1>[^}\n]+  { column += yyleng; }
+<COMM1>"}"	{ column += yyleng; BEGIN( INITIAL ); }
+<COMM1>\n	{ column = 1; line++; }
+{COMM2}         { column = 1; line++; }
+":"             { return rule(yytext[0]); }
+";"             { return rule(yytext[0]); }
+"."             { return rule(yytext[0]); }
+","             { return rule(yytext[0]); }
+"("             { return rule(yytext[0]); }
+")"             { return rule(yytext[0]); }
+"+"             { return rule(yytext[0]); }
+"-"             { return rule(yytext[0]); }
+.               { yyerror("unrecognized char");
+                  printf("-->%s<--\n",yytext);
+                  column++; }  
+%%
+
+int rule(int token)
+{
+    if (debug_tokenizer) {
+	printf("string:%s, token: %d, line: %d, column: %d\n",
+	       yytext,token,line,column);
+    }
+
+    yylval.info.line = line;
+    yylval.info.column = column;
+    column += yyleng;
+
+    yylval.info.string = malloc(yyleng+1);
+    assert(yylval.info.string);
+    strcpy(yylval.info.string, yytext); 
+
+    yylval.info.makenode = 0;
+
+    return token;
+}
+
+int node(int token)
+{
+    int tok = rule(token);
+    yylval.info.makenode = 1;
+    return tok;
+}
+
+void yyerror(char* message)
+{
+    printf("****** %s @line %d, column %d\n",
+	   message,line,column);
+}
+

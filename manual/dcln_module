@@ -1,0 +1,262 @@
+
+
+
+                       COP 5641/4640
+
+              Programming Language Translators
+
+1. Declaration Module
+
+     The  declaration module keeps track of identifiers that
+have been declared in the  program  being  compiled.   These
+identifiers  can  be  variables,  names  of  types  that are
+defined by the user, names of procedures  and/or  functions,
+etc.
+
+     In  Tiny, this is a trivial issue: all declarations are
+global, because there are no procedures or functions  (yet).
+In  real  life, however, most (decent) programming languages
+are "block" structured, meaning that blocks of code  can  be
+nested,  and  local declarations in these blocks must remain
+... well, local.  Consider the scoping rules  in  Pascal:  a
+declared  identifier  is visible in the block in which it is
+declared (let's call it block A), and in any block contained
+within  A.   The  compiler must be able to perform (quickly)
+operations such as:
+
+     1)   Finding the current declaration of an  identifier.
+          We  call  this a "Lookup" operation, and it should
+          return with some indication of where that declara-
+          tion occurred.  In our case, one convenient way to
+          "point to" a declaration is to point to  the  tree
+          node  (in  the  abstract syntax tree) in which the
+          declaration occurred.
+
+     2)   Opening a scope (in Pascal, this occurs  when  one
+          enters a procedure).  An aside: Here, "entering" a
+          procedure means entering for the purpose of trans-
+          lation,  NOT for the purpose of executing it.  The
+          compiler enters a  procedure  to  "constrain"  it,
+          i.e.  to examine it for violations of scope rules,
+          of type compatibility  rules,  etc.   Please  make
+          sure   you  understand  this  crucial  distinction
+          before proceeding.
+
+     3)   Entering an identifier in the current scope.  This
+          occurs  when the compiler encounters a declaration
+          of some identifier.   The  declaration  should  be
+          recorded  in the declaration table, in the current
+          scope.
+
+     4)   Closing a scope.  This occurs, naturally, when one
+          exits  a procedure.  This activity is more compli-
+          cated than it seems at first.  Assume block  B  is
+          nested within block A, as shown below.
+
+
+proc A;                 Open a scope.
+   var x: integer;      DTEnter x (integer) in the current scope.
+       y: boolean;      DTEnter y (boolean) in the current scope.
+   proc B:              Open another scope.
+      var x: boolean;   DTEnter x (boolean) in the current scope.
+          y: integer;   DTEnter y (integer) in the current scope.
+      begin { B }
+          x := true;    Lookup x (boolean). The outer x is invisible.
+          y := 1;       Lookup x (integer). The outer y is invisible.
+   endproc { B }        Close the current scope.  Restore all variables
+   begin   { A }              to what they were IN THE PREVIOUS SCOPE.
+         x := 1;        Lookup x (integer).
+         y := true;     Lookup y (boolean).
+endproc {A}
+
+
+     As  you  can see, at times it is necessary to make cer-
+tain declarations "invisible".  This occurs when an  identi-
+fier is re-declared in an inner scope.  These invisible dec-
+larations must be restored upon exit from the inner scope.
+
+     These are the four essential operations that a declara-
+tion  table  mechanism must provide.  We must implement them
+cleanly, efficiently, correctly, etc., etc.,
+
+     In most textbooks, the text table and  the  declaration
+table  are shown together, in a single unit called the "sym-
+bol" table.  We, in  our  self-righteousness,  declare  that
+these  two should be separate.  Actually, the main reason is
+that enforcing scoping rules on identifiers has  NOTHING  TO
+DO with the storage allocation scheme for those identifiers,
+although within this Department it is still a matter of rag-
+ing  controversy.  All kidding aside, the essential issue is
+whether  one  should  consider  separately  the  storage  of
+strings  (as symbols, in our case integers), and the storage
+of declarations.  History will decide.
+
+     Here's an  abstract  description  for  the  Declaration
+Table:
+
+          type DclnTable = record
+               Curr_Dcln,
+               Name,
+               Prior,
+               Dcln:  Table;
+          end;
+          {This structure is explained below}
+
+          var CurrentScope, LastDeclaration: integer;
+
+          procedure InitializeDeclarationTable     {I Love Long Names}
+               - Initializes the Declaration Table.
+
+          procedure DTEnter (S:String; T,Source:TreeNode);
+               - DTEnter name S into the current scope, with tree node T.
+                 Node Source is provided for error diagnostic purposes.
+                 The constrainer uses this procedure to enter
+                 declarations as it encounters them.  The tree node is
+                 that in which the declaration occurred.
+
+          function Lookup (S:String): TreeNode;
+               -  Returns the tree node in which the current declaration
+                 of S occurred.
+
+          procedure OpenScope;
+               -  Opens a declaration scope.
+
+          procedure CloseScope;
+               -  Closes the current scope.
+
+          function IsLocal ( S: String ) : boolean;
+               - Returns true if S has been entered in the current
+                 scope.
+
+
+     We  now  illustrate  the  structure  of the Declaration
+Table.  The example below is NOT written in Tiny, but rather
+in  some pseudo-language.  The actual language is irrelevant
+because the constrainer is only interested  in  declarations
+and  usages  of identifiers, not in what the identifiers are
+used for.  "Dx" stands for "declare x", and "Ux" stands  for
+"Use  x".  In this pseudo-language, "begin" and "end" define
+scope blocks.
+
+begin                  OpenScope
+      Dx               DTEnter (x,1).  The 1 means tree location 1.
+      Dy               DTEnter (y,2).  This is tree location 2.
+      begin            OpenScope.
+            Dx         DTEnter (x,3).  This is tree location 3.
+            Ux         Lookup (x) should return 3.
+            begin      OpenScope.
+                  Dx   DTEnter (x,4).  This is tree location 4.
+                  Dz   DTEnter (z,5).  This is tree location 5.
+                  Dx   DTEnter (x,6).  This should be an ERROR!
+                  Ux   Lookup (x) should return 4.
+                  Uy   Lookup (y) should return 2.
+            end        CloseScope.
+            Ux         Lookup (x) should return 3.
+      end              CloseScope.
+      Ux               Lookup (x) should return 1.
+end                    CloseScope.
+
+
+     Here's a picture of the Declaration Table:
+
+    Current_Dcln         Name   Prior   Dcln
+  -----------------    -----------------------
+                     1    0
+  -----------------    -----------------------
+y        3           2    x       0      1
+  -----------------    -----------------------
+x        7           3    y       0      2
+  -----------------    -----------------------
+                     4            1            LastDeclaration: 8
+  -----------------    -----------------------
+w                    5    x       2      3     CurrentScope: 6
+  -----------------    -----------------------
+                     6            4
+  -----------------    -----------------------
+z        8           7    x       5      4
+  -----------------    -----------------------
+                     8    z       0      5
+  -----------------    -----------------------
+
+
+The table above depicts  the  situation  just  after  "DTEn-
+ter(z,5)", in the above pseudo-code.  Here's an explanation:
+
+1)   Declarations are added to the bottom of  the  table  as
+     they  are  entered.   Opening a scope causes a "header"
+     entry to be added.  The header entry is followed by the
+     declarations  in that new scope.  In the picture, there
+     are three scopes, starting at 1,4 and 6.  The Name  and
+     Dcln  fields  of the header entry are blank.  The Prior
+     field of the header entry points to the header entry of
+     the  NEXT  OUTER  SCOPE.  Hence Prior[6]=4, Prior[4]=1,
+     Prior[1]=0.
+
+2)   Current_Dcln is indexed by String.  For a given  String
+     S, Current_Dcln holds the location in Dcln in which one
+     can find the current declaration of S.
+
+3)   The name is stored for each declaration.  This is where
+     a  Text Table comes in handy: for us, each such name is
+     just an integer.
+
+4)   The prior field of each declaration entry points to the
+     PREVIOUS  DECLARATION  of that identifier, which is not
+     necessarily in the  next  outer  scope.   For  example,
+     Prior[z]=0,  meaning z was not previously declared: not
+     in the first scope, nor in the second.
+
+5)   CurrentScope indicates the header entry of the  current
+     scope.   LastDeclaration indicates the last declaration
+     in the table.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

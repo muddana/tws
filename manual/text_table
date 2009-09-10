@@ -1,0 +1,144 @@
+
+
+                       COP 5641/4640
+
+              Programming Language Translators
+
+                         Text Table
+
+
+     This  document  describes, in general terms, the avail-
+able software for manipulating text in the translator  writ-
+ing system.
+
+1. Introduction
+
+     Text  is  stored  in  a text table, which is capable of
+holding an arbitrary number of strings,  each  of  arbitrary
+length.   The  characters  for each string are stored in one
+array which will expand when needed to  store  new  strings.
+Each string stored in the text table is identified by a pos-
+itive integer.  This means that comparing strings for equal-
+ity  is  simply  a  comparison  of  two integers.  The first
+string to be stored is assigned the value 1 and  all  subse-
+quent strings are assigned the next available integer.
+
+     There  is  a  buffer  used  by the text module to store
+characters of a string prior to storing the  string  in  the
+text table.  When all the characters of the string have been
+placed into the buffer, the string can be converted into its
+internal representation (and stored in the text table if not
+already there) by the function ConvertStringInBuffer.
+
+Module Interface
+
+Here is an abstract specification of the text table module:
+
+        The module defines (the equivalent of) the following data structure:
+
+         type TextTable = array [1..infinity] of array [1..infinity] of char;
+
+           type String = {positive} integer;
+
+           const UndefinedString = 0;
+            { This should always be used by its symbolic name. }
+
+           var LowerBound, UpperBound: String;
+            { These variables are used to delimit the range of strings
+              that are keywords in the language.  They are set by
+              procedures FreezeLowerBound and FreezeUpperBound, shown below }
+
+           procedure InitializeTextModule;
+            { Initializes the text table.  Initializes LowerBound and
+              UpperBound to some convenient (undefined) value }
+
+           function TextSize: integer;
+            { returns the number of strings currently in the text table}
+
+           procedure WriteString (File:text; S:String);
+            { writes string S to file File, if S is a valid string }
+
+           procedure PrintAllStrings (File:text);
+            { writes a report of the entire contents of the text table
+               to file File }
+
+           function StringLength (S:String): integer;
+            { returns the length of string S, if S is a valid string }
+
+           function Character (S:String; I:integer): char;
+            { returns the I'th character in string S, if S is a valid
+              string, and if it has an I'th character }
+
+           procedure FreezeLowerBound;
+            { sets LowerBound to the current size of the text table }
+
+           procedure FreezeUpperBound;
+            { sets UpperBound to the current size of the text table.
+              There should be an error if this procedure is called
+              before FreezeLowerBound. }
+
+         Note: FreezeLowerBound and FreezeUpperBound are intended to be used to
+            delimit a certain area of the text table (i.e. a certain
+            subset of the strings held in the text table) that have a
+            special purpose.  In particular, the set of keywords in Tiny
+            are of interest.  See procedure FillBuffer, below.
+
+           function IsStringReserved (S:String): boolean;
+            { Returns true if string S is between LowerBound and
+                 UpperBound }
+
+           procedure ResetBufferInTextTable;
+            { Initializes the buffer as an empty buffer. }
+
+           procedure AdvanceOnCharacter ( ch : char );
+            { Adds the character ch to the end of the buffer. }
+
+           function ConvertStringInBuffer : String;
+            { Takes the string in the buffer and returns its internal
+              representation.  It adds the string the the text table
+              if it is not already there. }
+
+           procedure StringArrayToStringConstant ( S : PascalString;
+            C : String constant );
+            { Takes the Pascal string S (S must end with ' ') and
+              enters it in the text table with the internal representation
+              being C.  For this to work, all calls to this routine
+              must occur in order before entering any other strings.
+              Then, the first string constant will be given the value 1. }
+
+3. Using the Text Module from C
+
+     You will need the definitions  of  the  procedures  and
+functions  of  the  text module in your program.  This means
+that you must include the appropriate files from the  header
+directory.  The following include statements are used in the
+constrainer and will certainly be enough to allow  usage  of
+the text module:
+
+           #include '<header/CommandLine.h>;
+           #include '<header/Table.h>;
+           #include '<header/Text.h>;
+           #include '<header/Error.h>;
+           #include '<header/String_Input.h>;
+
+You might find it helpful to read these header files.
+
+     Before you can use the text module, you must initialize
+it using the procedure InitializeTextModule.  This  is  nor-
+mally  part  of  an initialization routine for your program.
+If you examine code/Constrain.c, you will see that it  first
+invokes the procedure InitializeConstrainer which calls Ini-
+tializeTextModule.
+
+     After initialization, you may use any of the procedures
+and  functions  discussed above.  Most of these have clearly
+defined uses and should cause no confusion.  The method  for
+adding  a  string to the text table deserves fuller explana-
+tion.  The following sequence of calls will add  the  string
+"it"  to  the text table (or simply return the number repre-
+senting "it"):
+
+           ResetBufferInTextTable;
+           AdvanceOnCharacter ( 'i' );
+           AdvanceOnCharacter ( 't' );
+           NewString := ConvertStringInBuffer;

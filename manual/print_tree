@@ -1,0 +1,65 @@
+
+
+
+
+
+
+Name
+
+
+     print_tree - print out tree in semi-pretty format
+
+Synopsis
+
+     print_tree [ -ast _TREE ]
+
+Description
+
+     Print_tree  prints the tree in _TREE to standard output
+     in a (hopefully) readable  format.   In  general,  this
+     command can be executed after a call to parse, to print
+     out the generated tree when parsing.
+
+Options
+
+
+     -ast TREE
+          By default the tree is read from file  _TREE.   If
+          this  option is given, then the given TREE is used
+          instead.
+
+See Also
+
+
+
+
+Bugs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

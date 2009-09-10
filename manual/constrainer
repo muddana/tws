@@ -1,0 +1,115 @@
+
+                       COP 5641/4640
+
+              Programming Language Translators
+
+1. The Constriner
+
+     The  contextual  constrainer  enforces  contextual con-
+straints.  Tiny's contextual constraints are as follows:
+
+1)   The two program names must match.
+
+2)   Every identifier must be declared before it is used.
+
+3)   In the assignment statement, the Name and  the  Expres-
+     sion must be of the same type.
+
+4)   In the output statement, the Expression must be of type
+     integer.
+
+5)   The expression in the "if" statement must  be  of  type
+     boolean.
+
+6)   The expression in the "while" statement must be of type
+     boolean.
+
+7)   An expression preceded by  a  "not"  must  be  of  type
+     boolean.
+
+8)   Two terms joined by a "=" must both be of type integer.
+
+9)   A factor and a term joined by a "+"  (or  a  "-")  must
+     both be of type integer.
+
+10)  Assume "read" returns an integer.
+
+
+     The following scheme is used:
+
+1)   Use AddNode to create a tree of the following form:
+
+                      types
+                     /     \\
+                     type     type
+                      |         |
+                   boolean   integer
+
+
+2)   Add  this subtree to the program tree, placing it under
+     the program node, just after  the  first  program  name
+     (i.e. just before the declarations).
+
+3)   Recursively  walk  the  tree.   Open a scope before you
+     begin.  Close a scope when you're done.
+
+          a)   When you encounter a  type  node,  enter  the
+               name below the type node with the node.
+
+          b)   When you encounter a "dcln" node, use Lookup(
+               NodeName( LastKid(Node) ))  to  retrieve  the
+               type (a tree node).  Then Enter every identi-
+               fier under the "dcln" node  with  that  type.
+               Also  Decorate each identifier node with that
+               type.
+
+          c)   When you encounter a usage of an  identifier,
+               Lookup  that  identifier:  the value returned
+               from Lookup will  determine  whether  it  has
+               been  declared.  Decorate the identifier node
+               with its declaration.
+
+          d)   As you return from each recursive call (while
+               traversing  the  tree), enforce the type com-
+               patibility  rules  by  comparing  the   types
+               returned from the various subtrees.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,195 @@
+Terminals which are not used
+
+   WHITE
+
+
+Grammar
+
+    0 $accept: codeFile $end
+
+    1 codeFile: codeFile lines
+    2         | lines
+
+    3 lines: LABEL ID ID ID NL
+    4      | LABEL ID ID NL
+    5      | LABEL ID NL
+    6      | ID ID ID NL
+    7      | ID ID NL
+    8      | ID NL
+    9      | NL
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+ID (258) 3 4 5 6 7 8
+LABEL (259) 3 4 5
+NL (260) 3 4 5 6 7 8 9
+WHITE (261)
+
+
+Nonterminals, with rules where they appear
+
+$accept (7)
+    on left: 0
+codeFile (8)
+    on left: 1 2, on right: 0 1
+lines (9)
+    on left: 3 4 5 6 7 8 9, on right: 1 2
+
+
+state 0
+
+    0 $accept: . codeFile $end
+
+    ID     shift, and go to state 1
+    LABEL  shift, and go to state 2
+    NL     shift, and go to state 3
+
+    codeFile  go to state 4
+    lines     go to state 5
+
+
+state 1
+
+    6 lines: ID . ID ID NL
+    7      | ID . ID NL
+    8      | ID . NL
+
+    ID  shift, and go to state 6
+    NL  shift, and go to state 7
+
+
+state 2
+
+    3 lines: LABEL . ID ID ID NL
+    4      | LABEL . ID ID NL
+    5      | LABEL . ID NL
+
+    ID  shift, and go to state 8
+
+
+state 3
+
+    9 lines: NL .
+
+    $default  reduce using rule 9 (lines)
+
+
+state 4
+
+    0 $accept: codeFile . $end
+    1 codeFile: codeFile . lines
+
+    $end   shift, and go to state 9
+    ID     shift, and go to state 1
+    LABEL  shift, and go to state 2
+    NL     shift, and go to state 3
+
+    lines  go to state 10
+
+
+state 5
+
+    2 codeFile: lines .
+
+    $default  reduce using rule 2 (codeFile)
+
+
+state 6
+
+    6 lines: ID ID . ID NL
+    7      | ID ID . NL
+
+    ID  shift, and go to state 11
+    NL  shift, and go to state 12
+
+
+state 7
+
+    8 lines: ID NL .
+
+    $default  reduce using rule 8 (lines)
+
+
+state 8
+
+    3 lines: LABEL ID . ID ID NL
+    4      | LABEL ID . ID NL
+    5      | LABEL ID . NL
+
+    ID  shift, and go to state 13
+    NL  shift, and go to state 14
+
+
+state 9
+
+    0 $accept: codeFile $end .
+
+    $default  accept
+
+
+state 10
+
+    1 codeFile: codeFile lines .
+
+    $default  reduce using rule 1 (codeFile)
+
+
+state 11
+
+    6 lines: ID ID ID . NL
+
+    NL  shift, and go to state 15
+
+
+state 12
+
+    7 lines: ID ID NL .
+
+    $default  reduce using rule 7 (lines)
+
+
+state 13
+
+    3 lines: LABEL ID ID . ID NL
+    4      | LABEL ID ID . NL
+
+    ID  shift, and go to state 16
+    NL  shift, and go to state 17
+
+
+state 14
+
+    5 lines: LABEL ID NL .
+
+    $default  reduce using rule 5 (lines)
+
+
+state 15
+
+    6 lines: ID ID ID NL .
+
+    $default  reduce using rule 6 (lines)
+
+
+state 16
+
+    3 lines: LABEL ID ID ID . NL
+
+    NL  shift, and go to state 18
+
+
+state 17
+
+    4 lines: LABEL ID ID NL .
+
+    $default  reduce using rule 4 (lines)
+
+
+state 18
+
+    3 lines: LABEL ID ID ID NL .
+
+    $default  reduce using rule 3 (lines)

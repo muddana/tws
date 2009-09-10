@@ -1,0 +1,126 @@
+This file contains a brief description of all the files associated with the
+flex/yacc version of Tiny Parser/Scanner/Screener, this file is specifically
+for the parser_spec.
+
+BuildTables.c	- Takes care of building the Terminal and Nonterminal
+		  tables.
+	Functions:
+	- BuildNonterminalTable() builds the table of Nonterminals.
+	- VisitEachNT() visits each node of the tree and uses the
+	  child information to build the Nonterminals table.
+	- BuildNonterminalTable() builds the table of Terminals.
+	- VisitEachT() visits each node of the tree and uses the child
+	  information to build the Terminals table.
+
+CodeGen.c	- This file is what generates the yacc code that will
+		  convert the tiny.parse inputted to it, into a yaccable
+		  file that will become the actual parser.
+	Functions:
+
+	- CodeGen(), where is all starts.
+	- rule_code(), This generates the yacc code to parse a given rule.
+	- VisitEach(), Here we make sure that we visit each node of the tree.
+	- Actions(), This generates the yacc code to parse a given action.
+
+FILES		- This file.
+
+Flatten.c	- This contains the functions used to "flatten" the tree.
+		  Meaning that it visits all the nodes and checks to see if
+		  there are any that do not belong, or can be consolidated.
+
+GenericTrees.c	- Containes functions used in creating tree nodes and
+		  manipulating children/leaves of the tree.
+	Functions:
+
+	- InitTNode() call this before using a TNODE or a derived
+          class of TNODE.
+ 	- AddChild() makes 'child' the last kid of 'parent'.
+ 	- AddChildren() adds multiple children to 'parent'.  This function
+  	  successively calls AddChild() for each child in the argument list.
+  	  The argument list is terminated with a NULL pointer.
+ 	- AddNthChild() adds 'child' to the 'nth' position of the parent.
+  	  Counting of children starts with 1.
+ 	- ChildCount() returns the count of children 'node' has.
+ 	- GetChild() returns a pointer to the 'nth' child of the parent.  
+ 	- GetParent() returns a pointer to the parent of 'child'.
+ 	- GetChildNum() returns the number (position) of 'child' (relative to
+  	  the parent).
+ 	- NextSibling() moves the pointer from the current 'child' to the next
+  	  'child'.
+ 	- UnlinkTree() removes the node and it's subtree from the tree.
+ 	- UnlinkTrees() removes multiple nodes (and their subtrees) from the 
+  	  tree.  This functions sucessively call UnlinkTree for each node
+  	  specified in the argument list.  The argument list is terminated 
+  	  by a NULL pointer.
+ 	- PrintTree() visits each node (pre-order) and calls 'PrintFunc' to
+  	  print the contents of each node.  This function will automatically
+  	  indent and will pass the indent count to 'PrintFunc'.  This ident
+  	  count can be used by PrintTreeBlanks().
+ 	- PrintTreeTabs() prints "bars and spaces" based on indent level.
+ 	- PrintTabs() prints the appropriate number of tabs for indentation.
+ 	- PrintTreeBlanks() prints blanks corresponding to indent level.
+ 	- FreeTree() frees every node of the tree.  This function will pass
+  	  each node "through" a release function if specified.  This release
+  	  function should not free the actual node, only "extra" data.
+  	  If no release function is required, pass a NULL pointer.
+ 	- Lift() difers the operation until it can be determined later.
+
+GenericTrees.h	- Header file for GenericTrees.c
+
+Imakefile	- Used to create the Makefile for whatever machine you
+		  want to run this on.  Use xmkmf to create the
+		  makefile.
+
+Main.c		- All this file really does is start the code that is
+                  made from yacc.  It is also where debugging is currently
+                  hardwired to on. 
+
+NonTerminals.h	- An enumerated type that is a list of NonTerminals.
+		  These are not the same as nonterminals in the parser
+		  code that students use.
+
+Parser.y	- The yacc file that dictates how the tiny.parse table
+		  is actually going to be processed and turned into an
+		  executable program.
+
+SymbolTable.c	- Contains functions used to interact with the
+		  SymbolTable.
+	Functions:
+
+	- hash(), Do some hash magic on the Symbol table.
+	- Lookup() a name in the symbol table.
+	- Insert() a name into the symbol table.
+	- PrintTable(), output the symbol table for viewing pleasure.
+	- FreeTable() gives us all that memory being used by the table that we
+	  don't need anymore.
+
+SymbolTable.h	- Header file for SymbolTable.c
+
+Tokenizer.h	- Structures of token information.
+
+Tokenizer.l	- Lex file that defines what the valid tokens are.
+
+TreeCheck.c	- Checks to make sure that the tree is good.
+	Functions:
+
+	- TreeCheck(), Looks at all the tokens and decides if they are valid.
+
+Trees.c		- This is the code that contains the functions that actually
+		  create the tree from the input.
+	Functions:
+
+	- AllocTreeNode(), actually allocate the node and store it.
+	- ModifyTreeNode(),  Here we can modify a tree node if necissicary.
+	- pf(), Writes the node information out to a file.
+	- PrintRawTree(), This prints the tree out for degugging purposes.
+	- release(), Properly destroy unused space.
+	- FreeTreenodeTree(), Call release and free a node.
+	- DuplicateTree(), Make a copy of the entire tree.
+	- DuplicateNode(), Make a copy of only one node.
+
+Trees.h		- Header file for Trees.c
+
+
+
+
+

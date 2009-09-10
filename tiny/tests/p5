@@ -1,0 +1,4 @@
+program x:
+begin
+   if 1 <= 2 then else output (3)
+end x.

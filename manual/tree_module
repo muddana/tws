@@ -1,0 +1,106 @@
+
+
+
+                       COP 5641/4640
+
+              Programming Language Translators
+
+                        Tree Module
+
+
+1. Introduction
+
+     The  tree  module  is capable of holding trees of arbi-
+trary size, each node having an arbitrary  number  of  kids.
+Conceptually,  each  node of the tree contains three fields:
+the node name (a String), the source  location  (a  String),
+and  the  Decoration  (a  TreeNode).  Internally, it has one
+more field (number of kids).
+
+     (An Aside) Decorations will be used later (in the  con-
+textual  constrainer)  to  "decorate" the tree, i.e. to have
+one tree node "pointing to" another.  For example, the deco-
+ration  of  an  "identifier" node could yield the "var" node
+where that identifier was  declared.   The  "var"  node,  in
+turn,  should  be  decorated with the tree node that defines
+that type. (End-of-Aside)
+
+2. Tree Module Specification
+
+     Here is an abstract specification of the tree module:
+
+
+         type TreeNode = {positive} integer;
+
+           procedure InitializeTreeModule;
+            { Prepares the array for storing trees read in by ReadTree. }
+
+           function NodeName (Node:TreeNode):String;
+            { Returns the name of the Node }
+
+           function Rank (Node:TreeNode):integer;
+            { Returns the number of kids of node Node }
+
+           function Child (Node:TreeNode; Kid:integer): TreeNode;
+            { Returns the Kid'th child of Node }
+
+           function ReadTree ( Name : StringArray ) : integer;
+            { Reads a forest of trees from file Name, and stores the name
+              and the source location of each node in the Text Table.
+              Returns the number of trees read from the file.  ReadTree
+              will open and close the file for you. }
+
+           procedure PrintAllTrees (OutFile:text);
+            { Dumps all trees to file OutFile, in a format suitable
+              for reading it back in using function ReadTree.  To be
+              used by the parser when it finishes building the tree,
+              and by the compiler for debugging }
+
+           procedure PrintTree (Outfile:text; Root:TreeNode);
+            { Prints subtree defined by node Root to file OutFile, in a
+              format suitable for humans. }
+
+           procedure AddTree (Name:String; Parent:TreeNode; Kid:integer);
+               { Creates a tree node, with the given Name as child Kid
+              of the Parent node.  The previous Kid'th child will become
+              the Kid+1'th child. }
+
+           procedure Decorate (Node1:TreeNode; Node2:TreeNode);
+            { Decorates node Node1 with Node2. }
+
+           function Decoration (Node:TreeNode): TreeNode;
+            { Retrieves the decoration of Node, presumably put there
+              via procedure Decorate. }
+
+
+3. Using the Tree Module
+
+     You should place an include statement in your C  source
+file like
+
+           #include '<header/Tree.h>;
+
+
+     The  tree module must be initialized before you read in
+any trees.  This is done by placing a  call  to  Initialize-
+TreeModule in the initialization routine for your program.
+
+     After  initializing  the  tree  module,  you should use
+ReadTree to read in a forest of trees  from  a  file.   Nor-
+mally,  there  will  be only one tree in the forest, but the
+code supports an arbitrary number of trees.   Then  you  are
+ready  for a recursive traversal of the tree(s).  You should
+be able to read the tree manipulation of tiny to see how  to
+use the remaining features of the tree module.
+
+
+
+
+
+
+
+
+
+
+
+

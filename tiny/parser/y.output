@@ -1,0 +1,704 @@
+Grammar
+
+    0 $accept: Tiny $end
+
+    1 Tiny: PROGRAM Name ':' Dclns Body Name '.'
+
+    2 Dclns: VAR Dclns_1
+    3      | /* empty */
+
+    4 Dclns_1: /* empty */
+    5        | Dcln ';' Dclns_1
+
+    6 Dcln: Dcln_1
+
+    7 Dcln_1: Name ':' Type
+    8       | Name ',' Dcln_1
+
+    9 Type: INTEGER
+   10     | BOOLEAN
+
+   11 Body: BEGINX Body_1
+
+   12 Body_1: Statement END
+   13       | Statement ';' Body_1
+
+   14 Statement: Name ASSIGNMENT Expression
+   15          | OUTPUT '(' Expression ')'
+   16          | IF Expression THEN Statement ELSE Statement
+   17          | WHILE Expression DO Statement
+   18          | Body
+   19          | /* empty */
+
+   20 Expression: Term
+   21           | Term LTE Term
+
+   22 Term: Primary
+   23     | Primary '+' Term
+
+   24 Primary: '-' Primary
+   25        | READ
+   26        | Name
+   27        | INTEGER_NUM
+   28        | '(' Expression ')'
+
+   29 Name: IDENTIFIER
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'(' (40) 15 28
+')' (41) 15 28
+'+' (43) 23
+',' (44) 8
+'-' (45) 24
+'.' (46) 1
+':' (58) 1 7
+';' (59) 5 13
+error (256)
+END (258) 12
+VAR (259) 2
+IDENTIFIER (260) 29
+IF (261) 16
+READ (262) 25
+ELSE (263) 16
+THEN (264) 16
+WHILE (265) 17
+OUTPUT (266) 15
+DO (267) 17
+BEGINX (268) 11
+BOOLEAN (269) 10
+INTEGER_NUM (270) 27
+INTEGER (271) 9
+LTE (272) 21
+ASSIGNMENT (273) 14
+PROGRAM (274) 1
+
+
+Nonterminals, with rules where they appear
+
+$accept (28)
+    on left: 0
+Tiny (29)
+    on left: 1, on right: 0
+Dclns (30)
+    on left: 2 3, on right: 1
+Dclns_1 (31)
+    on left: 4 5, on right: 2 5
+Dcln (32)
+    on left: 6, on right: 5
+Dcln_1 (33)
+    on left: 7 8, on right: 6 8
+Type (34)
+    on left: 9 10, on right: 7
+Body (35)
+    on left: 11, on right: 1 18
+Body_1 (36)
+    on left: 12 13, on right: 11 13
+Statement (37)
+    on left: 14 15 16 17 18 19, on right: 12 13 16 17
+Expression (38)
+    on left: 20 21, on right: 14 15 16 17 28
+Term (39)
+    on left: 22 23, on right: 20 21 23
+Primary (40)
+    on left: 24 25 26 27 28, on right: 22 23 24
+Name (41)
+    on left: 29, on right: 1 7 8 14 26
+
+
+state 0
+
+    0 $accept: . Tiny $end
+
+    PROGRAM  shift, and go to state 1
+
+    Tiny  go to state 2
+
+
+state 1
+
+    1 Tiny: PROGRAM . Name ':' Dclns Body Name '.'
+
+    IDENTIFIER  shift, and go to state 3
+
+    Name  go to state 4
+
+
+state 2
+
+    0 $accept: Tiny . $end
+
+    $end  shift, and go to state 5
+
+
+state 3
+
+   29 Name: IDENTIFIER .
+
+    $default  reduce using rule 29 (Name)
+
+
+state 4
+
+    1 Tiny: PROGRAM Name . ':' Dclns Body Name '.'
+
+    ':'  shift, and go to state 6
+
+
+state 5
+
+    0 $accept: Tiny $end .
+
+    $default  accept
+
+
+state 6
+
+    1 Tiny: PROGRAM Name ':' . Dclns Body Name '.'
+
+    VAR  shift, and go to state 7
+
+    $default  reduce using rule 3 (Dclns)
+
+    Dclns  go to state 8
+
+
+state 7
+
+    2 Dclns: VAR . Dclns_1
+
+    IDENTIFIER  shift, and go to state 3
+
+    $default  reduce using rule 4 (Dclns_1)
+
+    Dclns_1  go to state 9
+    Dcln     go to state 10
+    Dcln_1   go to state 11
+    Name     go to state 12
+
+
+state 8
+
+    1 Tiny: PROGRAM Name ':' Dclns . Body Name '.'
+
+    BEGINX  shift, and go to state 13
+
+    Body  go to state 14
+
+
+state 9
+
+    2 Dclns: VAR Dclns_1 .
+
+    $default  reduce using rule 2 (Dclns)
+
+
+state 10
+
+    5 Dclns_1: Dcln . ';' Dclns_1
+
+    ';'  shift, and go to state 15
+
+
+state 11
+
+    6 Dcln: Dcln_1 .
+
+    $default  reduce using rule 6 (Dcln)
+
+
+state 12
+
+    7 Dcln_1: Name . ':' Type
+    8       | Name . ',' Dcln_1
+
+    ':'  shift, and go to state 16
+    ','  shift, and go to state 17
+
+
+state 13
+
+   11 Body: BEGINX . Body_1
+
+    IDENTIFIER  shift, and go to state 3
+    IF          shift, and go to state 18
+    WHILE       shift, and go to state 19
+    OUTPUT      shift, and go to state 20
+    BEGINX      shift, and go to state 13
+
+    $default  reduce using rule 19 (Statement)
+
+    Body       go to state 21
+    Body_1     go to state 22
+    Statement  go to state 23
+    Name       go to state 24
+
+
+state 14
+
+    1 Tiny: PROGRAM Name ':' Dclns Body . Name '.'
+
+    IDENTIFIER  shift, and go to state 3
+
+    Name  go to state 25
+
+
+state 15
+
+    5 Dclns_1: Dcln ';' . Dclns_1
+
+    IDENTIFIER  shift, and go to state 3
+
+    $default  reduce using rule 4 (Dclns_1)
+
+    Dclns_1  go to state 26
+    Dcln     go to state 10
+    Dcln_1   go to state 11
+    Name     go to state 12
+
+
+state 16
+
+    7 Dcln_1: Name ':' . Type
+
+    BOOLEAN  shift, and go to state 27
+    INTEGER  shift, and go to state 28
+
+    Type  go to state 29
+
+
+state 17
+
+    8 Dcln_1: Name ',' . Dcln_1
+
+    IDENTIFIER  shift, and go to state 3
+
+    Dcln_1  go to state 30
+    Name    go to state 12
+
+
+state 18
+
+   16 Statement: IF . Expression THEN Statement ELSE Statement
+
+    IDENTIFIER   shift, and go to state 3
+    READ         shift, and go to state 31
+    INTEGER_NUM  shift, and go to state 32
+    '('          shift, and go to state 33
+    '-'          shift, and go to state 34
+
+    Expression  go to state 35
+    Term        go to state 36
+    Primary     go to state 37
+    Name        go to state 38
+
+
+state 19
+
+   17 Statement: WHILE . Expression DO Statement
+
+    IDENTIFIER   shift, and go to state 3
+    READ         shift, and go to state 31
+    INTEGER_NUM  shift, and go to state 32
+    '('          shift, and go to state 33
+    '-'          shift, and go to state 34
+
+    Expression  go to state 39
+    Term        go to state 36
+    Primary     go to state 37
+    Name        go to state 38
+
+
+state 20
+
+   15 Statement: OUTPUT . '(' Expression ')'
+
+    '('  shift, and go to state 40
+
+
+state 21
+
+   18 Statement: Body .
+
+    $default  reduce using rule 18 (Statement)
+
+
+state 22
+
+   11 Body: BEGINX Body_1 .
+
+    $default  reduce using rule 11 (Body)
+
+
+state 23
+
+   12 Body_1: Statement . END
+   13       | Statement . ';' Body_1
+
+    END  shift, and go to state 41
+    ';'  shift, and go to state 42
+
+
+state 24
+
+   14 Statement: Name . ASSIGNMENT Expression
+
+    ASSIGNMENT  shift, and go to state 43
+
+
+state 25
+
+    1 Tiny: PROGRAM Name ':' Dclns Body Name . '.'
+
+    '.'  shift, and go to state 44
+
+
+state 26
+
+    5 Dclns_1: Dcln ';' Dclns_1 .
+
+    $default  reduce using rule 5 (Dclns_1)
+
+
+state 27
+
+   10 Type: BOOLEAN .
+
+    $default  reduce using rule 10 (Type)
+
+
+state 28
+
+    9 Type: INTEGER .
+
+    $default  reduce using rule 9 (Type)
+
+
+state 29
+
+    7 Dcln_1: Name ':' Type .
+
+    $default  reduce using rule 7 (Dcln_1)
+
+
+state 30
+
+    8 Dcln_1: Name ',' Dcln_1 .
+
+    $default  reduce using rule 8 (Dcln_1)
+
+
+state 31
+
+   25 Primary: READ .
+
+    $default  reduce using rule 25 (Primary)
+
+
+state 32
+
+   27 Primary: INTEGER_NUM .
+
+    $default  reduce using rule 27 (Primary)
+
+
+state 33
+
+   28 Primary: '(' . Expression ')'
+
+    IDENTIFIER   shift, and go to state 3
+    READ         shift, and go to state 31
+    INTEGER_NUM  shift, and go to state 32
+    '('          shift, and go to state 33
+    '-'          shift, and go to state 34
+
+    Expression  go to state 45
+    Term        go to state 36
+    Primary     go to state 37
+    Name        go to state 38
+
+
+state 34
+
+   24 Primary: '-' . Primary
+
+    IDENTIFIER   shift, and go to state 3
+    READ         shift, and go to state 31
+    INTEGER_NUM  shift, and go to state 32
+    '('          shift, and go to state 33
+    '-'          shift, and go to state 34
+
+    Primary  go to state 46
+    Name     go to state 38
+
+
+state 35
+
+   16 Statement: IF Expression . THEN Statement ELSE Statement
+
+    THEN  shift, and go to state 47
+
+
+state 36
+
+   20 Expression: Term .
+   21           | Term . LTE Term
+
+    LTE  shift, and go to state 48
+
+    $default  reduce using rule 20 (Expression)
+
+
+state 37
+
+   22 Term: Primary .
+   23     | Primary . '+' Term
+
+    '+'  shift, and go to state 49
+
+    $default  reduce using rule 22 (Term)
+
+
+state 38
+
+   26 Primary: Name .
+
+    $default  reduce using rule 26 (Primary)
+
+
+state 39
+
+   17 Statement: WHILE Expression . DO Statement
+
+    DO  shift, and go to state 50
+
+
+state 40
+
+   15 Statement: OUTPUT '(' . Expression ')'
+
+    IDENTIFIER   shift, and go to state 3
+    READ         shift, and go to state 31
+    INTEGER_NUM  shift, and go to state 32
+    '('          shift, and go to state 33
+    '-'          shift, and go to state 34
+
+    Expression  go to state 51
+    Term        go to state 36
+    Primary     go to state 37
+    Name        go to state 38
+
+
+state 41
+
+   12 Body_1: Statement END .
+
+    $default  reduce using rule 12 (Body_1)
+
+
+state 42
+
+   13 Body_1: Statement ';' . Body_1
+
+    IDENTIFIER  shift, and go to state 3
+    IF          shift, and go to state 18
+    WHILE       shift, and go to state 19
+    OUTPUT      shift, and go to state 20
+    BEGINX      shift, and go to state 13
+
+    $default  reduce using rule 19 (Statement)
+
+    Body       go to state 21
+    Body_1     go to state 52
+    Statement  go to state 23
+    Name       go to state 24
+
+
+state 43
+
+   14 Statement: Name ASSIGNMENT . Expression
+
+    IDENTIFIER   shift, and go to state 3
+    READ         shift, and go to state 31
+    INTEGER_NUM  shift, and go to state 32
+    '('          shift, and go to state 33
+    '-'          shift, and go to state 34
+
+    Expression  go to state 53
+    Term        go to state 36
+    Primary     go to state 37
+    Name        go to state 38
+
+
+state 44
+
+    1 Tiny: PROGRAM Name ':' Dclns Body Name '.' .
+
+    $default  reduce using rule 1 (Tiny)
+
+
+state 45
+
+   28 Primary: '(' Expression . ')'
+
+    ')'  shift, and go to state 54
+
+
+state 46
+
+   24 Primary: '-' Primary .
+
+    $default  reduce using rule 24 (Primary)
+
+
+state 47
+
+   16 Statement: IF Expression THEN . Statement ELSE Statement
+
+    IDENTIFIER  shift, and go to state 3
+    IF          shift, and go to state 18
+    WHILE       shift, and go to state 19
+    OUTPUT      shift, and go to state 20
+    BEGINX      shift, and go to state 13
+
+    $default  reduce using rule 19 (Statement)
+
+    Body       go to state 21
+    Statement  go to state 55
+    Name       go to state 24
+
+
+state 48
+
+   21 Expression: Term LTE . Term
+
+    IDENTIFIER   shift, and go to state 3
+    READ         shift, and go to state 31
+    INTEGER_NUM  shift, and go to state 32
+    '('          shift, and go to state 33
+    '-'          shift, and go to state 34
+
+    Term     go to state 56
+    Primary  go to state 37
+    Name     go to state 38
+
+
+state 49
+
+   23 Term: Primary '+' . Term
+
+    IDENTIFIER   shift, and go to state 3
+    READ         shift, and go to state 31
+    INTEGER_NUM  shift, and go to state 32
+    '('          shift, and go to state 33
+    '-'          shift, and go to state 34
+
+    Term     go to state 57
+    Primary  go to state 37
+    Name     go to state 38
+
+
+state 50
+
+   17 Statement: WHILE Expression DO . Statement
+
+    IDENTIFIER  shift, and go to state 3
+    IF          shift, and go to state 18
+    WHILE       shift, and go to state 19
+    OUTPUT      shift, and go to state 20
+    BEGINX      shift, and go to state 13
+
+    $default  reduce using rule 19 (Statement)
+
+    Body       go to state 21
+    Statement  go to state 58
+    Name       go to state 24
+
+
+state 51
+
+   15 Statement: OUTPUT '(' Expression . ')'
+
+    ')'  shift, and go to state 59
+
+
+state 52
+
+   13 Body_1: Statement ';' Body_1 .
+
+    $default  reduce using rule 13 (Body_1)
+
+
+state 53
+
+   14 Statement: Name ASSIGNMENT Expression .
+
+    $default  reduce using rule 14 (Statement)
+
+
+state 54
+
+   28 Primary: '(' Expression ')' .
+
+    $default  reduce using rule 28 (Primary)
+
+
+state 55
+
+   16 Statement: IF Expression THEN Statement . ELSE Statement
+
+    ELSE  shift, and go to state 60
+
+
+state 56
+
+   21 Expression: Term LTE Term .
+
+    $default  reduce using rule 21 (Expression)
+
+
+state 57
+
+   23 Term: Primary '+' Term .
+
+    $default  reduce using rule 23 (Term)
+
+
+state 58
+
+   17 Statement: WHILE Expression DO Statement .
+
+    $default  reduce using rule 17 (Statement)
+
+
+state 59
+
+   15 Statement: OUTPUT '(' Expression ')' .
+
+    $default  reduce using rule 15 (Statement)
+
+
+state 60
+
+   16 Statement: IF Expression THEN Statement ELSE . Statement
+
+    IDENTIFIER  shift, and go to state 3
+    IF          shift, and go to state 18
+    WHILE       shift, and go to state 19
+    OUTPUT      shift, and go to state 20
+    BEGINX      shift, and go to state 13
+
+    $default  reduce using rule 19 (Statement)
+
+    Body       go to state 21
+    Statement  go to state 61
+    Name       go to state 24
+
+
+state 61
+
+   16 Statement: IF Expression THEN Statement ELSE Statement .
+
+    $default  reduce using rule 16 (Statement)

@@ -1,0 +1,391 @@
+
+                       COP 5641/4640
+
+              Programming Language Translators
+
+
+The Abstract Machine.
+
+     This  document describes the abstract computer that the
+Tiny compiler generates code for.  The abstract  machine  is
+designed  for  convenient  code  generation from Pascal-like
+languages.  It is modeled after (actually a subset  of)  the
+abstract  Dream machine, designed by Frank DeRemer.  It is a
+stack machine with no addressable registers.  There  are  no
+instructions such as "load register n with ...".
+
+     The machine also lacks many of the common complications
+that actual processors usually have: branch instructions are
+not  limited  to a certain range, but can instead reach any-
+where in the code.  All instructions are in the same format,
+not  two  or  three  different  formats,  as  in  some (IBM)
+machines.
+
+         The machine has three separate and  distinct  memo-
+ries.   When  a program is loaded into memory for execution,
+various base and limit registers are set  to  perform  range
+checking and to facilitate addressing and stack computations
+at run time.  The general layout of the machine is  depicted
+in figure 1.
+
+
+          REGISTER             ABREV.                CODE MEMORY
+                                                 +-------------------+
+                                                 |   ////////////    |
+         Code Base              CBR ---------->  +-------------------+
+                                                 |                   |
+                                                 |       CODE        |
+                                                 |                   |
+         Code Limit             CLR ---------->  +-------------------+
+                                                 |   ////////////    |
+                                                 +-------------------+
+
+                                                     DATA MEMORY
+                                                 +-------------------+
+                                                 |   ////////////    |
+         Global Base            GBR ---------->  +-------------------+
+                                                 |                   |
+                                                 |     Globals       |
+                                                 |                   |
+         Global Limit           GLR ---------->  +-------------------+
+                                                 |                   |
+                                                 | Prior             |
+                                                 |    Stack          |
+                                                 |      Frames:      |
+                                                 |                   |
+                                                 |  Locals + Temps   |
+                                                 |                   |
+                                                 +-------------------+
+         Local Base             LBR ---------->  +-------------------+
+                                                 |                   |
+                                                 |  Top Frame:       |
+                                                 |                   |
+                                                 |  Locals + Temps   |
+                                                 |                   |
+         Stack Top              STR ---------->  +-------------------+
+                                                 |                   |
+                                                 |  Available but    |
+                                                 |  currently unused |
+                                                 |                   |
+         Stack Limit            SLR ---------->  +-------------------+
+
+                                                     RETURN MEMORY
+                                                 +-------------------+
+                                                 |   ////////////    |
+         Return Base            RBR ---------->  +-------------------+
+                                                 |                   |
+                                                 |  RETURN           |
+                                                 |      ADDRESSES    |
+                                                 |                   |
+         Return Top             RTR ---------->  +-------------------+
+                                                 |   ////////////    |
+         Return Limit           RLR ---------->  +-------------------+
+
+                    Figure 1.  Registers and memory layout.
+
+
+     The  program cannot branch out of its code area because
+every instruction address is ascertained to  be  inclusively
+between  the  contents  of the code base register (CBR), and
+the contents of the code limit register  (CLR).    The  code
+memory  is  considered  to  be  read-only.  Neither code nor
+return addresses can  be  modified  or  copied  because  all
+fetches  and stores are restricted to be inclusively between
+the global base register (GBR) and the  stack  top  register
+(STR).   In  other words, dangerous mucking around with self
+modifying code is impossible.  An overal limit on the amount
+of  memory  available  is  set  by  the Stack Limit Register
+(SLR).  This is provided because a physical  realization  of
+the machine can only have a finite amount of memory (DeRemer
+still plans to have this machine put on  a  chip  sometime).
+For  now,  the  interpreter provided to play the role of the
+machine will have virtual memory, i.e. its SLR will have the
+value "infinity".
+
+     All   addressing  of  local  and  global  variables  in
+instructions is indicated relative to either the GBR or  the
+LBR.   Thus  "LLV i" (Load Local Value i) means "push on the
+stack the value in the i'th word of the local frame".   Here
+"i"  can be viewed as an offset from the LBR.  The push car-
+ried out by this operation will, of course, adjust the stack
+top  register (STR) accordingly.  Another example is "SGV i"
+(Store Global Value i), which means "pop the  top  value  of
+the stack and store it in the i'th global word".  Again, the
+STR is adjusted, and "i" is the offset from  the  GBR.   Yet
+another  example is "LIT i" (Literal i), which means "push i
+on the stack".
+
+     For the sake of simplicity, execution  of  the  program
+(once  loaded) is assumed to begin at the instruction desig-
+nated by the CBR.  Hence we assume that the loader loads the
+program  at  that  location.   Instructions have an optional
+label, the instruction mnemonic, and up to two operands.
+
+     For example, consider the following Tiny program:
+
+
+               program copy:
+               { Echo-prints the first ten numbers on the input }
+               var count: integer;
+               begin
+                  count := 1
+                     while (count <= 10) do
+                        begin
+                           output (read)
+                           count := count + 1
+                        end
+               end copy.
+
+
+The machine code is shown below.  The comments are not  pro-
+duced by the code generator, obviously.
+
+
+            LIT    0             # Storage for "count".
+            LIT    1             # Assign 1
+            SGV    0             #   to count.
+     L2     LGV    0             # Load "count"
+            LIT    10            # Load 10.
+            BOP    BLE           # Pop them, compare them. Push T/F result.
+            COND   L3     L4     # Pop stack. If true, go to L3, else L4.
+     L3     SOS    INPUT         # OS Service Call. Read, push on stack.
+            SOS    OUTPUT        # OS Service Call. Pop stack, print.
+            SOS    OUTPUTL       # Print a "line feed".
+            LGV    0             # Load "count".
+            LIT    1             # Load 1.
+            BOP    BPLUS         # Add them. Push result on stack.
+            SGV    0             # Pop stack, store value in "count".
+            GOTO   L2            # Go back to L2.
+     L4     HALT                 # Come here when done. Stop.
+
+
+         To  understand the execution in utter detail, which
+you must do soon to succeed  in  COP-5641/4640,  you  should
+read the following program, which defines the interpreter of
+these instructions, and  then  draw  some  pictures  of  the
+machine  as  the  execution  proceeds,  hand simulating each
+step.  Then you should write another source program or  two,
+hand  translate  them  into  machine code, and hand simulate
+their execution.
+
+     algorithm Machine_Interpreter
+     var I: Initial_Abstract_Instruction
+         loop Process_the_Instruction
+           I <- I + 1
+         pool
+
+     where Process_the_Instruction means         # Lf: Local Frame
+     case (Decode(I)) of                         # Gf: Global Frame
+
+        NOP     :                                # Do nothing.
+        HALT    : halt                           # Stop.
+        LIT  v  : Push v on Lf                   # Literal v.
+        LLV  i  : Push (Lf i) on Lf              # Load Local Value i.
+        LGV  i  : Push (Gf i) on Lf              # Load Global Value i.
+        SLV  i  : Lf i <- Pop Lf                 # Store Local Value i.
+        SGV  i  : Gf i <- Pop Lf                 # Store Global Value i.
+        LLA  i  : Push (Local_Address i) on Lf   # Load Local Address i.
+        LGA  i  : Push (Global_Address i) on Lf  # Load Global Address i.
+        UOP  i  : const X = Pop Lf               # Unary Operation i.
+                  Push (Unop(i,X)) on Lf
+        BOP  i  : const Xr,Xl = Pop Lf, Pop Lf   # Binary Operation i.
+                  Push (Binop(i,Xl,Xr)) on Lf
+        POP  n  : Pop n off Lf                   # Pop n values.
+        DUP     : Push (Top Lf ) on Lf           # DUPlicate top of stack.
+        SWAP    : const One,Two = Pop Lf, Pop Lf # SWAP top two values.
+                  Push One on Lf
+               Push Two on Lf
+        CALL n  : Push I on Return_Stack         # Save current instruction.
+                  I <- Pop Lf                    # Entry point.
+                  Open_Frame n                   # Bump LBR (see below).
+                  repeat                         # back to top of loop.
+        RTN  n  : const Start = Depth Lf - n     # Return top n values
+                  if Start > 0 then              #    to caller
+                     for j=0 to n-1 do           # Move values to bottom of
+                       LF j <- Lf (Start+j)      #    frame.
+                     Pop Start off Lf            # Get rid of the rest.
+                  fi
+                  I <- Pop Return_Stack          # Branch to return address.
+                  Close_Frame i                  # Un-bump (De-bump?) LBR
+                    where I is CALL i            #    (see below).
+        GOTO L  : I <- L                         # branch to L
+                  repeat                         # Back to top of loop.
+        COND L M: I <- if Pop Lf = True          # Pop Stack.  If value is:
+                         then L                  #   true,  go to L
+                         else M                  #   false, go to M.
+                       fi
+                  repeat                         # Back to top of loop.
+        CODE F  : Push F on Lf                   # Push entry point.
+        SOS i   : Operating_System i             # May change Lf.
+     endcase
+
+     where
+         Unop(i,X) means
+     case i of
+           UNOT   : not(X)
+           UNEG   : -(X)
+           USUCC  : X+1
+           UPRED  : X-1
+     endcase
+
+     and  Binop(i,Xl,Xr) means
+     case i of
+           BAND   : Xl and Xr
+           BOR    : Xl or  Xr
+           BPLUS  : Xl +   Xr
+           BMINUS : Xl -   Xr
+           BMULT  : Xl *   Xr
+           BDIV   : Xl div Xr
+           BMOD   : Xl mod Xr
+           BEQ    : Xl =   Xr
+           BNE    : Xl <>  Xr
+           BLE    : Xl <=  Xr
+           BGE    : Xl >=  Xr
+           BLT    : Xl <   Xr
+           BGT    : Xl >   Xr
+     endcase
+
+     and Operating_System i means
+     case i of
+           TRACEX : Trace_Execution <- not TraceExecution
+           DUMPMEM: Dump_Memory
+           INPUT  : readln(i)
+                    Push i on Lf
+           INPUTC : readln(ch)
+                    Push Ord(ch) on Lf
+           OUTPUT : write (Pop Lf)
+           OUTPUTC: write (Chr(Pop(Lf)))
+           OUTPUTL: writeln
+           EOF    : if eof(input)
+                      then Push True  on Lf
+                      else Push False on Lf
+     endcase
+
+     and Push v on Lf     means Inc_STR 1
+                                Data_Memory(STR) <- v
+     and Top Lf           means Data_Memory(STR)
+     and Pop Lf           means Data_Memoty(STR)
+                                Dec_STR 1
+     and Pop n off Lf     means Dec_STR n
+     and Depth Lf         means STR - LBR + 1
+     and Open_Frame i     means LBR <- LBR + i
+     and Close_Frame i    means LBR <- LBR - i
+     and Lf i             means Data_Memory (GBR + Local_Address i)
+     and Gf i             means Data_Memory (GBR + Global_Address i)
+     and Inc_STR i        means STR <- STR + i
+     and Dec_STR i        means STR <- STR - i
+     and Local_Address i  means LBR + i - GBR
+     and Global_Address i means i
+     and Push I on
+          Return_Stack    means RTR <- RTR + 1
+                                Return_Stack (RTR) <- I
+     and Pop
+          Return_Stack    means Return_Stack (RTR)
+                                RTR <- RTR - 1
+
+     end Machine_Interpreter
+
+
+     To aid in understanding the machine, here is  a  sample
+program,  written in "Medium", the language that will result
+after you expand Tiny:
+
+     program fact:
+     var m:integer;
+
+     function fact (n:integer):integer
+     begin
+        if n>0 then
+             fact := n * fact (n-1)
+        else fact := 1;
+        m := m + 1
+     end;
+
+     begin
+          m := 0;
+          output (  fact(read) , m)
+
+     end fact.
+
+     Here is the Abstract Machine  Code  for  the  factorial
+program.  You should hand-simulate its execution.
+
+            LIT    0
+            GOTO   L1
+     L2     LLV    1
+            LIT    0
+            BOP    BGT
+            COND   L3     L4
+     L3     LLV    1
+            LIT    0
+            LLV    1
+            LIT    1
+            BOP    BMINUS
+            CODE   L2
+            CALL   3
+            BOP    BMULT
+            SLV    0
+            GOTO   L5
+     L4     LIT    1
+            SLV    0
+            NOP
+     L5     LGV    0
+            LIT    1
+            BOP    BPLUS
+            SGV    0
+            LLV    0
+            RTN    1
+     L1     LIT    0
+            SGV    0
+            LIT    0
+            SOS    INPUT
+            CODE   L2
+            CALL   1
+            SOS    OUTPUT
+            LGV    0
+            SOS    OUTPUT
+            SOS    OUTPUTL
+            HALT
+
+            SOS    INPUT
+            CODE   L2
+            CALL   1
+            SOS    OUTPUT
+            LGV    0
+            SOS    OUTPUT
+            SOS    OUTPUTL
+            HALT
+
+            SOS    INPUT
+            CODE   L2
+            CALL   1
+            SOS    OUTPUT
+            LGV    0
+            SOS    OUTPUT
+            SOS    OUTPUTL
+            HALT
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

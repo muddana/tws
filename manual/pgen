@@ -1,0 +1,64 @@
+
+
+
+
+
+
+Name
+
+
+     pgen - compile parser specification
+
+Synopsis
+
+
+     pgen < parser_specification > /dev/null 2> /dev/null || exit 1
+     pgen < parser_specification > || exit 1
+
+
+Description
+
+     pgen  takes  the given parser_specification, and builds
+     the corresponding YACC  file  code.y.   Typically  (see
+     parser/Makefile)  code.y is run through yacc, to gener-
+     ate 'parse'.  The first synopsis line above is used  if
+     no  debugging  information  is  desired.   If debugging
+     information is desired, use the second synopsis line.
+
+Options
+
+     NONE
+
+See Also
+
+
+Bugs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

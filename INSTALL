@@ -1,0 +1,45 @@
+Instructions on installing and compiling the TWS.
+
+1.  Download the TWS into the directory of your choice.
+    The link is on the Announcements page.
+
+2.  Execute:
+
+	  %gunzip tws.tar.gz
+	  %tar xvf tws.tar
+	  %cd tws
+
+3.  Read the README file.  If you're working on a Sun Solaris 
+    machine, no changes are needed.  If you are working on a Linux
+    machine, follow the instructions in the README file.
+
+4.  Compile the entire TWS system, including the Tiny compiler:
+
+	 %make
+
+5.  In the future, to re-compile the Tiny compiler,  run 'make'
+     while in the 'tiny' directory.
+    
+6. To test the Tiny Compiler/Interpreter:
+
+	 %./tc tests/p1   +   Seven test programs.  It is strongly
+	 %./tc tests/p2   |   suggested you take a look at %these test
+	 %./tc tests/p3   |   programs.  Your first assignment 
+	 %./tc tests/p4   |   (Project 0) consists of writing an 
+	 %./tc tests/p5   |   eighth Tiny program, to become %familiar
+	 %./tc tests/p6   |   with the language and the %compiler.
+	 %./tc tests/p7   +   
+
+If your Linux distro includes bison rather than yacc:
+
+     1)  Go into /tws/pgen, and open Makefile in a text editor.
+     2)  Count down to line 28, and you will see "yacc -dv Parser.y". Change
+         this to read "bison -dv Parser.y" instead.
+     3)  Immediately after the "bison -dv Parser.y" line, insert these
+         lines as part of the same rule:
+
+         "cp Parser.tab.c y.tab.c"
+         "cp Parser.tab.h y.tab.h"
+
+     4)  Save the file, and then re-compile the TWS system.
+

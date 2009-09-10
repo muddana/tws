@@ -1,0 +1,242 @@
+
+                       COP-5641/4640
+
+             Programming Language Translators I
+
+
+1.The Code Generator
+
+     The  code  generator operates in a manner quite similar
+to the constrainer: it performs one recursive  walk  of  the
+abstract syntax tree, generating code along the way.
+
+1.1 Support Modules
+
+     We have a code module, to store the instructions in the
+code, and to create labels.  Below is an  abstract  descrip-
+tion.
+
+
+     ---------------------   CODE & LABEL MODULE -----------------------
+
+          const NoLabel = UndefinedString;
+
+          var   FrameSize: integer;
+
+                Labels, Instr, Operand1, Operand2: Table;
+
+          { It is quite convenient to use "Table"s to store instructions }
+
+          procedure InitializeCode;
+          - Initializes the data structures, if necessary.
+
+          function MakeLabel: String;
+          -  Makes a new label, which is a string.
+
+          procedure CodeGen0 (Instruction: String; L:Label);
+          - Adds an instruction, with no operands, to the code.
+            The instruction is called Instr, and is labeled with L.
+
+          procedure CodeGen1 (Instr,Op1: String; L:Label);
+          - Adds an instruction, with one operand, to the code.
+            The instruction is called Instr, and is labeled with L.
+            The operand is called Op1.
+
+          procedure CodeGen2 (Instr,Op1,Op2: String; L:Label);
+          - Adds an instruction, with two operands, to the code.
+            The instruction is called Instr, and is labeled with L.
+            The operands are called Op1 and Op2.
+
+          procedure IncrementFrameSize;
+          - Increments the current frame size.
+
+          procedure DecrementFrameSize;
+          - Decrements the current frame size.
+
+          procedure OpenFrame;
+          - Opens a frame, by pushing the current frame size on some
+            stack, and re-setting FrameSize to zero.
+            Note: Since there are no functions or procedures in Tiny, you
+                  may defer implementing this until... well, whenever.
+
+          procedure CloseFrame;
+          - Closes a frame, by restoring the current frame size to what
+            it was before the last OpenFrame.  This is done by popping
+            the stack used by OpenFrame, and re-setting FrameSize to
+            the value popped.
+            Note: You may defer implementing this one, too.
+
+          function MakeAddress:integer;
+          - Makes an address out of the current frame size.  An easy
+            choice (for now) is to have the address be FrameSize itself.
+            Details in class.
+
+          procedure DumpCode (var File: text);
+          - Dumps the code to File.
+
+     ------------------   END OF CODE & LABEL MODULE -------------------
+
+1.2 The Code Generator
+
+     This module reads in the abstract syntax tree, walks it
+recursively, and generates code, using procedures  from  the
+code module.  The central ideas are as follows:
+
+1)   Declaration nodes are processed before the main body of
+     the program.  In each declaration node,  each  <identi-
+     fier>  node  is RE-DECORATED with the result of MakeAd-
+     dress.  Thus the decoration of  these  nodes  will  not
+     point to their TYPE, but instead the decoration will be
+     an offset from the GBR, FOR THAT  PARTICULAR  VARIABLE.
+     We  must  also reserve locations for all these declared
+     variables at the bottom of the stack, by  generating  a
+     "LIT  0"  instruction  for  each variable.  Finally, we
+     must call IncrementFrameSize for  each  variable  being
+     declared,  so  that  the next variable that is declared
+     gets a different (in fact the next) slot in the  global
+     frame allocated to it.
+
+2)   In  the  body of the program, a reference to a variable
+     (an <identifier> node) could occur on the left side  of
+     assignment, or on the right side.  The former implies a
+     store operation, the latter implies a  load  operation.
+     From  the  constrainer, we know that each such <identi-
+     fier> node is decorated with a pointer to the  declara-
+     tion  of  that variable.  That declaration has now been
+     re-decorated (as described in 1)  above),  with  essen-
+     tially the "address" of the variable, in the form of an
+     offset from the GBR.  When processing such an  <identi-
+     fier> node, we must generate either a "LGV i" or a "SGV
+     i" instruction, depending on where the  node  has  been
+     encountered  (left  or  right  of  an assignment).  THE
+     ACTUAL  VALUE  of  "i"   SHOULD   BE   SIMPLY   Decora-
+     tion(Decoration(T)),  where T is the <identifier> node.
+
+3)   Aside from this, the rest of the activity of code  gen-
+     eration  is purely a matter of common sense, a thorough
+     understanding of the machine you  are  generating  code
+     for, and persistence.
+
+
+To  get  you  started, a skeleton form of the code generator
+module is shown below.
+
+
+     ---------------------   CODE GENERATOR  MODULE -----------------------
+
+      type Mode = (LeftMode, RightMode);  { For store and load, respectively}
+
+      procedure InitializeCodeGenerator;
+         - Sets up names of nodes to be expected in the tree, and names of
+           instructions and operands.  Initializes FrameSize to zero.
+
+     procedure Reference (T:TreeNode;M:Mode;L:Label);
+        - Generates an "L" labeled "LGV i" or a "SGV i" instruction,
+          depending on mode M.  As discussed above,  "i" should be
+          Decoration(Decoration(T)).
+
+     function ProcessNode (T:TreeNode;CurrLabel:Label): Label;
+        { Generates code for node T.  The first instruction to be generated
+          by this procedure (or any procedure/function it calls) is to be
+          labeled with CurrLabel.  Returns the label to placed ON THE FIRST
+          INSTRUCTION THAT IS GENERATED AFTER THIS CALL TO ProcessNode.
+        }
+
+         procedure Expression (T:TreeNode; CurrLabel:Label);
+            { Generates code for node T.  The first instruction to be
+           generated by this procedure (or any procedure/function it
+           calls) is to be labeled with CurrLabel.
+            }
+         begin
+         case NodeName (T) of
+             NotNode       : begin
+                              Expression ( Son (T,1) , CurrLabel) ;
+                        CodeGen1 (UOPOP, UNOT, NoLabel);
+                             end;
+             PlusNode      : begin
+                        Expression ( Son(T,1) , CurrLabel);
+                        Expression ( Son(T,2) , NoLabel);
+                        CodeGen1 (BOPOP, BPLUS, NoLabel);
+                             end;
+             EQNode        :
+             MinusNode     :
+             ReadNode      :    { YOU FILL THESE IN ! }
+             IntegerNode   :
+             IdentifierNode: Reference (T,RightMode,CurrLabel);
+
+         end { case }
+         end { Expression }
+
+     begin   { ProcessNode }         {  YOU FILL IN THE BLANK CASES !! }
+     case NodeName (T) of
+        ProgramNode    : begin
+                          for Kid:=3 to Nkids-1 do  { Don't process types }
+                    CurrLabel := ProcessNode (Son(T,Kid), CurrLabel);
+                    ProcessNode := CurrLabel
+                         end;
+
+        DclnsNode      :
+
+                             -6-
+
+
+        DclnNode       : begin
+                     for Kid := 1 to Nkids - 1 do
+                     begin
+                              CodeGen1 (LITOP,0,NoLabel)
+                        Decorate ( Son(T,Kid), MakeAddress);
+                              IncrementFrameSize;
+                           end;
+                     ProcessNode := NoLabel
+                         end;
+        BlockNode      :
+        AssignNode     : begin
+                     Expression (Son(T,2), CurrLabel);
+                     Reference (Son(T,1), LeftMode, NoLabel);
+                           ProcessNode := NoLabel
+                   end;
+        OutputNode     :
+        IfNode         :
+        WhileNode      :
+
+     end  { case }
+     end  { ProcessNode }
+
+     procedure CodeGenerate;
+     begin
+        ReadTree (TreeFile);
+        HaltLabel := ProcessNode ( Root , NoLabel);
+        CodeGen0 (HALTOP, HaltLabel);
+        DumpCode (CodeFile);
+     end;
+
+     -----------------   END OF CODE GENERATOR  MODULE -----------------
+
+     Once you get the picture of what's going on, it  should
+be  obvious  that  making simple extensions to Tiny is quite
+easy.  Adding more operators, such as multiplication,  divi-
+sion,   mod,  and  all  the  other  comparison  operators  (
+<,>,<>,etc.) is quite easy.   At that point, Tiny will be  a
+workable  language, and working on a compiler, believe it or
+not, will actually be fun.  In the anxiousness to  test  the
+compiler,  one  introduces semantic errors in test programs.
+It is a pleasant surprise to discover that the  COMPILER  is
+right, and that our test program does not do what we thought
+it did.
+
+     Finally, involved issues such as adding procedures  and
+functions  to  Tiny,  adding  records, arrays (pointers ??),
+will probably be addressed later  on  in  the  course.  Stay
+tuned ...
+
+
+
+
+
+
+
+file
+
+
+
+

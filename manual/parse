@@ -1,0 +1,58 @@
+
+
+
+Name
+
+     parse - parse input according to specifications
+
+Synopsis
+
+     parse
+
+
+Description
+
+     parse  takes  the  compiled  scanner  and parser, loads
+     them, and then parses the input accordingly.  Input can
+     be given from a file using the redirect < option.  Out-
+     put is  a  summary  of  what  has  happened,  including
+     errors.
+
+Options
+
+     NONE.   IF  you  wish debugging information, re-compile
+     the   parser   using    the    -debug    option    (see
+     parser/Makefile)
+
+See Also
+
+Bugs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,57 @@
+Dear COP 4620 Student:
+
+    Welcome to fifteen weeks of torture !!  We will try to make
+    sure this course is comparable to taking a drink of water
+    from a firehose.  So, brace yourselves for lots of material.
+
+Here are some instructions on getting started with the tws system:
+
+1.  Go to your home directory.
+2.  Execute:
+
+	  %mkdir tiny
+	  %cd tiny
+
+3.  %cp -r ~manuel/systems/tws/tiny.src/* .      <--- Don't forget the dot!
+
+4.  Edit the first line in Makefile: MYOBJS should describe
+    the path to your tiny directory.  Likewise, edit the third line
+    in file "tc" and change MYOBJS.
+
+5.  To compile the Tiny compiler (while in your tiny directory):
+
+	 %make
+
+This will cause various commands to be performed:
+
+       {compilation of your Constrainer.c}
+       {compilation of your CodeGenerator.c}
+       {compilation of lex.tiny into lex.yy.c}
+       {compilation of lex.yy.c into lex.yy.o}
+       {compilation parse.tiny into code.y}
+       {compilation of code.y into y.tab.c}
+       {comnpilation of y.tab.c into y.tab.o}
+       {loading of y.tab.o and lex.yy.o into parse}
+
+To test the Tiny Compiler/Interpreter:
+
+	 %tc tests/p1   +   Seven test programs.  It is strongly
+	 %tc tests/p2   |   suggested you take a look at these test
+	 %tc tests/p3   |   programs.  Your first assignment (see 8,
+	 %tc tests/p4   |   below) consists of writing an eighth Tiny
+	 %tc tests/p5   |   program, to become familiar with the
+	 %tc tests/p6   |   language and the compiler.
+	 %tc tests/p7   +   
+
+To test the interpreter alone:
+
+	 %cd tests
+	 %~manuel/systems/tws/bin/interpret
+
+8. TO GET INSTRUCTIONS ON YOUR FIRST ASSIGNMENT, see the file 
+
+   %~manuel/systems/tws/manual/project_0   
+
+---------------
+GOOD LUCK !!  
+The Management.

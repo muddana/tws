@@ -1,0 +1,4 @@
+program x:
+begin
+   output(3)
+end x.
