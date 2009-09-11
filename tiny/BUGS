@@ -1,0 +1,11 @@
+1 .
+program copy:
+
+   { Echo-prints the first ten numbers on the input }
+
+begin
+    output (  8 / 2 * 2 );
+end copy.
+
+gives 2 as output instead of 8, need to change the grammar
+

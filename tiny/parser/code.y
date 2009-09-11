@@ -46,6 +46,7 @@ typedef struct {
 %token <info>  LT
 %token <info>  ASSIGNMENT
 %token <info>  PROGRAM
+%type <dlist> MulDiv
 %type <dlist> Tiny
 %type <dlist> Statement_1
 %type <dlist> Body_1
@@ -60,6 +61,7 @@ typedef struct {
 %type <dlist> Expression
 %type <dlist> Dclns
 %type <dlist> Primary
+%type <dlist> OrModAnd
 %%
 
 Tiny     : PROGRAM  Name     ':'      Dclns    Body     Name     '.'      
@@ -891,7 +893,7 @@ Expression : Term
              }
          ;
 
-Term     : Primary  
+Term     : OrModAnd 
              {
 		DLIST r;
 
@@ -903,7 +905,7 @@ Term     : Primary
 		$$ = r;
 
              }
-         | Primary  '+'      Term     
+         | Term     '+'      OrModAnd 
              {
 		DLIST r;
 		T_NODE *t;
@@ -929,7 +931,7 @@ Term     : Primary
 		$$ = r;
 
              }
-         | Primary  '-'      Term     
+         | Term     '-'      OrModAnd 
              {
 		DLIST r;
 		T_NODE *t;
@@ -955,7 +957,21 @@ Term     : Primary
 		$$ = r;
 
              }
-         | Primary  OR       Term     
+         ;
+
+OrModAnd : MulDiv   
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		$$ = r;
+
+             }
+         | OrModAnd OR       MulDiv   
              {
 		DLIST r;
 		T_NODE *t;
@@ -994,7 +1010,7 @@ Term     : Primary
 		$$ = r;
 
              }
-         | Primary  MOD      Term     
+         | OrModAnd MOD      MulDiv   
              {
 		DLIST r;
 		T_NODE *t;
@@ -1033,7 +1049,7 @@ Term     : Primary
 		$$ = r;
 
              }
-         | Primary  AND      Term     
+         | OrModAnd AND      MulDiv   
              {
 		DLIST r;
 		T_NODE *t;
@@ -1072,7 +1088,21 @@ Term     : Primary
 		$$ = r;
 
              }
-         | Primary  '*'      Term     
+         ;
+
+MulDiv   : Primary  
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		$$ = r;
+
+             }
+         | MulDiv   '*'      Primary  
              {
 		DLIST r;
 		T_NODE *t;
@@ -1098,7 +1128,7 @@ Term     : Primary
 		$$ = r;
 
              }
-         | Primary  '/'      Term     
+         | MulDiv   '/'      Primary  
              {
 		DLIST r;
 		T_NODE *t;

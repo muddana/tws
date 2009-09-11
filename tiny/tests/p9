@@ -6,9 +6,6 @@ var count,x,y: integer;
      
 begin
     count := 1;   # initialization
-    while not (false) do
-       begin
-	  output (read);
-          count := count + 1;
-       end
+    x := 1;
+    output ( 3 - 8 * 4 / 2  + 2)
 end copy.
