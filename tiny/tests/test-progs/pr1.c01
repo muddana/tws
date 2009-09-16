@@ -1,0 +1,17 @@
+program pr1c01:
+
+{ Prints
+         1 2 3 4 5
+         7
+}
+var a,b,c,d,e:integer;
+begin
+   a:=1;
+   b:=2;
+   c:=3;
+   d:=4;
+   e:=5;
+   output(a,b,c,d,e);
+   a:=a*b-c/d-e;
+   output(a);
+end pr1c01.

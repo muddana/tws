@@ -1,0 +1,24 @@
+program pr3c39:
+
+{ The program will input an integer x. If x is in 1..12
+  it will print constants k and m otherwise it will print
+  the letter "w".
+ 
+  It will loop until the input for x is zero.       }
+
+const k = 12;
+      m = k;
+      letter = 'w';
+var x:integer;
+begin
+
+   loop
+     read(x);
+     if x = 0 then exit;
+
+     case x of
+        1..k : output("k is ",k," m is ",m);
+        otherwise output("letter = ",letter);
+     end;
+   pool;
+end pr3c39.

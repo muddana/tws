@@ -1,0 +1,11 @@
+program pr3c43:
+#
+#	outputs 1 2 3 4 5 on separate lines
+#
+type day = (sunday, monday, tuesday,
+            wednesday, thursday, friday, saturday);
+var
+	i : day;
+begin
+	for i := monday to friday do output(ord(i)-ord(sunday));
+end pr3c43.

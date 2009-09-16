@@ -1,0 +1,19 @@
+program pr1e06:
+
+    #{ this program tests the eof built in function }
+
+var
+    count, i : integer;    
+
+begin
+
+    count := 0;
+    while (eof <> 1) do     # error: incompatible types
+    begin
+         i := read;
+         count := count + 1;
+         output(i)
+    end;
+    output(count)
+
+end pr1e06.

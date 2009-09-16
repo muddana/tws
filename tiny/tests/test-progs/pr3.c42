@@ -1,0 +1,12 @@
+program pr3c42:
+#
+#	outputs 3 2 1 0 on separate lines
+#
+type number = (zero, one, two, three);
+
+begin
+	output(ord(three));
+	output(ord(two));
+	output(ord(one));
+	output(ord(zero))
+end pr3c42.

@@ -1,0 +1,17 @@
+program pr3e06:
+{
+  errors:
+    chr(A)                 : argument of chr must be of type integer
+    sum := sum + five + A  : incompatible types -- can't add chars to integers
+}
+const
+  five = 5;
+  A = 'A';
+var sum:integer;
+
+begin
+  output (chr(A));
+  sum := five + ord(A);
+  sum := sum + five + A;
+end pr3e06.
+

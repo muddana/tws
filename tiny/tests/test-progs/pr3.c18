@@ -1,0 +1,28 @@
+program pr3c18:
+#
+#	c10: outputs
+#		1 0
+#		1 1
+#		1 2
+#		2 0
+#		2 1
+#		2 2
+#
+const
+	Cone   = 1;
+	Ctwo   = 2;
+	Cthree = 3;
+        one    = '0';
+	two    = '1';
+	three  = '2';
+
+var
+	i : integer;
+	j : char;
+
+begin
+	for i := Cone to Ctwo do
+		for j := one to three do
+			output(i,ord(j)-ord('0'));
+
+end pr3c18.

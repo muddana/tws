@@ -1,0 +1,44 @@
+program pr3c33:
+{
+
+        INPUT  ->  a letter
+
+	OUTPUT ->  the next 10 letters folowing the input letter.
+
+		   YAHOO! ... aw PHOOEY!, I am through.
+
+
+
+ 	EXAMPLE:
+
+		INPUT ->   b
+               
+		OUPUT ->   Letter => b
+			   Letter => c
+			   Letter => d
+	  		   Letter => e
+			   Letter => f
+			   Letter => g
+			   Letter => h
+			   Letter => i
+			   Letter => j
+			   Letter => k
+		 	   YAHOO! ... aw PHOOEY!, I am through.			   	
+
+}
+	
+var
+	a, b: char;
+	x: integer;
+begin
+	read (a);
+	b:= a;
+        for x := 1 to 10 do
+		b:= succ(b);
+	while a<> b do
+		begin
+			output("Letter => ",a);
+			a:= pred(succ(succ(a)));
+		end;
+	output("YAHOO! ... aw PHOOEY!, I am through.");
+end pr3c33.

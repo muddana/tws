@@ -1,0 +1,14 @@
+program pr1c13:
+
+{ this program tests the exponential operator }
+
+{  Prints
+     -1
+}
+
+var a : integer;
+
+begin
+   a := -1**2;
+   output (a);
+end pr1c13.

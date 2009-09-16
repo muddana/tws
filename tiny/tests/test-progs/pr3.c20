@@ -1,0 +1,22 @@
+program pr3c20:
+  const
+    start = 65;
+    stop  = 70;
+{******* Sample Test Program for String Output ***********}
+{                       output                            
+Ascii Table from 'A' to 'F'
+ascii code and character:         65 A
+ascii code and character:         66 B
+ascii code and character:         67 C
+ascii code and character:         68 D
+ascii code and character:         69 E
+ascii code and character:         70 F
+}
+
+  var 
+    lp : integer;
+  begin
+    output("Ascii Table from ",chr(start)," to ",chr(stop));
+    for lp := start to stop do
+      output("ascii code and character: ",lp,' ',chr(lp));
+end pr3c20.

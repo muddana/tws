@@ -1,0 +1,34 @@
+program pr3c36:
+
+{ The output of the program should be as follows:
+
+  k = 1
+  l = 1
+  c
+  b
+  a
+
+}
+
+const
+   k = 1;
+   j = 'c';
+   l = k;
+
+var
+  i :char;
+
+begin
+
+  if (k = 3) then
+    output("This is incorrect")
+  else
+    output("k = ",k);
+
+
+  output("l = ",l);
+
+  for i := j downto 'a' do
+    output(i);
+
+end pr3c36.

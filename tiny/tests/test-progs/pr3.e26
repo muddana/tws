@@ -1,0 +1,14 @@
+program pr3e26:
+#
+#	error: type of loop control variable doesn't match the
+#	            type of start expression
+
+#                   output of enumerated type.
+#
+#
+type number = (one,two,three);
+var
+	i : number;
+begin
+	for i := 1 to three do output(i);
+end pr3e26.

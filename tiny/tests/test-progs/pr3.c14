@@ -1,0 +1,19 @@
+program pr3c14:
+#
+#	outputs 0 1 2 3 4 on separate lines
+#
+const a = 0;
+      b = 1;
+      c = 2;
+      d = 3;
+      e = 4;
+      f = 5;
+var
+	i : integer;
+begin
+	i := a;
+	repeat
+		output(ord(i));
+		i := succ(i);
+	until i > e;
+end pr3c14.

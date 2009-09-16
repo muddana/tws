@@ -1,0 +1,43 @@
+program pr1e09:
+
+    #{ this program tests operator precedence }
+
+var
+    num1, num2, num3, int : integer;
+    b1, b2, b3, bool : boolean;
+
+begin
+    
+    num1 := 5;
+    num2 := 2;
+    num3 := 20;
+    b1 := false;
+    b2 := true;
+    b3 := true;
+    b4 := false;    { b4 not declared, type mismatch }
+
+    int := not (num1 + num2 * num3); #{error: not requires boolean}
+                                     # assignment type mismatch 
+    output(int);
+    int := num1 * num2 + num3;
+    output(int);
+    int := num3 / num1 + num2;
+    output(int);
+    int := num3 mod 6 - num1;
+    output(int);
+
+    bool := b1 and b3 or b4;   {b4 not declared; type mismatch }
+    if int then output(one)    {if statement needs boolean expression;}
+                               { one not declared }
+    else output(zero);         { zero undeclared }
+    bool := b1 or b2 and b4;   {b4 not declared; type mismatch }
+    if bool then output(one)   { identifier one undeclared }
+    else output(zero);         { identifier zero undeclared }
+    bool := not b1 or b2;
+    if bool then output(one)   { identifier one undeclared }
+    else output(zero);         { identifier zero undeclared }
+    bool := not (b1 or b2);
+    if bool then output(one)   { identifier one undeclared }
+    else output(zero);         { identifier zero undeclared }
+    
+end pr1e09.

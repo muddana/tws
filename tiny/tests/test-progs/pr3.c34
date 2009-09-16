@@ -1,0 +1,35 @@
+program pr3c34:
+
+{ Tests character input, case with character tag values and 
+  string literal output 
+
+  Possible input/output combinations:
+
+  t
+  t
+  ch = z
+
+  t
+  c
+  ch = z
+
+  a
+  g
+  x = lowercase a
+}
+
+const ch = 'z';
+      
+var x,y: char;
+
+begin
+
+  read (x,y);
+  case x of
+  ch: output ("x = y");
+  'a': output ("x = lowercase a");
+  otherwise
+    output ("ch = ",ch)
+  end
+
+end pr3c34.

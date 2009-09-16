@@ -1,0 +1,21 @@
+program pr3e05:
+
+const x = 'a';
+      y = 'b';
+      z = 'c';
+
+var i:integer;
+    c:char;
+
+begin
+   i:= ord(c);
+   c:= x;
+   case c of
+      'a' : output("value is ",(c));
+      'b' : output("value is ",(c));
+       i  : output("value is ",(c)); 
+       {Two errors:
+          -- case label type does not match case expression type
+	  -- case label must be const or lit }
+   end;
+end pr3e05.

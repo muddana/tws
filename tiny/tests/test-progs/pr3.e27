@@ -1,0 +1,19 @@
+program pr3e27:
+#
+#	error: can't swap with a literal.
+#              can't output an ennumerated type.
+#
+const
+	four = 4;
+
+type number = (one,two,three);
+
+var
+	i : integer;
+	j : number;
+begin
+	i := 2;
+	j := one;
+	i :=: one;
+	output(i,j);
+end pr3e27.

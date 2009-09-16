@@ -1,0 +1,12 @@
+program pr3e24:
+#
+#	error: can't compare number and weekday.
+#
+type
+	number = (one, two, three);
+	weekday = (monday, tuesday, wednesday, thursday, friday);
+begin
+	if pred(three) = succ(three) then output(3);
+	if pred(tuesday) > succ(two) then output(2);
+	if pred(two) = pred(pred(succ(succ(one)))) then output(1);
+end pr3e24.

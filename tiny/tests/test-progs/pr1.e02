@@ -1,0 +1,7 @@
+program pr1e02:
+
+{ Errors:  variables not declared }
+
+begin
+a:=x+-t--+y
+end pr1e02.

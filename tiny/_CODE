@@ -1,19 +1,18 @@
        LIT    0             
        LIT    0             
        LIT    0             
-       LIT    1             
        SGV    0             
-       LIT    1             
+L1     SOS    EOF           
+       UOP    UNOT          
+       COND   L2     L3     
+L2     SOS    INPUT         
        SGV    1             
-       LIT    3             
-       LIT    8             
-       LIT    4             
-       BOP    BMULT         
-       LIT    2             
-       BOP    BDIV          
-       BOP    BMINUS        
-       LIT    2             
+       LGV    0             
+       LIT    1             
        BOP    BPLUS         
+       SGV    0             
+       GOTO   L1            
+L3     LGV    0             
        SOS    OUTPUT        
        SOS    OUTPUTL       
        HALT                 

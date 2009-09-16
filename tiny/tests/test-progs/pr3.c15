@@ -1,0 +1,19 @@
+program pr3c15:
+#
+#	outputs 5 4 3 2 1 on separate lines
+#
+const a = 0;
+      b = 1;
+      c = 2;
+      d = 3;
+      e = 4;
+      f = 5;
+var
+	i : integer;
+begin
+	i := f;
+	repeat
+		output(ord(i));
+		i := pred(i);
+	until i = a;
+end pr3c15.

@@ -1,0 +1,11 @@
+program pr3c41:
+#
+#	outputs 3 2 1 on separate lines
+#
+type
+	number = (one, two, three);
+begin
+	if pred(three) = succ(one) then output('3');
+	if pred(pred(three)) = pred(succ(one)) then output('2');
+	if pred(two) = pred(pred(succ(succ(one)))) then output('1');
+end pr3c41.

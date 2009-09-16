@@ -1,0 +1,13 @@
+program pr3c10:
+#
+#	outputs 3 2 1 on separate lines
+#
+const
+	one  = 0;
+	two  = 1;
+	three= 2;
+begin
+	if pred(three) = succ(one) then output('3');
+	if pred(pred(three)) = pred(succ(one)) then output('2');
+	if pred(two) = pred(pred(succ(succ(one)))) then output('1');
+end pr3c10.

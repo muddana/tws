@@ -1,0 +1,27 @@
+program pr3c44:
+#
+#	outputs 1 2 3 on separate lines
+#
+type color = (red, white, blue, yellow, green);
+var
+	i : color;
+begin
+	i := red;
+	case i of
+	red..white  : output(1);
+	blue..yellow: output(2);
+	green       : output(3);
+	end;
+	i := succ(succ(succ(i)));
+	case i of
+	red..white  : output(1);
+	blue..yellow: output(2);
+	green       : output(3);
+	end;
+	i := succ(i);    {Use i := pred(succ(succ(i))); to test wrap}
+	case i of
+	red..white  : output(1);
+	blue..yellow: output(2);
+	green       : output(3);
+	end;
+end pr3c44.

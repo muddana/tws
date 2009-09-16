@@ -1,0 +1,15 @@
+program pr3e17:
+{
+	All lines are fine except line  x:= ''';
+	The parser should stop at this line.
+
+}
+var
+   x: char;
+begin
+   x:= 'a';       
+   output("This { here } isn''t a comment","''''",x,"!!!");
+   x:= ''';        { error-- the character is not enclosed in quotes }
+   x:= '"';
+   output("Mark and Sunjay's problem program!")
+end pr3e17.

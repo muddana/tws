@@ -1,0 +1,26 @@
+program pr2e04:
+#
+#	 error:	case variable and label mismatch
+#
+var
+	i : integer;
+begin
+	i := 1;
+	case i of
+	true: output(1);
+	2: output(2);
+	3: output(3);
+	end;
+	i := 2;
+	case i of
+	1: output(1);
+	2: output(2);
+	3: output(3);
+	end;
+	i := 3;
+	case i of
+	1: output(1);
+	2: output(2);
+	3: output(3);
+	end;
+end pr2e04.

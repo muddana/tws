@@ -1,0 +1,30 @@
+program pr2c01:
+#
+#  The output should be:
+#
+#         5     6
+#         6     5
+#         1     1
+#         5
+#         2     4
+#         10
+#         3     9
+#         15
+#         4    16
+#         20
+#
+var i,j,k: integer;
+begin
+   i:=5;
+   j:=6;
+   k:=12;
+   output(i,j);
+   i :=: j;
+   output(i,j);
+   for i := 1 to 4 do
+      begin
+	 output(i,i*i);
+	 k:=i*j;
+	 output(k);
+      end;
+end pr2c01.

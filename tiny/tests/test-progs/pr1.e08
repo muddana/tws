@@ -1,0 +1,29 @@
+program pr1e08:
+
+    #{ this program tests the arithmetic operators }
+var
+    two, result : integer;
+    b1, b2 : boolean;
+
+begin
+
+    b1 := false;
+    b2 := true;
+    two := 2;
+
+    result := 1000;
+    output(result);
+    result := result / b1;
+#{error: wrong type for operation}
+    output(result);
+    result := b2 * two;
+#{error: wrong type for operation}
+    output(result);
+    result := b1 - 50;
+#{error: wrong type for operation}
+    output(result);
+    result := result mod b2;
+#{error: wrong type for operation}
+    output(result);
+    
+end pr1e08.

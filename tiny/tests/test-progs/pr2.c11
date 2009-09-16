@@ -1,0 +1,11 @@
+program pr2c11:
+#
+#	 outputs 1 2 on separate lines
+#
+var
+	i : integer;
+begin
+	i := 1;
+	if i > 0 then output(i);
+	if i = 0 then output(100) else output(i+1);
+end pr2c11.

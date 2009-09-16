@@ -1,0 +1,29 @@
+program pr2c16:
+
+{ overlapping case labels }
+{ backwards range on case statement }
+
+{ output should be 
+
+   0
+   1
+}
+
+var a, b: integer;
+
+begin
+	a := 4;
+	case a of
+	2..4: output(0);
+	3..5: output(1);
+	otherwise output(2)
+	end;
+
+
+	a := 4;
+	case a of
+	4..2: output(0);
+	3..5: output(1);
+	otherwise output(2)
+	end;
+end pr2c16.

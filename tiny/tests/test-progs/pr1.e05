@@ -1,0 +1,36 @@
+program pr1e05:
+
+{# This program tests to see if booleans are typechecked.
+  Constrainer errors should be produced. }
+
+var
+    a, b, c, d, e, f : boolean;
+    tvalue, fvalue : integer;
+
+begin
+
+    tvalue := 1;
+    fvalue := 0;
+    a := true;
+    b := 0;                      #{error: wrong type }
+    c := not true;
+    d := not false;
+    e := truevalue and b;        #{error: undeclared id and wrong type }
+    f := a or 1;                 #{error: wrong type }
+
+
+    if a then output(tvalue)
+    else output(fvalue);
+    if b then output(tvalue)
+    else output(fvalue);
+    if c then output(tvalue)
+    else output(fvalue);
+    if d then output(tvalue)
+    else output(fvalue);
+    if e then output(tvalue)
+    else output(fvalue);
+    if f then output(tvalue)
+    else output(fvalue);
+    
+
+end pr1e05.

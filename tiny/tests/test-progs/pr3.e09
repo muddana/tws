@@ -1,0 +1,37 @@
+program pr3e09:
+
+{ Test for type compatibility in expressions, even when they contain the
+  intrinsic functions 'succ' and 'pred'.
+
+  Login name:  mf
+  Owner/Student:  Michael Fitzgerald
+}
+
+const
+  a = 1;
+  c = '1';
+  e = false;
+
+var
+  b: boolean;
+  d: integer;
+  f: char;
+
+begin
+  b := true;
+  d := -9;
+  f := 'a';
+  output (succ(a)+succ(d));  {allowed}
+  output (pred(d)+succ(d*a));  {allowed}
+  output (pred(c), succ(f));   {OK}
+  output (succ(pred(c)), pred(succ(a)));  {OK}
+  f := succ(c);              {OK}
+  b := succ(pred(succ(succ(b) and pred(e or succ(e)))));  {YES!}
+  d := succ(c) * succ(d);  {`*` requires two integers...
+                            c is not an integer, neither is succ(c)}
+  d := pred(f);            {Assignment types don't match...
+                            neither f nor pred(f) is an integer}
+  b := succ(a) or pred(b); {`or` requires two boolean expressions...
+                            neither a nor succ(a) is boolean}                
+  output (a,c,d,f);
+end pr3e09.

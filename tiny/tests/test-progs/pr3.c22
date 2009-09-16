@@ -1,0 +1,25 @@
+program pr3c22 :
+
+
+{ input : a char, a int 
+  output : the ord value of the input, and 0
+  will loop three times
+
+}
+var
+   character : char;
+   number,i: integer;
+   truth : boolean;
+
+begin
+   i := 2;
+   loop 
+   read (character,number);
+   truth := false;
+   output (ord(character),ord(number),ord(truth));
+   i := i + 1;
+   if i=5 then exit else;
+   pool;
+
+
+end pr3c22.

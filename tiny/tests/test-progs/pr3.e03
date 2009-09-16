@@ -1,0 +1,18 @@
+program pr3e03 :
+
+const  a = 2;
+       c = 'c';
+
+var    x : integer;
+       z : char;
+
+begin
+
+     x :=: z;   # type clash
+     z :=: c;   # can't swap a constant
+
+     while c <> 4 do   # type clash
+        output (a);
+
+end pr3e03.
+

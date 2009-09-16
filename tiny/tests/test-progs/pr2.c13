@@ -1,0 +1,14 @@
+program pr2c13:
+
+#  output is 100 100 1.
+
+var x,y: integer;
+begin
+   x:=100;
+   y:=100;
+   if x = y then
+      if ((x*y) > 500) then
+	 if y <> 100 then
+	    output(x,y,x*y)
+   else output(x,y,x/y);
+end pr2c13.

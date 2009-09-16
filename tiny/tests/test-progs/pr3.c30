@@ -1,0 +1,29 @@
+program pr3c30:
+
+{This tiny program will test the use of a for loop control
+variable of type char.  It should print the twenty-six letters
+of the alphabet (both upper-case and lower-case) and the numbers
+corresponding to their position in the
+ alphabet.
+
+     Output generated:
+         A      1
+         B      2
+         C      3
+          ...
+         Z     26
+         a      1
+         b      2
+         c      3
+          ...
+         z     26
+}
+
+var c: char;
+
+begin
+  for c := 'A' to 'Z' do
+     output(c, "\t", (ord(c)-ord('A'))+1);
+  for c := 'a' to 'z' do 
+     output(c, "\t", (ord(c)-ord('a'))+1);
+end pr3c30.

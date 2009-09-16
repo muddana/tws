@@ -1,0 +1,68 @@
+program pr3c08:
+
+# output depends on input
+# 999 terminates inner loop
+# must enter 999 3 times to finish
+
+# tests nesting as follows: inner --> outer
+#  output/case/repeat/loop/for 
+#  output/if/loop/case/repeat/loop/for 
+#  output/for/case/repeat/loop/for 
+#  output/downto/case/repeat/loop/for 
+#  output/repeat/case/repeat/loop/for 
+#  output/case/case/repeat/loop/for 
+#  output/for/if/if/case/repeat/loop/for 
+#  output/loop/case/case/case/repeat/loop/for 
+
+var x,y,z:integer;
+begin
+   for z:=1 to 3 do
+   begin
+      output(111,222,333,444);
+      loop
+         repeat
+            read(x);
+            case x of
+               1:output(x);
+               2: loop
+                     x:=x+2;
+                     if x <20
+		        then output(666,x)
+                        else exit;
+                  pool;
+               3: for x:=1 to 5 do
+                     output(x);
+               4: for x:=5 downto 1 do
+                     output(x);
+               5: repeat
+                     output(x);
+                     x:=x+2;
+                  until x >10;
+               6: case x+1 of
+                     6:output(000);
+                  otherwise output(000,000)
+                  end;
+               7: if x=z then
+                     if false then
+                        output(777)
+                     else output(777,777)
+                  else for y:=1 to 5 do
+                           output(y,777,777,777);
+               8: read(y);
+           9..12: case z of
+                     1: output(111);
+                     2: case x+z of
+                           10..15: loop
+                                     output(x,y,z);
+                                     exit;
+                                   pool;
+                        end;
+                  3..5: output(x+z,x*z,333);
+                  end;
+            otherwise output(999)
+            end;
+         until x = 999;
+         exit;
+      pool;
+   end;
+end pr3c08.

@@ -1,0 +1,25 @@
+program pr3c47:
+#
+#	outputs 
+#                      aA
+#                      bB
+#                      cC
+#                      dD
+#                      eE
+#                      fF
+#
+type enumerated = (a,b,c,d,e,f);
+var
+	i : enumerated;
+	pos1,pos2:integer;
+	c1,c2: char;
+begin
+        pos1 := ord('a');
+        pos2 := ord('A');
+        for i := a to f do
+	begin
+	   c1 := chr(ord(i) + pos1);
+	   c2 := chr(ord(i) + pos2);
+	   output(c1,c2)
+	end
+end pr3c47.

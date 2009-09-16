@@ -1,0 +1,22 @@
+program pr3c21:
+#
+# output:
+#         33
+#         22
+#         57
+#
+const
+	three = 33;
+	two   = 22;
+	one   = 57;
+var 
+        temp,c :integer;
+        TYPE :boolean;
+
+begin
+	c := three;
+	output(c);
+	output(two);
+	output(one);
+
+end pr3c21.

@@ -1,0 +1,14 @@
+ program pr2c06:
+ var x: integer;
+
+ begin
+    repeat
+       x := read;
+       if (x<10) then
+	  loop
+	     x:=x+1;
+	     if x=12 then exit 
+	     else output(x);
+          pool;
+    until (x=999);
+end pr2c06.

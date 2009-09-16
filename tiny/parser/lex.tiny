@@ -56,6 +56,7 @@ STR     \"[^\"]+\"
 "false"		{ return rule(FALSE); }
 
 "read" 		{ return rule(READ); }
+"eof" 		{ return rule(Eof); }
 {INT}		{ return node(INTEGER_NUM); }
 {IDENT}		{ return node(IDENTIFIER); }
 "{"		{ column += yyleng; BEGIN( COMM1 ); }

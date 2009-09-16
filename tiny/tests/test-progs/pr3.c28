@@ -1,0 +1,14 @@
+program pr3c28: 
+
+{--------------------------------------------------------------
+This program tests tiny's ability to recognize null STRINGS, and
+verifies that the output statement will ignore null strings.
+The output should be on a single line as follows:
+
+   Nulls test.
+
++------------  ------------------------------------------------}
+
+ begin
+  output("","","","Nulls test.")
+ end pr3c28.

@@ -1,0 +1,33 @@
+program pr3c19:
+#
+#	 outputs
+#		1
+#		2
+#		3
+#
+const
+	one   = 1;
+	two   = 2;
+	three = 3;
+	a     = 'a';
+	b     = 'b';
+	c     = 'c';
+var
+	i, j : char;
+begin
+	for i := a to b do
+		case i of
+		a:
+			for j := a to c do
+				case j of 
+				'a': output(1);
+				'b': if i = j then output(100);
+				'c': if i > j then output(1000);
+				end;
+		b: if i = a then output(100) else output(2);
+		end;
+	i := a;
+	j := c;
+	i :=: j;
+	if ( (i = c) and (j = a) ) then output(3) else output(10000);
+end pr3c19.

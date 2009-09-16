@@ -1,0 +1,14 @@
+program pr1c03:
+
+{   Prints
+            18
+}
+var a,b_1,c,e:integer;
+begin
+   a:=7;
+   b_1:=21;
+   c:=10;
+   e:=1;
+   a:=a + b_1 - c / e;
+   output(a);
+end pr1c03.

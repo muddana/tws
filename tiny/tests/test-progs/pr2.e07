@@ -1,0 +1,11 @@
+program pr2e07:
+
+# Can't exit from for loop
+
+var x: integer;
+begin
+   for x := 10 downto 5 do
+      if x<10 then exit
+      else
+	 output(x);
+end pr2e07.

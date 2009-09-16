@@ -1,0 +1,21 @@
+program pr3e14:
+{
+this program tests the allowable types for ord, pred, chr, and succ
+there should be an error on the last two lines:
+ cannot take the 'chr' of a boolean
+ cannot take the 'chr' of a character
+}
+var x : integer ;
+    a : boolean ;
+    c : char ;
+begin
+
+  x := 1 ;
+  a := true ;
+  c := 'c' ;
+
+  x := ord(x) ;
+  c := chr(a) ;
+  c := chr(c) ;
+
+end pr3e14.

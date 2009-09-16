@@ -1,0 +1,18 @@
+program pr2e12:
+
+# Can't re-use loop control variable.
+
+var i,j: integer;
+begin
+   for i := 7 to 5 do
+      for j := 1 to 3 do
+	  for i := 10 to 3 do
+	     output(i,j);
+
+# Can't exit from for loop
+
+   for i := 10 to 5 do
+      if i<10 then exit
+      else
+	 output(i);
+end pr2e12.

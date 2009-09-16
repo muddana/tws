@@ -1,0 +1,19 @@
+program pr1c09:
+
+    { this program tests the eof built-in function }
+
+var
+    count, i : integer;    
+
+begin
+
+    count := 0;
+    while not eof do
+    begin
+         i := read;
+         count := count + 1;
+         output(i)
+    end;
+    output(count)
+
+end pr1c09.

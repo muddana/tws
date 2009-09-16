@@ -1,0 +1,15 @@
+program pr2e02:
+#
+#	error:	repeat expression not boolean
+#
+var
+	i : integer;
+begin
+	i := 1;
+	repeat
+	begin
+		output(i);
+		i := i + 1;
+	end
+	until i - 5;
+end pr2e02.

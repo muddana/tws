@@ -1,0 +1,7 @@
+program pr1e04:
+
+{ Error: syntax error on line 6 }
+
+begin
+a:=a_b+a_b*(5-5a)/a54_3_f
+end pr1e04.

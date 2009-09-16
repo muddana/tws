@@ -1,0 +1,15 @@
+program pr3c09:
+#
+#	outputs 3 2 1 0 on separate lines
+#
+const zero  = 0;
+      one   = 1;
+      two   = 2;
+      three = 3;
+
+begin
+	output(ord(three));
+	output(ord(two));
+	output(ord(one));
+	output(ord(zero))
+end pr3c09.

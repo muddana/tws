@@ -1,0 +1,31 @@
+program pr3e16:
+#
+#   This program should produce two errors:	
+#	error 1:  Range specifiers must be of the same type.        
+#	error 2:  Constant value cannot be changed.      
+#	      
+#	
+const k = 5;
+      l = k;
+      m = l;
+      bool = true;
+      c = 'a';
+var i: integer;
+    done : boolean;
+    letter: char;
+begin
+   i := 4;
+   case i of
+	2..'a': output(1);
+        7..10: output(0);
+   end;
+   case bool of
+     true: output(1);
+     false: output(0);
+   end;
+   c := 'b';
+   case letter of
+     c..'b': output(1);
+     'c'..'d': output(0);
+   end;
+end pr3e16.

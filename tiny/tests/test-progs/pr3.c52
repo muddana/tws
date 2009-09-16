@@ -1,0 +1,32 @@
+program pr3c52:
+
+{ This program tests user defined types and case statements. }
+
+{      outputs:   3 4 2 on separate lines  }
+
+type
+	color = (red, orange, yellow, green, blue, violet);
+var
+	a, b, c: color;
+begin
+	a := yellow;
+	case a of
+	red:	output(1);
+	orange: output(2);
+	yellow: output(3);
+	otherwise output(4)
+	end;
+
+	b := violet;
+	case b of
+	red..yellow:	output(1);
+	otherwise output(4)
+	end;
+
+	c := blue;
+	case c of
+	violet:	output(1);
+	green..blue: output(2);
+	otherwise output(4)
+	end
+end pr3c52.

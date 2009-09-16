@@ -85,14 +85,35 @@
 #define    IfNode       58   /* 'if'       */
 #define    WhileNode    59   /* 'while'    */
 #define    NullNode     60   /* '<null>'   */
-#define    LENode       61   /* '<='       */
-#define    PlusNode     62   /* '+'        */
-#define    MinusNode    63   /* '-'        */
-#define    ReadNode     64   /* 'read'     */
-#define    IntegerNode  65   /* '<integer>'*/
-#define    IdentifierNode 66 /* '<identifier>'*/
 
-#define    NumberOfNodes 66 /* '<identifier>'*/
+#define GTNode          61
+#define LTNode          62
+#define GTENode         63
+#define NENode          64
+#define EQNode          65
+#define LTENode         66
+
+#define PlusNode        67
+#define MinusNode       68
+
+#define ORNode          69
+#define MODNode         70
+#define ANDNode         71
+#define MultiplyNode    72
+#define DivisionNode    73
+
+#define NOTNode         74
+#define UnaryMinusNode  75
+#define POWNode         76
+
+#define ReadNode        77
+#define TrueNode        78
+#define FalseNode       79
+
+#define    IntegerNode  80   /* '<integer>'*/
+#define    IdentifierNode 81 /* '<identifier>'*/
+
+#define    NumberOfNodes 81 /* '<identifier>'*/
 typedef int Mode;
 
 FILE *CodeFile;
@@ -112,11 +133,23 @@ char *mach_op[] =
    as defined above, then adjust the j loop control variable in
    InitializeNodeNames(). 
 *******************************************************************/
+char *node_name[] = { "program", "types", "type", "dclns",
+                 "dcln", "integer", "boolean", "block",
+                 "assign", "output", "if", "while", 
+                 "<null>", ">", "<", ">=",
+		 "<>", "=", "<=", "+",
+		 "-", "or", "mod", "and",
+		 "*", "/", "not", "neg",
+		 "pow", "read", "<true>", "<false>",
+		 "<integer>", "<identifier>" 
+                };
+
+/*old_code for deletion in future
 char *node_name[] =
     {"program","types","type","dclns","dcln","integer",
      "boolean","block","assign","output","if","while",
      "<null>","<=","+","-","read","<integer>","<identifier>"};
-
+*/
 
 void CodeGenerate(int argc, char *argv[])
 {
@@ -234,8 +267,8 @@ void Reference(TreeNode T, Mode M, Clabel L)
 int NKids (TreeNode T)
 {
    return (Rank(T));
-}
 
+};
 
 void Expression (TreeNode T, Clabel CurrLabel)
 {
@@ -253,28 +286,60 @@ void Expression (TreeNode T, Clabel CurrLabel)
 
    switch (NodeName(T))
    {
-      case LENode :
-      case PlusNode :
+      case GTNode:
+      case LTNode:
+      case GTENode:
+      case NENode:
+      case EQNode:
+      case LTENode :
+      
          Expression ( Child(T,1) , CurrLabel);
          Expression ( Child(T,2) , NoLabel);
-         if (NodeName(T) == LENode)
+	 if(NodeName(T) == GTNode)
+	   CodeGen1(BOPOP, BGT, NoLabel);
+	 else if(NodeName(T) == LTNode)
+	   CodeGen1(BOPOP, BLT, NoLabel);
+         else if (NodeName(T) == GTENode)
+            CodeGen1 (BOPOP, BGE, NoLabel);
+	 else if (NodeName(T) == NENode)
+	    CodeGen1 (BOPOP, BNE, NoLabel);
+	 else if (NodeName(T) == EQNode)
+	    CodeGen1 (BOPOP, BEQ, NoLabel);
+         else if (NodeName(T) == LTENode)
             CodeGen1 (BOPOP, BLE, NoLabel);
-         else
-            CodeGen1 (BOPOP, BPLUS, NoLabel);
          DecrementFrameSize();
          break;
-
+   
+      case PlusNode :
       case MinusNode :
+      case ORNode :
+      case MODNode :
+      case ANDNode :
+      case MultiplyNode :
+      case DivisionNode :
          Expression ( Child(T,1) , CurrLabel);
-         if (Rank(T) == 2)
-         {
-            Expression ( Child(T,2) , NoLabel);
+	 Expression ( Child(T,2) , NoLabel);
+	 if (NodeName(T) == PlusNode)
+	   CodeGen1 (BOPOP, BPLUS, NoLabel);
+	 else if(NodeName(T) == MinusNode)
             CodeGen1 (BOPOP, BMINUS, NoLabel);
-            DecrementFrameSize();
-         }
-         else
-            CodeGen1 (UOPOP, UNEG, NoLabel);
+	 else if(NodeName(T) == ORNode)
+	   CodeGen1 (BOPOP, BOR, NoLabel);
+	 else if(NodeName(T) == MODNode)
+	   CodeGen1 (BOPOP, BMOD, NoLabel);
+	 else if(NodeName(T) == ANDNode)
+	   CodeGen1 (BOPOP, BAND, NoLabel);
+	 else if(NodeName(T) == MultiplyNode)
+	   CodeGen1 (BOPOP, BMULT, NoLabel);
+	 else if(NodeName(T) == DivisionNode)
+	   CodeGen1 (BOPOP, BDIV, NoLabel);
+	 DecrementFrameSize();
          break;
+
+      case UnaryMinusNode :
+	 Expression (Child(T,1) , CurrLabel);
+	 CodeGen1 (UOPOP, UNEG, NoLabel);
+	 break;
 
       case ReadNode :
          CodeGen1 (SOSOP, OSINPUT, CurrLabel);
@@ -417,4 +482,4 @@ Clabel ProcessNode (TreeNode T, Clabel CurrLabel)
               printf ("\n");
 
    } /* end switch */
-}   /* end ProcessNode */
+};   /* end ProcessNode */

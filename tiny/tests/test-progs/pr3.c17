@@ -1,0 +1,19 @@
+program pr3c17:
+#
+#	c09: outputs 4 1 on one line
+#
+const a = 0;
+      b = 1;
+      c = 2;
+      d = 3;
+      e = 4;
+      f = 5;
+
+var
+	i, j : integer;
+begin
+	i := b;
+	j := e;
+	i :=: j;
+	output(i,j);
+end pr3c17.

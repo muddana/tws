@@ -1,0 +1,20 @@
+program pr3c07:
+{
+   output:
+      999
+      777
+}
+var
+   done,x,y,a,b,c,d: boolean;
+begin
+   x := true;
+   y := not x;
+   a := succ(y);  
+   b := pred(x);
+   c := succ(y);
+   d := pred(x);   
+   if a then output(999);
+   if d then output(888);
+   if c then output(777);
+   if b then output(666);
+end pr3c07.

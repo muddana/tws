@@ -54,20 +54,21 @@
      EQ = 270,
      WHILE = 271,
      OUTPUT = 272,
-     GTE = 273,
-     NOT = 274,
-     DO = 275,
-     BEGINX = 276,
-     BOOLEAN = 277,
-     INTEGER_NUM = 278,
-     TRUE = 279,
-     AND = 280,
-     INTEGER = 281,
-     LTE = 282,
-     OR = 283,
-     LT = 284,
-     ASSIGNMENT = 285,
-     PROGRAM = 286
+     Eof = 273,
+     GTE = 274,
+     NOT = 275,
+     DO = 276,
+     BEGINX = 277,
+     BOOLEAN = 278,
+     INTEGER_NUM = 279,
+     TRUE = 280,
+     AND = 281,
+     INTEGER = 282,
+     LTE = 283,
+     OR = 284,
+     LT = 285,
+     ASSIGNMENT = 286,
+     PROGRAM = 287
    };
 #endif
 /* Tokens.  */
@@ -86,20 +87,21 @@
 #define EQ 270
 #define WHILE 271
 #define OUTPUT 272
-#define GTE 273
-#define NOT 274
-#define DO 275
-#define BEGINX 276
-#define BOOLEAN 277
-#define INTEGER_NUM 278
-#define TRUE 279
-#define AND 280
-#define INTEGER 281
-#define LTE 282
-#define OR 283
-#define LT 284
-#define ASSIGNMENT 285
-#define PROGRAM 286
+#define Eof 273
+#define GTE 274
+#define NOT 275
+#define DO 276
+#define BEGINX 277
+#define BOOLEAN 278
+#define INTEGER_NUM 279
+#define TRUE 280
+#define AND 281
+#define INTEGER 282
+#define LTE 283
+#define OR 284
+#define LT 285
+#define ASSIGNMENT 286
+#define PROGRAM 287
 
 
 
@@ -112,7 +114,7 @@ typedef union YYSTYPE
    DLIST dlist;
 }
 /* Line 1489 of yacc.c.  */
-#line 116 "y.tab.h"
+#line 118 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

@@ -1,0 +1,36 @@
+program pr3c02:
+{
+   the output should be
+   98   b
+}
+var
+   x: char;
+   y: integer;
+   t: boolean;
+begin
+   t := false;
+   x := 'a';
+   y := 0;
+   while not t do 
+   begin
+      x := succ(x);
+      repeat
+	 y := pred(y);
+	 case y of
+	    1..5: output (x,y);
+         otherwise
+	    if (y >= 6) and (y < 9) then
+	       output(chr(y+97),y)
+            else
+	       t := true
+         end;
+      until (t = true); 
+      if (x <> 'c') then
+	 begin
+	    t := false; 
+	    output(ord(x),x)
+         end
+      else
+	 t := true;
+   end;
+end pr3c02.

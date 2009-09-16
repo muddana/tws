@@ -1,0 +1,20 @@
+program pr3c40:
+
+{ -- A correct program to test use of constants. }
+{ -- Output should be  50  }
+{		       51  }
+
+const
+	ten   = 10;
+	limit = 50;
+var
+	i : integer;
+begin
+	i := 1;
+	repeat
+		i := i + ten;
+	until ( i > limit );
+ 
+	output (limit);
+	output (i);
+end pr3c40.

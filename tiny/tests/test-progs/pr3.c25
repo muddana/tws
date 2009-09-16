@@ -1,0 +1,25 @@
+program pr3c25:
+
+{       output
+          character = a
+          character = b
+          character = c
+}
+
+const initial = 1;
+      final = 3;
+      startletter = 'a'; 
+
+var x,count:integer;
+    c:char;
+
+begin
+   c:= startletter;
+   for count:= initial to final do
+      begin
+         output("character = ",c);
+         x:= ord(c);
+         x:= x+1;
+         c:= chr(x);
+      end
+end pr3c25.  

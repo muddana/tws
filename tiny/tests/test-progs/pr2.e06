@@ -1,0 +1,13 @@
+program pr2e06:
+
+# two errors: can't assign to loop control variable
+
+var i,j,x: integer;
+begin
+   for i := 1 to 5 do
+      for j := 1 to 5 do
+	 begin
+	   i := 12;
+	   x :=: i
+         end;
+end pr2e06.

@@ -1,0 +1,14 @@
+program pr3c48:
+#
+#	outputs 4 1 on one line
+#
+type enumerated = (a,b,c,d,e,f);
+
+var
+	i, j : enumerated;
+begin
+	i := b;
+	j := e;
+	i :=: j;
+	output(ord(i),ord(j));
+end pr3c48.

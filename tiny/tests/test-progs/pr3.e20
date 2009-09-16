@@ -1,0 +1,15 @@
+program pr3e20:
+#
+#	error: redeclares three
+#
+const
+	three = 3;
+	two   = 2;
+	one   = 1;
+
+type number = (three, four, five);
+begin
+	output(three);
+	output(two);
+	output(one);
+end pr3e20.

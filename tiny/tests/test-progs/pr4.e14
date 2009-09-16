@@ -1,0 +1,28 @@
+{ This program tests user defined types and case statements. }
+program pr5e16:
+type
+	color = (red, orange, yellow, green, blue, violet);
+var
+	a, b, c: color;
+begin
+	a := yellow;
+	case a of
+	red:	output(1);
+	true: output(2);	# ERROR: wrong type label in case
+	yellow: output(3);
+	otherwise output(4)
+	end;
+
+	b := 13;		# ERROR: wrong type for assignment
+	case b of
+	red..yellow:	output(1);
+	otherwise output(4)
+	end;
+
+	c := blue;
+	case c of
+	violet:	output(violet);	# ERROR: wrong type for output
+	green..blue: output(2);
+	otherwise output(4)
+	end
+end pr5e16.

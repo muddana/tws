@@ -1,0 +1,26 @@
+program pr3e02:
+
+{
+   input : none
+   output : should not be run in the codegenerator 
+
+
+   this program will test the type-checking in the constrainer
+   for the ord and chr function...
+   ord should accept boolean values but chr should not
+   accept boolean values
+}
+
+var 
+  true1,false1,okay : boolean ;
+
+begin
+   true1 := true;
+   false1 := false;
+   okay  := true;
+   output(ord(pred(true1)),ord(succ(false1)),chr(succ(okay)));
+   { Constrainer should accept first two, but crash on the last }
+
+end pr3e02.
+
+

@@ -1,0 +1,15 @@
+program pr3c46:
+#
+#	outputs 0 1 2 3 on separate lines,
+
+#
+type enumerated = (a,b,c,d,e,f);
+var
+	i : enumerated;
+begin
+	i := a;   
+	repeat
+		output(ord(i));
+		i := succ(i);
+	until i = e;
+end pr3c46.

@@ -1,0 +1,15 @@
+
+{ This program tests simple procedure calls for zero arguments. }
+program pr5c22:
+var a: integer;
+
+procedure y;
+begin
+	output(1)
+end y;
+
+begin
+	output(0);
+	y();
+	output(0)
+end pr5c22.

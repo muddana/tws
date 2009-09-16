@@ -1,0 +1,9 @@
+program pr2e01:
+#
+#	error: for loop variable doesn't match the start value
+#
+var
+	i : integer;
+begin
+	for i := true to 5 do output(i);
+end pr2e01.

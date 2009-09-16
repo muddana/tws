@@ -1,0 +1,11 @@
+program pr1c04:
+ {  Prints
+            1
+}
+var a,y,q:integer;
+begin
+   a:=3;
+   y:=1;
+   q:=7;
+   if (a mod 2 < q / y) then output (1) else output(2);
+end pr1c04.

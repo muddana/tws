@@ -1,0 +1,11 @@
+program pr1c05:
+ {  Prints
+            2
+}
+var a,y,q:integer;
+begin
+   a:=3;
+   y:=1;
+   q:=7;
+   if ((a mod 2 < -q / y) or (q > 7)) then output (1) else output(2);
+end pr1c05.

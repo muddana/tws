@@ -1,0 +1,8 @@
+{ This program tests the new 'read' statement }
+program pr5e11:
+var a, b: integer;
+	c: boolean;
+begin
+	read(a, c, b);	# ERROR: can't read booleans
+	output(b, a, c)	# here too
+end pr5e11.

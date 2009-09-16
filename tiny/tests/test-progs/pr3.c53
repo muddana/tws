@@ -1,0 +1,43 @@
+program pr3c53:
+
+{ This program tests user defined types and for statements. }
+{     output:
+
+           1 
+	   2 
+	   3 
+	   4 
+	   5 
+	   6 
+	   2 
+	   3 
+	   4 
+	   5 
+}
+
+type
+	color = (red, orange, yellow, green, blue, violet);
+var
+	a, b : color;
+begin
+	for a := red to violet do
+	case a of
+	red:	output(1);
+	orange: output(2);
+	yellow: output(3);
+	green:	output(4);
+	blue:	output(5);
+	violet:	output(6);
+	end;
+
+	for b := orange to blue do
+	case b of
+	red:	output(1);
+	orange: output(2);
+	yellow: output(3);
+	green:	output(4);
+	blue:	output(5);
+	violet:	output(6);
+	end;
+
+end pr3c53.

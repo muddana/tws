@@ -1,0 +1,21 @@
+program pr2c02:
+{
+  this quits when x=0
+  }
+var x,y,i: integer;
+    done: boolean;
+begin
+   y:=6;
+   done := false;
+   repeat
+   begin
+      x := read;
+      i := x*y;
+      x :=: y;
+      y :=: i;
+      output(x,y,i);
+      if x=0 then
+	 done:=true;
+   end
+   until done=true;
+end pr2c02.

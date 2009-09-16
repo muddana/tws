@@ -1,0 +1,17 @@
+program pr1c06:
+{  Prints 
+
+    1
+}
+var a,g1,b,c,h,i,l:integer;
+begin
+a:=4;
+g1:=8;
+b:=3;
+c:=1;
+h:=2;
+i:=5;
+l:=7;
+a:=(g1 * ( b-a ) / (h*i-l)+c);
+output (a);
+end pr1c06.

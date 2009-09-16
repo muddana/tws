@@ -1,0 +1,30 @@
+program pr3c16:
+#
+#         outputs 
+#                      aA
+#                      bB
+#                      cC
+#                      dD
+#                      eE
+#                      fF
+#
+const a = 0;
+      b = 1;
+      c = 2;
+      d = 3;
+      e = 4;
+      f = 5;
+var
+	i : integer;
+	pos1,pos2:integer;
+	c1,c2: char;
+begin
+        pos1 := ord('a');
+        pos2 := ord('A');
+        for i := a to f do
+	begin
+	   c1 := chr(ord(i) + pos1);
+	   c2 := chr(ord(i) + pos2);
+	   output(c1,c2)
+	end
+end pr3c16.

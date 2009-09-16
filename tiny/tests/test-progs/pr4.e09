@@ -1,0 +1,20 @@
+{ This program tests simple procedure calls for two arguments. }
+program pr5e10:
+var a: integer;
+    b: boolean;
+
+procedure y (b:integer; a:boolean);
+begin
+	if a then
+		output(1)
+	else
+		output(b);
+end y;
+
+begin
+	a := 13;
+	b := false;
+	output(0);
+	a := y(a, b);	# ERROR: y is not a function
+	output(0)
+end pr5e10.

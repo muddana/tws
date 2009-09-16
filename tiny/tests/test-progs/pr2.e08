@@ -1,0 +1,19 @@
+ program pr2e08:
+
+ # wrong context for exit: not inside a loop statement
+
+ var x: integer;
+
+ begin
+    x := read;
+    if x > 10 then
+    repeat
+       if (x<10) then
+	  loop
+	     x:=x+1;
+	     if x=12 then exit 
+	     else output(x)
+          pool
+    until (x=999)
+    else exit;
+end pr2e08.

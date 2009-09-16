@@ -1,0 +1,17 @@
+program pr3c23 :
+
+# output should be 5 55 55 5
+
+ const   constintfive = 5;
+         constcharfive = '5';
+
+ var    intfive : integer;
+        charfive : char;
+
+begin
+  intfive := constintfive;
+  charfive := constcharfive; 
+
+  output (5,'5',constintfive,constcharfive,intfive,charfive);
+
+end pr3c23.

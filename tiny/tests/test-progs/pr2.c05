@@ -1,0 +1,26 @@
+program pr2c05:
+var a: integer;
+begin
+   a := read;
+   while a < 100 do
+      begin
+	 case a of
+	    10: begin
+		   loop
+		      a:=a+1;
+		      if a=15 then
+			 exit;
+                   pool;
+		   output(a);
+                end;
+            50: output(999);
+	    70: repeat
+		begin
+		   a:=a+1;
+		   output(a);
+                end
+                until a<75;
+         end;
+	 a := read;
+      end;
+end pr2c05.

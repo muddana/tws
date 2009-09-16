@@ -1,0 +1,23 @@
+program pr3e08:
+
+{ 2 errors; listed below }
+
+const FALSE = false;
+      ALetterB = 'b';
+
+var truthvalue : boolean;
+    JoeCharacter : char;
+
+begin
+  
+   JoeCharacter := succ(FALSE);
+{ error - type mismatch in assignment}
+
+
+   FALSE := ( JoeCharacter = 'a' );
+{ error - can't assign to a constant }
+
+   if (truthvalue = FALSE) and (JoeCharacter = ALetterB) then
+      output(ALetterB," is not an a");
+
+end pr3e08.

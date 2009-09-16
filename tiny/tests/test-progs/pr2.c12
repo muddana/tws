@@ -1,0 +1,12 @@
+program pr2c12:
+#
+#	c12: outputs 1 2 on one lins
+#
+var
+	i, j : integer;
+begin
+	i := 2;
+	j := 1;
+	i :=: j;
+	output(i,j);
+end pr2c12.

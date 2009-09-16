@@ -1,0 +1,20 @@
+program pr3e10:
+
+#     b := chr(a);   : argument og chr must be of type integer 
+#     output(l,x,b)  : can't output boolean type
+#
+
+var l: boolean;
+    x,y: integer;
+    a,b: char;
+
+begin
+     y := 3;
+     a := 'Z';
+     l := true;
+
+     x := ord(y);   
+     b := chr(a);
+
+        output(l,x,b)
+end pr3e10.

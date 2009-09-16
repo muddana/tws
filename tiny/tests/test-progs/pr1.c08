@@ -1,0 +1,42 @@
+program pr1c08:
+
+{ This program tests to see if booleans are handled OK }
+
+    { output of program should be :
+        1
+        0
+        0
+        1
+        0
+        1
+    }
+
+var
+    a, b, c, d, e, f : boolean;
+    tvalue, fvalue : integer;
+
+begin
+
+    tvalue := 1;
+    fvalue := 0;
+    a := true;
+    b := false;
+    c := not true;
+    d := not false;
+    e := a and b;
+    f := a or b;
+
+    if a then output(tvalue)
+    else output(fvalue);
+    if b then output(tvalue)
+    else output(fvalue);
+    if c then output(tvalue)
+    else output(fvalue);
+    if d then output(tvalue)
+    else output(fvalue);
+    if e then output(tvalue)
+    else output(fvalue);
+    if f then output(tvalue)
+    else output(fvalue);
+    
+end pr1c08.

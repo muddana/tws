@@ -1,0 +1,16 @@
+program pr3e23:
+#
+#	error: can't compare integer and number
+#              can't output boolean type
+#
+const
+	three = 3;
+	two   = 2;
+	one   = 1;
+type
+	number = (a,b,c);
+begin
+	output(c=three);
+	output(two);
+	output(one);
+end pr3e23.

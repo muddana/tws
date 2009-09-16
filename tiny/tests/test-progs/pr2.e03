@@ -1,0 +1,12 @@
+program pr2e03:
+#
+#	 error:	swap with a integer
+#
+var
+	i, j : integer;
+begin
+	i := 2;
+	j := 1;
+	i :=: 12;
+	output(i,j);
+end pr2e03.

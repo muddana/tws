@@ -1,0 +1,28 @@
+program pr3e15:
+
+
+const
+   k = integer;    { mode conflict }
+   j = 'c';
+   l = k;
+
+var
+  i :char;
+
+begin
+
+  if (k = j) then               { type must be the same }
+    output("This is incorrect")
+  else
+    output("k = ",k);
+
+
+  output("l = ",l);
+
+  for i := j downto 'a' do
+   begin
+    output(i);
+    i := succ(i);		{ assigning to a control variable }
+   end;
+
+end pr3e15.

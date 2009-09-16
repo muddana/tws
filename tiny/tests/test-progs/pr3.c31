@@ -1,0 +1,19 @@
+program pr3c31:
+{
+   output:
+
+       100   ac98
+}
+var
+   a,x: char;
+   b,c: integer;
+begin
+         x := 'd'; 
+	 b := 97;
+         a := pred(x);
+         c := succ(b);
+        
+	 output (ord(x),"   ",chr(b),a,c)
+
+
+end pr3c31.

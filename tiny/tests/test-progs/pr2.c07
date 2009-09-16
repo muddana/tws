@@ -1,0 +1,7 @@
+program pr2c07:
+#
+#	outputs 3 2 1 on one line
+#
+begin
+	output(3,2,1);
+end pr2c07.

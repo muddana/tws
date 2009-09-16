@@ -1,0 +1,31 @@
+program pr3c06:
+{
+   output:
+      4
+      3
+      2
+      1
+      0
+      255
+      254
+      253
+      252
+}
+var
+   r: integer;
+   x,t: char;
+   done: boolean;
+begin
+   x := chr(5);
+   done := false;
+   while not done do
+      begin
+         if x = chr(0) then t:= chr(255) else t := pred(x);
+         {  Simply  t:=pred(x) if wrapping}
+	 r := ord(t);
+	 output(r);
+	 if r = 252 then
+	    done := true;
+         x := t;
+      end;
+end pr3c06.

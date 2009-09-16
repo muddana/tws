@@ -1,0 +1,37 @@
+program pr1e07:
+
+    #{ this program tests the equality/inequality operators }
+
+var
+    zero, one, two, twenty, negativefive : integer;
+    b1, b2:boolean;
+begin
+
+    b1 := false;
+    b2 := true;
+    zero := 0;
+    one := 1;
+    two := 2;
+    twenty := 20;
+    negativefive := -5;
+
+    if ( zero = b1 ) then output(one)
+#{error:-^ incompatible types}
+    else output(zero);
+    if ( one <> b2 ) then output(one)
+#{error:-^ incompatible types}
+    else output(zero);
+    if ( b1 < zero ) then output(one)
+#{error:-^ incompatible types}
+    else output(zero);
+    if ( one > b1 ) then output(one)
+#{error:-^ incompatible types}
+    else output(zero);
+    if ( one <= b2 ) then output(one)
+#{error:-^ incompatible types}
+    else output(zero);
+    if ( b1 >= two ) then output(one)
+#{error:-^ incompatible types}
+    else output(zero);
+    
+end pr1e07.

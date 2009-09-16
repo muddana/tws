@@ -107,13 +107,14 @@
 #define POWNode         76
 
 #define ReadNode        77
-#define TrueNode        78
-#define FalseNode       79
+#define EofNode         78
+#define TrueNode        79
+#define FalseNode       80
 
-#define    IntegerNode  80   /* '<integer>'*/
-#define    IdentifierNode 81 /* '<identifier>'*/
+#define    IntegerNode  81  /* '<integer>'*/
+#define    IdentifierNode 82/* '<identifier>'*/
 
-#define    NumberOfNodes 81 /* '<identifier>'*/
+#define    NumberOfNodes 82 /* '<identifier>'*/
 typedef int Mode;
 
 FILE *CodeFile;
@@ -140,7 +141,7 @@ char *node_name[] = { "program", "types", "type", "dclns",
 		 "<>", "=", "<=", "+",
 		 "-", "or", "mod", "and",
 		 "*", "/", "not", "neg",
-		 "pow", "read", "<true>", "<false>",
+		      "pow", "read", "eof", "<true>", "<false>",
 		 "<integer>", "<identifier>" 
                 };
 
@@ -336,6 +337,11 @@ void Expression (TreeNode T, Clabel CurrLabel)
 	 DecrementFrameSize();
          break;
 
+     case NOTNode:
+	 Expression (Child(T,1) , CurrLabel);
+	 CodeGen1(UOPOP, UNOT, NoLabel);
+	 break;
+
       case UnaryMinusNode :
 	 Expression (Child(T,1) , CurrLabel);
 	 CodeGen1 (UOPOP, UNEG, NoLabel);
@@ -345,6 +351,17 @@ void Expression (TreeNode T, Clabel CurrLabel)
          CodeGen1 (SOSOP, OSINPUT, CurrLabel);
          IncrementFrameSize();
          break;
+
+   case EofNode:
+     CodeGen1( SOSOP, OSEOF, CurrLabel);
+     IncrementFrameSize();
+     break;
+
+	 /* what exactly does Reference do ? */
+      case FalseNode:
+      case TrueNode:
+	     Reference (T,RightMode,CurrLabel);
+	   break;
 
       case IntegerNode :
          CodeGen1 (LITOP, NodeName (Child(T,1)), CurrLabel);

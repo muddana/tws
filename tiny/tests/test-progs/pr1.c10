@@ -1,0 +1,38 @@
+program pr1c10:
+
+    { this program tests the equality/inequality operators }
+
+    { the output should be:
+        1
+        0
+        1
+        1
+        1
+        1
+    }
+
+var
+    zero, one, two, twenty, negativefive : integer;
+
+begin
+
+    zero := 0;
+    one := 1;
+    two := 2;
+    twenty := 20;
+    negativefive := -5;
+
+    if ( zero = zero ) then output(one)
+    else output(zero);
+    if ( one <> one ) then output(one)
+    else output(zero);
+    if ( negativefive < zero ) then output(one)
+    else output(zero);
+    if ( twenty > two ) then output(one)
+    else output(zero);
+    if ( one <= one ) then output(one)
+    else output(zero);
+    if ( two >= two ) then output(one)
+    else output(zero);
+    
+end pr1c10.

@@ -1,0 +1,18 @@
+program pr2c14:
+
+# Repeatedly read a number and:
+#   a.-  prints itself if it's anything but 1.
+#   b.-  exits if it's 1.
+
+var x: integer;
+begin
+   loop
+      x := read;
+      case x of
+	 2..4: output(x*x/x);
+	 1: if x=1 then exit;
+      otherwise
+	 output(x)
+      end;
+   pool
+end pr2c14.

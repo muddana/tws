@@ -1,0 +1,21 @@
+program pr3c27 :
+{
+           outputs   1 5
+                     2 8
+                     3 11    }
+
+
+const two = 2;
+
+var
+   i,one,three : integer;
+
+begin
+   three := succ(2);
+   for i := pred(two) to succ(two) do
+   begin
+      one := pred(three) + succ(two);
+      output(i,one);
+      three := succ(one);
+   end;
+end pr3c27.

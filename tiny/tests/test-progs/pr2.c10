@@ -1,0 +1,15 @@
+program pr2c10:
+#
+#	outputs 1 2 3 4 5 on separate lines
+#
+var
+	i : integer;
+begin
+	i := 1;
+	repeat
+	begin
+		output(i);
+		i := i + 1;
+	end
+	until i > 5;
+end pr2c10.

@@ -1,0 +1,14 @@
+program pr2e10:
+
+# Two errors: Can't swap with loop control variable
+
+var i,j,k: integer;
+begin
+   for i :=1 to 3 do
+      for j :=1 to 3 do
+	 begin
+	    k := i;
+	    k :=: i;
+	    j :=: k;
+	 end
+end pr2e10.

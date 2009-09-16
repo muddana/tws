@@ -1,0 +1,14 @@
+program pr3e07 :
+
+{Constrainer error:  can't read in a FOR loop control variable }
+
+var
+   i : integer;
+
+begin
+   for i := 1 to 5 do
+   begin
+      read(i);
+      output(i);
+   end;
+end pr3e07.

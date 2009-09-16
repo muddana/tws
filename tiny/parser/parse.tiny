@@ -7,7 +7,7 @@ Type       -> INTEGER 		             		=> "integer"
            -> BOOLEAN				     	=> "boolean";
 Body       -> BEGINX Statement list ';' END      	=> "block";
 Statement  -> Name ASSIGNMENT Expression          	=> "assign"
-           -> OUTPUT '(' Expression ')'           	=> "output"
+           -> OUTPUT '(' Expression list ',' ')'       	=> "output"
            -> IF Expression THEN Statement
                             (ELSE Statement)?       	=> "if"
            -> WHILE Expression DO Statement      	=> "while"
@@ -22,24 +22,27 @@ Expression -> Term
 	   -> Term EQ Term				=> "="
 	   -> Term LTE Term				=> "<=";
 
-Term       -> OrModAnd 
-	   -> Term '+' OrModAnd				=> "+"
-	   -> Term '-' OrModAnd				=> "-";
+Term       -> ModAndMulDiv 
+	   -> ModAndMulDiv OR Term			=> "or"
+	   -> ModAndMulDiv '+' Term			=> "+"
+	   -> ModAndMulDiv '-' Term			=> "-";
 
-OrModAnd   -> MulDiv
-	   -> OrModAnd OR MulDiv			=> "or"
-	   -> OrModAnd MOD MulDiv			=> "mod"
-	   -> OrModAnd AND MulDiv			=> "and";
-
-MulDiv	   -> Primary
-	   -> MulDiv '*' Primary			=> "*"
-	   -> MulDiv '/' Primary			=> "/";
+ModAndMulDiv-> Unary
+	    -> Unary MOD ModAndMulDiv   		=> "mod"
+	    -> Unary AND ModAndMulDiv  			=> "and"
+	    -> Unary '*' ModAndMulDiv			=> "*"
+	    -> Unary '/' ModAndMulDiv			=> "/";
 	   
-Primary    -> NOT Primary 				=> "not"
-	   -> '+' Primary
-	   -> '-' Primary				=> "neg"
-	   -> Primary POW Primary			=> "pow"
-	   -> READ                                 	=> "read"
+Unary      -> Misc
+	   -> NOT Unary 				=> "not"
+	   -> '+' Unary
+	   -> '-' Unary					=> "neg";
+
+Misc	   -> Primary
+	   -> Primary POW Misc				=> "pow";
+
+Primary	   -> READ                                 	=> "read"
+	   -> Eof					=> "eof"
            -> Name
 	   -> TRUE					=> "<true>"
 	   -> FALSE					=> "<false>"

@@ -1,0 +1,17 @@
+program pr3e13:
+
+const int = 5;
+      ch = 'a';
+
+var j: integer;
+    b: boolean;
+
+begin
+
+  read (j);
+  int:=:j;             { Will complain here about swapping with a constant }
+  output (j,int,ch);
+  b := false;
+  output (j+chr(b))    { Will complain here about chr of a boolean }
+
+end pr3e13.

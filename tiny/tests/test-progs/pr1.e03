@@ -1,0 +1,7 @@
+program pr1e03:
+
+{ Errors: variables not declared  }
+
+begin
+a:=a_b+a__b*(5-a)/a54_3_f
+end pr1e03.

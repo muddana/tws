@@ -32,6 +32,7 @@ typedef struct {
 %token <info>  EQ
 %token <info>  WHILE
 %token <info>  OUTPUT
+%token <info>  Eof
 %token <info>  GTE
 %token <info>  NOT
 %token <info>  DO
@@ -46,11 +47,14 @@ typedef struct {
 %token <info>  LT
 %token <info>  ASSIGNMENT
 %token <info>  PROGRAM
-%type <dlist> MulDiv
+%type <dlist> Statement_1_1
+%type <dlist> ModAndMulDiv
+%type <dlist> Unary
 %type <dlist> Tiny
 %type <dlist> Statement_1
 %type <dlist> Body_1
 %type <dlist> Dcln
+%type <dlist> Misc
 %type <dlist> Statement
 %type <dlist> Term
 %type <dlist> Dcln_1
@@ -61,7 +65,6 @@ typedef struct {
 %type <dlist> Expression
 %type <dlist> Dclns
 %type <dlist> Primary
-%type <dlist> OrModAnd
 %%
 
 Tiny     : PROGRAM  Name     ':'      Dclns    Body     Name     '.'      
@@ -438,7 +441,7 @@ Statement : Name     ASSIGNMENT Expression
 		$$ = r;
 
              }
-         | OUTPUT   '('      Expression ')'      
+         | OUTPUT   '('      Statement_1 
              {
 		DLIST r;
 		T_NODE *t;
@@ -474,7 +477,7 @@ Statement : Name     ASSIGNMENT Expression
 		$$ = r;
 
              }
-         | IF       Expression THEN     Statement Statement_1 
+         | IF       Expression THEN     Statement Statement_1_1 
              {
 		DLIST r;
 		T_NODE *t;
@@ -611,7 +614,7 @@ Statement : Name     ASSIGNMENT Expression
              }
          ;
 
-Statement_1 : 
+Statement_1_1 : 
              {
 		DLIST r;
 
@@ -639,6 +642,35 @@ Statement_1 :
 
 		while (DCount(&$2) > 0)
 		    DAddTail(&r,DRemHead(&$2));
+
+		$$ = r;
+
+             }
+         ;
+
+Statement_1 : Expression ')'      
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		$$ = r;
+
+             }
+         | Expression ','      Statement_1 
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		while (DCount(&$3) > 0)
+		    DAddTail(&r,DRemHead(&$3));
 
 		$$ = r;
 
@@ -893,7 +925,7 @@ Expression : Term
              }
          ;
 
-Term     : OrModAnd 
+Term     : ModAndMulDiv 
              {
 		DLIST r;
 
@@ -905,73 +937,7 @@ Term     : OrModAnd
 		$$ = r;
 
              }
-         | Term     '+'      OrModAnd 
-             {
-		DLIST r;
-		T_NODE *t;
-
-		InitDList(&r);
-
-		while (DCount(&$1) > 0)
-		    DAddTail(&r,DRemHead(&$1));
-
-		while (DCount(&$3) > 0)
-		    DAddTail(&r,DRemHead(&$3));
-
-		t = (T_NODE *)malloc(sizeof(T_NODE));
-		assert(t);
-		t->nodeptr = AllocTreeNode(TREETAG_STRING,"+",
-		                           TREETAG_DONE);
-		while (DCount(&r) > 0) {
-		    T_NODE *t3 = DRemHead(&r);
-		    AddChild(t->nodeptr,t3->nodeptr);
-		    free(t3);
-		}
-		DAddTail(&r,&t->mynode);
-		$$ = r;
-
-             }
-         | Term     '-'      OrModAnd 
-             {
-		DLIST r;
-		T_NODE *t;
-
-		InitDList(&r);
-
-		while (DCount(&$1) > 0)
-		    DAddTail(&r,DRemHead(&$1));
-
-		while (DCount(&$3) > 0)
-		    DAddTail(&r,DRemHead(&$3));
-
-		t = (T_NODE *)malloc(sizeof(T_NODE));
-		assert(t);
-		t->nodeptr = AllocTreeNode(TREETAG_STRING,"-",
-		                           TREETAG_DONE);
-		while (DCount(&r) > 0) {
-		    T_NODE *t3 = DRemHead(&r);
-		    AddChild(t->nodeptr,t3->nodeptr);
-		    free(t3);
-		}
-		DAddTail(&r,&t->mynode);
-		$$ = r;
-
-             }
-         ;
-
-OrModAnd : MulDiv   
-             {
-		DLIST r;
-
-		InitDList(&r);
-
-		while (DCount(&$1) > 0)
-		    DAddTail(&r,DRemHead(&$1));
-
-		$$ = r;
-
-             }
-         | OrModAnd OR       MulDiv   
+         | ModAndMulDiv OR       Term     
              {
 		DLIST r;
 		T_NODE *t;
@@ -1010,7 +976,73 @@ OrModAnd : MulDiv
 		$$ = r;
 
              }
-         | OrModAnd MOD      MulDiv   
+         | ModAndMulDiv '+'      Term     
+             {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		while (DCount(&$3) > 0)
+		    DAddTail(&r,DRemHead(&$3));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"+",
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		$$ = r;
+
+             }
+         | ModAndMulDiv '-'      Term     
+             {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		while (DCount(&$3) > 0)
+		    DAddTail(&r,DRemHead(&$3));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"-",
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		$$ = r;
+
+             }
+         ;
+
+ModAndMulDiv : Unary    
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		$$ = r;
+
+             }
+         | Unary    MOD      ModAndMulDiv 
              {
 		DLIST r;
 		T_NODE *t;
@@ -1049,7 +1081,7 @@ OrModAnd : MulDiv
 		$$ = r;
 
              }
-         | OrModAnd AND      MulDiv   
+         | Unary    AND      ModAndMulDiv 
              {
 		DLIST r;
 		T_NODE *t;
@@ -1088,21 +1120,7 @@ OrModAnd : MulDiv
 		$$ = r;
 
              }
-         ;
-
-MulDiv   : Primary  
-             {
-		DLIST r;
-
-		InitDList(&r);
-
-		while (DCount(&$1) > 0)
-		    DAddTail(&r,DRemHead(&$1));
-
-		$$ = r;
-
-             }
-         | MulDiv   '*'      Primary  
+         | Unary    '*'      ModAndMulDiv 
              {
 		DLIST r;
 		T_NODE *t;
@@ -1128,7 +1146,7 @@ MulDiv   : Primary
 		$$ = r;
 
              }
-         | MulDiv   '/'      Primary  
+         | Unary    '/'      ModAndMulDiv 
              {
 		DLIST r;
 		T_NODE *t;
@@ -1156,7 +1174,19 @@ MulDiv   : Primary
              }
          ;
 
-Primary  : NOT      Primary  
+Unary    : Misc     
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		$$ = r;
+
+             }
+         | NOT      Unary    
              {
 		DLIST r;
 		T_NODE *t;
@@ -1192,7 +1222,7 @@ Primary  : NOT      Primary
 		$$ = r;
 
              }
-         | '+'      Primary  
+         | '+'      Unary    
              {
 		DLIST r;
 
@@ -1204,7 +1234,7 @@ Primary  : NOT      Primary
 		$$ = r;
 
              }
-         | '-'      Primary  
+         | '-'      Unary    
              {
 		DLIST r;
 		T_NODE *t;
@@ -1227,7 +1257,21 @@ Primary  : NOT      Primary
 		$$ = r;
 
              }
-         | Primary  POW      Primary  
+         ;
+
+Misc     : Primary  
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		$$ = r;
+
+             }
+         | Primary  POW      Misc     
              {
 		DLIST r;
 		T_NODE *t;
@@ -1266,7 +1310,9 @@ Primary  : NOT      Primary
 		$$ = r;
 
              }
-         | READ     
+         ;
+
+Primary  : READ     
              {
 		DLIST r;
 		T_NODE *t;
@@ -1287,6 +1333,39 @@ Primary  : NOT      Primary
 		t = (T_NODE *)malloc(sizeof(T_NODE));
 		assert(t);
 		t->nodeptr = AllocTreeNode(TREETAG_STRING,"read",
+		                                TREETAG_LINE,$1.line,
+		                                TREETAG_COLUMN,$1.column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		$$ = r;
+
+             }
+         | Eof      
+             {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		if ($1.makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$1.string,
+		                                TREETAG_LINE,$1.line,
+		                                TREETAG_COLUMN,$1.column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"eof",
 		                                TREETAG_LINE,$1.line,
 		                                TREETAG_COLUMN,$1.column,
 		                           TREETAG_DONE);

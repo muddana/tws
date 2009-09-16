@@ -1,0 +1,58 @@
+program pr1c12:
+
+    { this program tests operator precedence }
+
+    {the output of this program should be:
+         45
+         30
+         6
+         -3
+	 20
+         0
+         0
+         1
+         0
+    }
+
+
+var
+    one, zero, num1, num2, num3, int : integer;
+    b1, b2, b3, b4, bool : boolean;
+
+begin
+
+    one := 1;
+    zero := 0;
+    num1 := 5;
+    num2 := 2;
+    num3 := 20;
+    b1 := false;
+    b2 := true;
+    b3 := true;
+    b4 := false;
+
+    int := num1 + num2 * num3;
+    output(int);
+    int := num1 * num2 + num3;
+    output(int);
+    int := num3 / num1 + num2;
+    output(int);
+    int := num3 mod 6 - num1;
+    output(int);
+    int := num1 * num2 ** num2;
+    output(int);
+
+    bool := b1 and b3 or b4;
+    if bool then output(one)
+    else output(zero);
+    bool := b1 or b2 and b4;
+    if bool then output(one)
+    else output(zero);
+    bool := not b1 or b2;
+    if bool then output(one)
+    else output(zero);
+    bool := not (b1 or b2);
+    if bool then output(one)
+    else output(zero);
+    
+end pr1c12.

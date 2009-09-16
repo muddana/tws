@@ -1,0 +1,14 @@
+program pr3e18:
+
+const k=1;
+      p=10;
+      k=m;
+# identifier m is undeclared 
+# identifier k is already declared 
+      m=3;
+begin
+   for x:=k to p do  
+# indentifier x is undeclared
+       output("error");
+# error in output !! single quotes for strings
+end pr3e18.

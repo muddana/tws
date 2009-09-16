@@ -1,0 +1,27 @@
+program pr3c49:
+#
+#	outputs
+#		1 0
+#		1 1
+#		1 2
+#		2 0
+#		2 1
+#		2 2
+#
+const
+	Cone   = 1;
+	Ctwo   = 2;
+	Cthree = 3;
+
+type number = (one, two, three);
+
+var
+	i : integer;
+	j : number;
+
+begin
+	for i := Cone to Ctwo do
+		for j := one to three do
+			output(i,ord(j));
+
+end pr3c49.

@@ -49,12 +49,13 @@
 #define POWNode        29
 
 #define ReadNode       30
-#define TrueNode       31
-#define FalseNode      32
-#define IntegerNode    33
-#define IdentifierNode 34
+#define EofNode        31
+#define TrueNode       32
+#define FalseNode      33
+#define IntegerNode    34
+#define IdentifierNode 35
 
-#define NumberOfNodes  34
+#define NumberOfNodes  35
 
 typedef TreeNode UserType;
 
@@ -70,7 +71,7 @@ char *node[] = { "program", "types", "type", "dclns",
 		 "<>", "=", "<=", "+",
 		 "-", "or", "mod", "and",
 		 "*", "/", "not", "neg",
-		 "pow", "read", "<true>", "<false>",
+		 "pow", "read", "eof", "<true>", "<false>",
 		 "<integer>", "<identifier>" 
                 };
 
@@ -211,12 +212,24 @@ UserType Expression (TreeNode T)
             printf ("\n");
 	  }
 	return (TypeBoolean);
-	
-      case PlusNode :
-      case MinusNode : 
+
       case ORNode :
-      case MODNode :
       case ANDNode :
+	 Type1 = Expression (Child(T,1));
+         Type2 = Expression (Child(T,2));
+	 if (Type1 != TypeBoolean || Type2 != TypeBoolean)
+         {
+            ErrorHeader(Child(T,1));
+            printf ("ARGUMENTS OF 'or', 'and' ");
+            printf ("MUST BE TYPE BOOLEAN\n");
+            printf ("\n");
+         }
+         return (TypeBoolean);
+	 
+
+      case PlusNode :
+      case MinusNode :
+      case MODNode :       
       case MultiplyNode :
       case DivisionNode :
       case UnaryMinusNode :
@@ -231,7 +244,7 @@ UserType Expression (TreeNode T)
          if (Type1 != TypeInteger || Type2 != TypeInteger)
          {
             ErrorHeader(Child(T,1));
-            printf ("ARGUMENTS OF '+', '-', 'or', 'mod', 'and', '*', '/', unary '-', '**' ");
+            printf ("ARGUMENTS OF '+', '-', 'mod', '*', '/', unary '-', '**' ");
             printf ("MUST BE TYPE INTEGER\n");
             printf ("\n");
          }
@@ -240,6 +253,8 @@ UserType Expression (TreeNode T)
       case ReadNode :
          return (TypeInteger);
 
+     case EofNode:
+         return (TypeBoolean);
 
       case IntegerNode : 
          return (TypeInteger);

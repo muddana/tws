@@ -1,0 +1,47 @@
+program pr3c32:
+{ from: mjw
+ 
+  output should be:
+        Bo knows Football.
+        Bo knows Baseball.
+        but...
+        Bo don't know Translators.
+}
+const
+   foo = 'f';
+   f =false;
+   zaa = foo;
+
+var
+    i,j : integer;
+    b1,b2 : boolean;
+    c1, c2 : char;
+begin
+
+   if foo = chr(ord(succ('e'))) then
+      output("Bo knows Football.")
+   else
+      output("Spank! Error."); 
+
+   b1 := not(f);
+   b2 := false;
+
+   if b1 then
+      output("Bo knows Baseball.")
+   else
+      output("Spank! Error");
+
+   for i := 1 to 2 do
+     if i = 1 then
+       b1 :=: b2
+     else
+       if zaa = foo then
+         output("but","...");
+
+   if succ(pred(succ(f))) then   {   if pred(succ(succ(f))) if wrapping}
+      output("Bo don't know Translators.")
+   else
+      output("Spank! Error.");
+
+
+end pr3c32.

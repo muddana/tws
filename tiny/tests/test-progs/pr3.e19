@@ -1,0 +1,20 @@
+program pr3e19:
+		{ -- An INCORRECT program to test constant use. }
+
+{ -- Don't take Life too seriously, nobody gets out of it alive. }
+const
+	ten   = 10;
+	limit = 50;
+var
+	i : integer;
+begin
+	i := 1;
+	limit := limit + ten;  {-- ERROR: attempted assignment to a constant}
+	repeat
+		i := i + ten;
+	until ( i > limit );
+ 
+	output (limit);
+	output (i);
+
+end pr3e19.

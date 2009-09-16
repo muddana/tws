@@ -1,0 +1,29 @@
+program pr3e28:
+#
+#	e09: type mismatch in case statement
+#	     ( one in each case statement)
+#
+
+type color = (red, white, blue, yellow, green);
+var
+	i : color;
+begin
+	i := red;
+	case i of
+	red..white  : output(1);
+	blue..yellow: output(2);
+	true        : output(3);
+	end;
+	i := succ(succ(succ(i)));
+	case i of
+	red..white  : output(1);
+	blue..yellow: output(2);
+	2           : output(3);
+	end;
+	i := pred(succ(succ(i)));
+	case i of
+	red..white  : output(1);
+	blue..yellow: output(2);
+	'3'         : output(3);
+	end;
+end pr3e28.

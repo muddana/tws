@@ -1,0 +1,18 @@
+program pr2e11:
+
+{ no exit from outer loop }
+
+var i, x: integer;
+
+begin
+	x := 0;
+	loop
+		x := x + 1;
+		i := x;
+		loop
+			i := i - 1;
+			if i < 0 then exit;
+			output(i)
+		pool;
+	pool
+end pr2e11.

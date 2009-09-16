@@ -1,0 +1,11 @@
+program pr3e25:
+#
+#	error:	can't output an enumerated value
+#
+type
+	number = (one, two, three);
+begin
+	if pred(three) = succ(one) then output(three);
+	if pred(pred(three)) = pred(succ(one)) then output(2);
+	if pred(two) = pred(pred(succ(succ(one)))) then output(1);
+end pr3e25.

@@ -1,0 +1,33 @@
+program pr3c05:
+{
+   output:
+      1   -1   U
+      2    0   V
+      3    1   W
+      4    2   X
+      5    3   Y
+      6    4   Z
+      7    5   [
+      8    6   \
+      9    7   ]
+
+}
+const
+   start = 5;
+   finish = 10;
+var
+   x,y: integer;
+   a: char;
+begin
+   a := 'T';
+   x := start;
+   y := 0;
+   loop
+      a := succ(a);
+      x := pred(y);
+      y := y +1;
+      if y = finish then
+	 exit;
+      output(y,x,a);
+   pool
+end pr3c05.

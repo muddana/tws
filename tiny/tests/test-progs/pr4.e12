@@ -1,0 +1,20 @@
+{ This program tests simple procedure calls for two arguments. }
+program pr5e14:
+var a: integer;
+    b: boolean;
+
+procedure y (b:integer; a:boolean);
+begin
+	if a then
+		output(1)
+	else
+		output(b)
+end y;
+
+begin
+	a := 13;
+	b := false;
+	output(0);
+	y(a, a);	# ERROR: bad argument type
+	output(0)
+end pr5e14.

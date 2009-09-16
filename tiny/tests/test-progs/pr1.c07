@@ -1,0 +1,13 @@
+program pr1c07:
+{  Prints
+   21
+}
+var a,b,ab,af:integer;
+begin
+a:=2;
+b:=3;
+ab:=6;
+af:=1;
+a:=b++ab*(5-a)/af;
+output(a);
+end pr1c07.

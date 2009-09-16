@@ -1,0 +1,25 @@
+program pr3c38:
+{
+    This tests the parser to see if it reads a single quote as
+    character.
+    It also tests the chr(), ord(), pred() and succ() functions and a
+    test for proper processing of a quote at the end of a string.
+
+    The output should be:
+
+    This is Mark and Sunjay's test program.
+
+}
+var
+   x: char;
+begin
+   x:= '"';           { this should be one character, not a string. }
+   case x of
+      '"': begin
+                 x:= chr((ord(succ('x'))-ord(x) / 2)+ord('3') / 4);
+                 output("This is Mark and Sunjay'",pred(x)," test program.");
+                 end;
+      'a': ;
+      'b': ;
+      end
+end pr3c38.

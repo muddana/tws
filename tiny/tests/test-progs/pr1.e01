@@ -1,0 +1,7 @@
+program pr1e01:
+
+{ Errors:  variales not declared }
+
+begin
+a:=( - - - x /d + f *(d-e) )
+end pr1e01.

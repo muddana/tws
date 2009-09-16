@@ -1,0 +1,32 @@
+{
+	This is a program to compute the factors of entered numbers.
+	It tests:
+		procedures
+		repeat loop
+		if statement
+		arithmetic
+}
+program factors:
+
+var
+    i : integer;
+
+procedure Factor ( i : integer );
+var
+    j : integer;
+begin
+    if i > 0 then
+	for j := 1 to i do
+	    if i mod j = 0 then output ( j );
+    return (1);  { ***** procedure returns a value ***** }
+end Factor;
+
+begin
+
+    repeat
+	read(i);
+	i := Factor ( i );
+	Factor ( i )
+    until i <= 0
+
+end factors.

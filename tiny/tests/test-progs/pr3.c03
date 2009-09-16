@@ -1,0 +1,19 @@
+program pr3c03:
+{
+   input: 3 integers and 3 characters
+   output:
+      4 1 a 3 c 2 b
+      3 1 a 3 c 2 b
+      2 1 a 3 c 2 b
+      1 1 a 3 c 2 b
+      0 1 a 3 c 2 b
+}
+var int1,int2,int3,x: integer;
+    char1,char2,char3:char; 
+begin
+   read(int1,int2,int3,char1,char2,char3);
+   for x := 4 downto 0 do
+      begin
+         output(x,int1,char1,int3,char3,int2,char2);
+      end;
+end pr3c03.

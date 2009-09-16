@@ -1,0 +1,30 @@
+program pr3e11:
+{ from: mjw
+
+  Errors:
+     Undeclared Identifier  foo
+     CHR of boolean
+     NOT of char type
+}
+
+
+const
+    x = 45;
+    y = x;
+    foo = foo;              { error #1 }
+
+var
+    i,j : integer;
+    b1,b2 : boolean;
+    c1, c2 : char;
+begin
+
+   b1 := false;
+   c1 := chr(b1);          { error #2 }
+
+   if not(c1) then          { error #3 }
+     output("Error")
+   else
+     output("Error");
+
+end pr3e11.

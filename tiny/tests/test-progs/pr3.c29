@@ -1,0 +1,21 @@
+program pr3c29:
+
+{ Expected output:
+
+     b is not an a  
+}
+
+const FALSE = false;
+      ALetterB = 'b';
+
+var truthvalue : boolean;
+    JoeCharacter : char;
+
+begin
+   JoeCharacter := succ('a');
+   truthvalue := ( JoeCharacter = 'a' );
+
+   if (truthvalue = FALSE) and (JoeCharacter = ALetterB) then
+      output(ALetterB," is not an a");
+
+end pr3c29.

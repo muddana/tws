@@ -1,0 +1,28 @@
+program pr3c51:
+
+{  Should output the characters 'y', 't', '!' all on separate lines. }
+
+type colors = ( red, green, blue , magenta , cyan );
+     fruits = ( kevin, bob, maurice );
+
+var x, y : colors;
+    q, z : fruits;
+
+begin
+    x := red;
+    y := cyan;
+    q := maurice;
+    z := bob;
+    q :=: z;
+    x := blue;
+
+    if q = bob then
+      output('y');
+    if z = maurice then
+      output('t');
+    case x of
+    red..magenta : output('!');
+    otherwise  output('?')
+    end;
+    
+end pr3c51.

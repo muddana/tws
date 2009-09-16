@@ -1,0 +1,9 @@
+program pr2c08:
+#
+#	outputs 1 2 3 4 5 on separate lines
+#
+var
+	i : integer;
+begin
+	for i := 1 to 5 do output(i);
+end pr2c08.

@@ -1,0 +1,23 @@
+program pr2c04:
+var x,y: integer;
+begin
+   for x := 11 downto 0 do
+      begin
+	 case x of
+	    1: output(x);
+	    2..3: output(x);
+	    4..5: for y := 1 to x do
+		    output(x,y);
+            6: ;
+	    7: ;
+	    8..9: begin
+		     {do nothing}
+		     end;
+            10: output(999);
+         otherwise
+	    begin
+	       output(888);
+            end
+         end;
+      end;
+end pr2c04.

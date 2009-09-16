@@ -1,0 +1,20 @@
+program pr2e13:
+
+var i, x: integer;
+
+# Cannot exit from a for statement
+
+begin
+	x := 0;
+	loop
+		x := x + 1;
+		loop
+			for i := x to 10 do
+			begin
+				if i > 5 then exit;
+				output(i)
+			end;
+		pool;
+		if x > 5 then exit
+	pool
+end pr2e13.

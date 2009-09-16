@@ -1,0 +1,21 @@
+program pr3e01:
+{
+   errors: 
+      c := three      : assignment types do not match
+      x := c          : assignment types do not match
+      c := chr(a)     : argument of chr must be of type integer
+}
+const
+   three = 3;
+var
+   c,a: char;
+   x: integer;
+begin
+   a := 'b';
+   c := three;
+   x := c;
+   x := 5;
+   c := chr(x);
+   x := ord(three);
+   c := chr(a);
+end pr3e01.

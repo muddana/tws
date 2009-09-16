@@ -1,0 +1,15 @@
+program pr3e22:
+#
+#	error: redeclared three as a type
+#
+const
+	three = 3;
+	two   = 2;
+	one   = 1;
+type
+	three = (a,b,c);
+begin
+	output(three);
+	output(two);
+	output(one);
+end pr3e22.

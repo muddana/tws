@@ -1,0 +1,17 @@
+program pr3e04:
+
+const a = integer;   {******ERROR : constants can't be assigned a type*****}
+      b = 23;
+
+var Dom, Kat, Glen : char;
+
+begin
+   Dom := 'd';
+   Kat := b;            {****ERROR : Types do not match****}
+   Glen := Dom + Kat;   {****ERROR : characters can not be added to each other****}
+   for Glen := Dom downto Kat do
+   begin
+      output( Glen, Dom, Kat );
+   end;
+end pr3e04.
+

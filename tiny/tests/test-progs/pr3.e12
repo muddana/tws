@@ -1,0 +1,36 @@
+program pr3e12:
+
+{
+
+	NO INPUT
+
+
+
+	ERROR => trying to assign an int value to a variable of type 'char'.
+			=> b:= ord(c);
+
+	ERROR => trying to assign an char value to a variable of type 'int'.
+			=> c:= chr(c);
+
+	ERROR => trying to assign a value to a constant.
+			=> a:= c;
+ 
+
+        NO OUTPUT
+
+}
+
+const
+	a = 57;
+
+var
+	b: char;
+	c: integer;
+
+begin
+	b:= pred(succ(chr(a)));
+	c:= ord(b);
+	b:= ord(c);
+	c:= chr(c);
+	a:= c;
+end pr3e12.

@@ -1,0 +1,33 @@
+program pr3c04:
+{
+   output:
+      A   65
+      B   66
+      C   67
+      D   68
+      E   69
+      F   70
+      a   97
+      b   98
+      c   99
+      d   100
+      e   101
+      f   102
+}
+var
+   a: char;
+   b,x: integer;
+begin
+   for x := 65 to 70 do
+      begin
+	 a := chr(x);
+	 b := ord(a);
+	 output (a,b)
+      end;
+   for x := 97 to 102 do
+      begin
+	 a := chr(x);
+	 b := ord(a);
+	 output (a,b)
+      end;
+end pr3c04.
