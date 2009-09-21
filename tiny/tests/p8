@@ -1,0 +1,25 @@
+
+program test_or:
+{ Expected out put :
+  1
+  1
+
+Current Output:
+ 1
+ 0
+}
+begin
+
+if( -1 and -3)
+then
+output(1) {prints 1}
+else
+output(0);
+
+if( -1 or -3)
+then
+output(1)
+else
+output(0); {prints 0 }
+
+end test_or.

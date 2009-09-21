@@ -1,0 +1,16 @@
+program test_or:
+begin
+
+if( -1 and -3) 
+then 
+output(1)
+else
+output(0);
+
+if( -1 or -3) 
+then 
+output(1)
+else
+output(0);
+
+end test_or.
