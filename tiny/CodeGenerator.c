@@ -318,6 +318,7 @@ void Expression (TreeNode T, Clabel CurrLabel)
       case ANDNode :
       case MultiplyNode :
       case DivisionNode :
+      case POWNode :
          Expression ( Child(T,1) , CurrLabel);
 	 Expression ( Child(T,2) , NoLabel);
 	 if (NodeName(T) == PlusNode)
@@ -334,6 +335,8 @@ void Expression (TreeNode T, Clabel CurrLabel)
 	   CodeGen1 (BOPOP, BMULT, NoLabel);
 	 else if(NodeName(T) == DivisionNode)
 	   CodeGen1 (BOPOP, BDIV, NoLabel);
+	 else if(NodeName(T) == POWNode)
+	   CodeGen1 (BOPOP, BEXP, NoLabel);
 	 DecrementFrameSize();
          break;
 
@@ -360,7 +363,11 @@ void Expression (TreeNode T, Clabel CurrLabel)
 	 /* what exactly does Reference do ? */
       case FalseNode:
       case TrueNode:
-	     Reference (T,RightMode,CurrLabel);
+	if(NodeName(T) == FalseNode)
+	  CodeGen1 (LITOP, MakeStringOf(0), CurrLabel);
+        else 
+	  CodeGen1 (LITOP, MakeStringOf(1), CurrLabel);
+	IncrementFrameSize();
 	   break;
 
       case IntegerNode :

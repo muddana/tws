@@ -1,18 +1,122 @@
        LIT    0             
        LIT    0             
        LIT    0             
+       LIT    0             
+       LIT    0             
+       LIT    0             
+       LIT    0             
+       LIT    0             
+       LIT    5             
        SGV    0             
-L1     SOS    EOF           
-       UOP    UNOT          
-       COND   L2     L3     
-L2     SOS    INPUT         
+       LIT    2             
        SGV    1             
-       LGV    0             
+       LIT    20            
+       SGV    2             
+       LIT    0             
+       SGV    4             
        LIT    1             
-       BOP    BPLUS         
+       SGV    5             
+       LIT    1             
+       SGV    6             
+       LIT    0             
        SGV    0             
-       GOTO   L1            
-L3     LGV    0             
+       LGV    0             
+       LGV    1             
+       LGV    2             
+       BOP    BMULT         
+       BOP    BPLUS         
+       UOP    UNOT          
+       SGV    3             
+       LGV    3             
        SOS    OUTPUT        
        SOS    OUTPUTL       
-       HALT                 
+       LGV    0             
+       LGV    1             
+       BOP    BMULT         
+       LGV    2             
+       BOP    BPLUS         
+       SGV    3             
+       LGV    3             
+       SOS    OUTPUT        
+       SOS    OUTPUTL       
+       LGV    2             
+       LGV    0             
+       BOP    BDIV          
+       LGV    1             
+       BOP    BPLUS         
+       SGV    3             
+       LGV    3             
+       SOS    OUTPUT        
+       SOS    OUTPUTL       
+       LGV    2             
+       LIT    6             
+       BOP    BMOD          
+       LGV    0             
+       BOP    BMINUS        
+       SGV    3             
+       LGV    3             
+       SOS    OUTPUT        
+       SOS    OUTPUTL       
+       LGV    4             
+       LGV    6             
+       BOP    BAND          
+       LGV    0             
+       BOP    BOR           
+       SGV    7             
+       LGV    3             
+       COND   L1     L2     
+L1     LGV    0             
+       SOS    OUTPUT        
+       SOS    OUTPUTL       
+       GOTO   L3            
+L2     LGV    0             
+       SOS    OUTPUT        
+       SOS    OUTPUTL       
+       NOP                  
+L3     LGV    4             
+       LGV    5             
+       LGV    0             
+       BOP    BAND          
+       BOP    BOR           
+       SGV    7             
+       LGV    7             
+       COND   L4     L5     
+L4     LGV    0             
+       SOS    OUTPUT        
+       SOS    OUTPUTL       
+       GOTO   L6            
+L5     LGV    0             
+       SOS    OUTPUT        
+       SOS    OUTPUTL       
+       NOP                  
+L6     LGV    4             
+       UOP    UNOT          
+       LGV    5             
+       BOP    BOR           
+       SGV    7             
+       LGV    7             
+       COND   L7     L8     
+L7     LGV    0             
+       SOS    OUTPUT        
+       SOS    OUTPUTL       
+       GOTO   L9            
+L8     LGV    0             
+       SOS    OUTPUT        
+       SOS    OUTPUTL       
+       NOP                  
+L9     LGV    4             
+       LGV    5             
+       BOP    BOR           
+       UOP    UNOT          
+       SGV    7             
+       LGV    7             
+       COND   L10    L11    
+L10    LGV    0             
+       SOS    OUTPUT        
+       SOS    OUTPUTL       
+       GOTO   L12           
+L11    LGV    0             
+       SOS    OUTPUT        
+       SOS    OUTPUTL       
+       NOP                  
+L12    HALT                 
