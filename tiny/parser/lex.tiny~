@@ -50,12 +50,13 @@ STR     \"[^\"]+\"
 "*"             { return rule(yytext[0]); }
 "/"             { return rule(yytext[0]); }
 "not"           { return rule(NOT); }
-"**"		{ return rule(POW); }
+
 
 "true" 		{ return rule(TRUE); }
 "false"		{ return rule(FALSE); }
 
 "read" 		{ return rule(READ); }
+"eof" 		{ return rule(Eof); }
 {INT}		{ return node(INTEGER_NUM); }
 {IDENT}		{ return node(IDENTIFIER); }
 "{"		{ column += yyleng; BEGIN( COMM1 ); }

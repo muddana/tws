@@ -198,7 +198,7 @@ UserType Expression (TreeNode T)
          if (Type1 != Type2)
          {
             ErrorHeader(Child(T,1));
-            printf ("ARGUMENTS OF '>=', '<','>', '<=' MUST BE TYPE INTEGER\n");
+            printf ("ARGUMENTS OF '>=', '<','>', '<=', '=' and '<>' MUST BE TYPE INTEGER\n");
             printf ("\n");
          }
          return (TypeBoolean);

@@ -378,14 +378,14 @@ struct yy_trans_info
 static yyconst flex_int16_t yy_accept[117] =
     {   0,
         1,    1,    0,    0,   50,   48,    1,    2,   48,   44,
-       45,   25,   46,   43,   47,   42,   26,   33,   40,   41,
+       45,   26,   46,   43,   47,   42,   27,   33,   40,   41,
        17,   20,   16,   34,   34,   34,   34,   34,   34,   34,
        34,   34,   34,   34,   34,   34,   34,   34,   35,   36,
-       38,   37,    1,    0,   39,   28,   33,    9,   21,   19,
+       38,   37,    1,    0,   39,   25,   33,    9,   21,   19,
        18,   34,   34,   34,   34,   15,   34,   34,   34,   34,
        11,   34,   34,   34,   22,   34,   34,   34,   34,   34,
        34,   34,   36,   24,   34,   34,   34,    8,   32,   34,
-       34,   23,   27,   34,   34,   34,   34,   34,    4,   34,
+       34,   23,   28,   34,   34,   34,   34,   34,    4,   34,
        34,   34,   13,   34,   34,   34,   34,   31,   12,   29,
 
        34,    7,   34,   30,   34,   34,   34,   14,   34,   34,
@@ -904,7 +904,7 @@ YY_RULE_SETUP
 case 25:
 YY_RULE_SETUP
 #line 50 "lex.tiny"
-{ return rule(yytext[0]); }
+{ return rule(POW); }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
@@ -914,120 +914,120 @@ YY_RULE_SETUP
 case 27:
 YY_RULE_SETUP
 #line 52 "lex.tiny"
-{ return rule(NOT); }
+{ return rule(yytext[0]); }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 53 "lex.tiny"
-{ return rule(POW); }
+{ return rule(NOT); }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 55 "lex.tiny"
+#line 56 "lex.tiny"
 { return rule(TRUE); }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 56 "lex.tiny"
+#line 57 "lex.tiny"
 { return rule(FALSE); }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 58 "lex.tiny"
+#line 59 "lex.tiny"
 { return rule(READ); }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 59 "lex.tiny"
+#line 60 "lex.tiny"
 { return rule(Eof); }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 60 "lex.tiny"
+#line 61 "lex.tiny"
 { return node(INTEGER_NUM); }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 61 "lex.tiny"
+#line 62 "lex.tiny"
 { return node(IDENTIFIER); }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 62 "lex.tiny"
+#line 63 "lex.tiny"
 { column += yyleng; BEGIN( COMM1 ); }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 63 "lex.tiny"
+#line 64 "lex.tiny"
 { column += yyleng; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 64 "lex.tiny"
+#line 65 "lex.tiny"
 { column += yyleng; BEGIN( INITIAL ); }
 	YY_BREAK
 case 38:
 /* rule 38 can match eol */
 YY_RULE_SETUP
-#line 65 "lex.tiny"
+#line 66 "lex.tiny"
 { column = 1; line++; }
 	YY_BREAK
 case 39:
 /* rule 39 can match eol */
 YY_RULE_SETUP
-#line 66 "lex.tiny"
+#line 67 "lex.tiny"
 { column = 1; line++; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 67 "lex.tiny"
+#line 68 "lex.tiny"
 { return rule(yytext[0]); }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 68 "lex.tiny"
+#line 69 "lex.tiny"
 { return rule(yytext[0]); }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 69 "lex.tiny"
+#line 70 "lex.tiny"
 { return rule(yytext[0]); }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 70 "lex.tiny"
+#line 71 "lex.tiny"
 { return rule(yytext[0]); }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 71 "lex.tiny"
+#line 72 "lex.tiny"
 { return rule(yytext[0]); }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 72 "lex.tiny"
+#line 73 "lex.tiny"
 { return rule(yytext[0]); }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 73 "lex.tiny"
+#line 74 "lex.tiny"
 { return rule(yytext[0]); }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 74 "lex.tiny"
+#line 75 "lex.tiny"
 { return rule(yytext[0]); }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 75 "lex.tiny"
+#line 76 "lex.tiny"
 { yyerror("unrecognized char");
                   printf("-->%s<--\n",yytext);
                   column++; }  
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 78 "lex.tiny"
+#line 79 "lex.tiny"
 ECHO;
 	YY_BREAK
 #line 1034 "lex.yy.c"
@@ -2029,7 +2029,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 78 "lex.tiny"
+#line 79 "lex.tiny"
 
 
 

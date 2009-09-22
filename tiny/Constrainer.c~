@@ -213,6 +213,7 @@ UserType Expression (TreeNode T)
 	  }
 	return (TypeBoolean);
 
+      /* this has to be strictly boolean as the interpreter is expecting strictly 1 or 0 as the two expression results */
       case ORNode :
       case ANDNode :
 	 Type1 = Expression (Child(T,1));
