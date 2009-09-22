@@ -1,0 +1,10 @@
+1.
+
+Need to investigate why the below program doesn't show the correct line number for the error(not), it shows the line number as L0/C0
+program test_or:
+var num1, num2, num3, int : integer;
+begin
+
+int := not ( num2 * num3)
+
+end test_or.
