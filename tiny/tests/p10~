@@ -1,0 +1,8 @@
+
+program test_or:
+var num1, num2, num3, int : integer;
+begin
+
+int := not ( num2)
+
+end test_or.
