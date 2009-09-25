@@ -111,10 +111,14 @@
 #define TrueNode        79
 #define FalseNode       80
 
-#define    IntegerNode  81  /* '<integer>'*/
-#define    IdentifierNode 82/* '<identifier>'*/
+#define IntegerNode     81  /* '<integer>'*/
+#define IdentifierNode  82/* '<identifier>'*/
 
-#define    NumberOfNodes 82 /* '<identifier>'*/
+#define RepeatNode      83  /* 'repeat' */
+#define LoopNode        84  /* 'loop' */
+#define ExitNode        85  /* 'exit' */
+
+#define NumberOfNodes   85 /* '<identifier>'*/
 typedef int Mode;
 
 FILE *CodeFile;
@@ -142,7 +146,8 @@ char *node_name[] = { "program", "types", "type", "dclns",
 		 "-", "or", "mod", "and",
 		 "*", "/", "not", "neg",
 		      "pow", "read", "eof", "<true>", "<false>",
-		 "<integer>", "<identifier>" 
+		      "<integer>", "<identifier>" ,
+		      "repeat", "loop", "exit"
                 };
 
 /*old_code for deletion in future
@@ -496,9 +501,49 @@ Clabel ProcessNode (TreeNode T, Clabel CurrLabel)
          return (Label3);
 
 
-       case NullNode : return(CurrLabel);
+      case RepeatNode:
+        if (CurrLabel == NoLabel){
+            Label2 = MakeLabel();
+	    CurrLabel = Label2;
+	}
+	else
+            Label2 = CurrLabel;
+	for (Kid = 1; Kid <= NKids(T)-1; Kid++)
+	  CurrLabel = ProcessNode (Child(T,Kid), CurrLabel);
+	Expression(Child(T,NKids(T)), CurrLabel);
+	Label1 = MakeLabel();
+	CodeGen2 (CONDOP, Label1, Label2, NoLabel);
+	DecrementFrameSize();
+	return (Label1);
 
- 
+      case LoopNode:
+	if (CurrLabel == NoLabel){
+            Label2 = MakeLabel();
+	    CurrLabel = Label2;
+	}
+	else
+            Label2 = CurrLabel;
+	Label1 = MakeLabel();/*for decoration of the LoopNode so as to pass this to the next operation */
+	Decorate(T, Label1);
+	for (Kid = 1; Kid <= NKids(T); Kid++)
+	  CurrLabel = ProcessNode (Child(T,Kid), CurrLabel);
+	CodeGen1(GOTOOP, Label2, CurrLabel);
+	/*printf("Decoration of LoopNode is : %d\n", Decoration(T));
+	  printf("Decoration of Label1:%d", Label1);*/
+	/* I need a way for the loop Node to remember if it has atleast one exit in it so as to decide if to pass NoLabel or Label1 */
+	if(Decoration(T) == 0)
+	  return (NoLabel);
+	else
+	  return (Label1);
+     
+      case ExitNode:
+	Label1 = Decoration(Decoration(T));
+	CodeGen1(GOTOOP, Label1, CurrLabel);
+	return (NoLabel);
+
+       case NullNode : return(CurrLabel);
+   
+
       default :
               ReportTreeErrorAt(T);
               printf ("<<< CODE GENERATOR >>> : UNKNOWN NODE NAME ");

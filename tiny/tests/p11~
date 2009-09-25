@@ -1,0 +1,10 @@
+program pr2c02:
+begin
+loop
+	if 3 = read then
+		output(3)
+	else
+	exit
+
+pool;
+end pr2c02.

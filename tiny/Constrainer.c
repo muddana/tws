@@ -55,7 +55,11 @@
 #define IntegerNode    34
 #define IdentifierNode 35
 
-#define NumberOfNodes  35
+#define RepeatNode     36
+#define LoopNode       37
+#define ExitNode       38
+
+#define NumberOfNodes  38
 
 typedef TreeNode UserType;
 
@@ -72,7 +76,8 @@ char *node[] = { "program", "types", "type", "dclns",
 		 "-", "or", "mod", "and",
 		 "*", "/", "not", "neg",
 		 "pow", "read", "eof", "<true>", "<false>",
-		 "<integer>", "<identifier>" 
+		 "<integer>", "<identifier>",
+		 "repeat", "loop", "exit"
                 };
 
 
@@ -153,16 +158,23 @@ void AddIntrinsics (void)
    AddTree (IntegerTNode, TempTree, 1);
 }
 
-
-
-void ErrorHeader (TreeNode T)
-{ 
-   printf ("<<< CONSTRAINER ERROR >>> AT ");
+void PrintHeader(TreeNode T, char * message)
+{
+   printf (message);
    Write_String (stdout,SourceLocation(T));
    printf (" : ");
    printf ("\n");
 }
 
+void ErrorHeader (TreeNode T)
+{ 
+   PrintHeader(T, "<<< CONSTRAINER ERROR >>> AT ");
+}
+
+void WarningHeader (TreeNode T)
+{ 
+  PrintHeader(T, "<<< CONSTRAINER WARNING >>> AT ");
+}
 
 int NKids (TreeNode T)
 {
@@ -291,7 +303,7 @@ void ProcessNode (TreeNode T)
 {
    int Kid, N;
    String Name1, Name2;
-   TreeNode Type1, Type2, Type3;
+   TreeNode Type1, Type2, Type3, Temp;
 
    if (TraceSpecified)
    {
@@ -305,6 +317,8 @@ void ProcessNode (TreeNode T)
    {
       case ProgramNode : 
          OpenScope();
+	 /* for loop context */
+	 DTEnter("<loop_ctxt>", T, T);
          Name1 = NodeName(Child(Child(T,1),1));
          Name2 = NodeName(Child(Child(T,NKids(T)),1));
 
@@ -410,6 +424,46 @@ void ProcessNode (TreeNode T)
          ProcessNode (Child(T,2));
          break;
 
+      case RepeatNode:
+         for(Kid = 1; Kid <= NKids(T)-1; Kid++){
+          ProcessNode(Child(T,Kid));
+         };
+         if (Expression (Child(T,NKids(T))) != TypeBoolean)
+         {
+            ErrorHeader(T);
+            printf ("WHILE EXPRESSION NOT OF TYPE BOOLEAN\n");
+            printf ("\n");
+         };
+	 break;
+
+   case LoopNode:
+     OpenScope();
+     DTEnter("<loop_ctxt>", T, T);
+     for(Kid = 1; Kid <= NKids(T); Kid++){
+          ProcessNode(Child(T,Kid));
+         };
+     CloseScope();
+     if(Decoration(T)== 0){
+       WarningHeader(T);
+       printf("no 'exit' for loop.");
+       printf("\n");
+     }
+     break;
+
+   case ExitNode:
+     Temp = Lookup("<loop_ctxt>", T);
+     if(NodeName(Temp) != LoopNode)
+       {
+	 ErrorHeader(T);
+	 printf("'exit'  CAN ONLY BE INSIDE A 'loop' statement");
+	 printf("\n");
+       }
+     else
+       {
+	 Decorate(T, Temp);
+	 Decorate(Temp, T);
+       };
+     break;
 
       case NullNode : 
          break;

@@ -1,10 +1,11 @@
-       LIT    0             
-       LIT    0             
-       LIT    0             
-       LIT    0             
-       LGV    1             
-       LGV    2             
-       BOP    BMULT         
-       UOP    UNOT          
-       SGV    3             
-       HALT                 
+L1     LIT    3             
+       SOS    INPUT         
+       BOP    BEQ           
+       COND   L3     L4     
+L3     LIT    3             
+       SOS    OUTPUT        
+       SOS    OUTPUTL       
+       GOTO   L5            
+L4     NOP                  
+L5     GOTO   L1            
+L2     HALT                 

@@ -47,6 +47,7 @@ STR     \"[^\"]+\"
 "or" 		{ return rule(OR); }
 "mod" 		{ return rule(MOD); }
 "and" 		{ return rule(AND); }
+"**"		{ return rule(POW); }
 "*"             { return rule(yytext[0]); }
 "/"             { return rule(yytext[0]); }
 "not"           { return rule(NOT); }
