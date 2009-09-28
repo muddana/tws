@@ -24,5 +24,6 @@ Decrementing Framesize to 0
        GOTO   L5            
 L4     NOP                  
 L5     GOTO   L1            
+       GOTO   L2            
 <<< CODE GENERATOR >>> Processing Node <null> , Label is  L2
 L2     HALT                 

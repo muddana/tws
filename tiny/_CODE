@@ -8,4 +8,5 @@ L3     LIT    3
        GOTO   L5            
 L4     NOP                  
 L5     GOTO   L1            
+       GOTO   L2            
 L2     HALT                 

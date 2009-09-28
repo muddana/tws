@@ -531,10 +531,8 @@ Clabel ProcessNode (TreeNode T, Clabel CurrLabel)
 	/*printf("Decoration of LoopNode is : %d\n", Decoration(T));
 	  printf("Decoration of Label1:%d", Label1);*/
 	/* I need a way for the loop Node to remember if it has atleast one exit in it so as to decide if to pass NoLabel or Label1 */
-	if(Decoration(T) == 0)
-	  return (NoLabel);
-	else
-	  return (Label1);
+	CodeGen1(GOTOOP, Label1, NoLabel);
+        return (Label1);
      
       case ExitNode:
 	Label1 = Decoration(Decoration(T));
