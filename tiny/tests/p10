@@ -1,13 +1,14 @@
-
 program test_or:
-var num1, int : integer;
+var num, int : integer;
 begin
-
-int := 10;
-num1 := 9;
-
-int :=: num1;
-
-output(num1);
-output(int);
+int := num;
+for int := 1 to 6 do
+begin
+	for num := int to (23*(2/2)) do
+	begin
+		output((int-1)*46 + num);
+	end
+end;
 end test_or.
+
+

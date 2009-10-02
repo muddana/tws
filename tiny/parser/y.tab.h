@@ -41,79 +41,83 @@
    enum yytokentype {
      END = 258,
      FALSE = 259,
-     EQSWAP = 260,
-     VAR = 261,
-     IDENTIFIER = 262,
-     POW = 263,
-     POOL = 264,
-     IF = 265,
-     READ = 266,
-     REPEAT = 267,
-     ELSE = 268,
-     UNTIL = 269,
-     THEN = 270,
-     NE = 271,
-     MOD = 272,
-     GT = 273,
-     EQ = 274,
-     WHILE = 275,
-     OUTPUT = 276,
-     EXIT = 277,
-     Eof = 278,
-     GTE = 279,
-     NOT = 280,
-     DO = 281,
-     BEGINX = 282,
-     BOOLEAN = 283,
-     INTEGER_NUM = 284,
-     TRUE = 285,
-     AND = 286,
-     INTEGER = 287,
-     LTE = 288,
-     LOOP = 289,
-     OR = 290,
-     LT = 291,
-     ASSIGNMENT = 292,
-     PROGRAM = 293
+     TO = 260,
+     EQSWAP = 261,
+     VAR = 262,
+     IDENTIFIER = 263,
+     POW = 264,
+     POOL = 265,
+     IF = 266,
+     READ = 267,
+     REPEAT = 268,
+     ELSE = 269,
+     UNTIL = 270,
+     FOR = 271,
+     THEN = 272,
+     NE = 273,
+     MOD = 274,
+     GT = 275,
+     EQ = 276,
+     WHILE = 277,
+     OUTPUT = 278,
+     EXIT = 279,
+     Eof = 280,
+     GTE = 281,
+     NOT = 282,
+     DO = 283,
+     BEGINX = 284,
+     BOOLEAN = 285,
+     INTEGER_NUM = 286,
+     TRUE = 287,
+     AND = 288,
+     INTEGER = 289,
+     LTE = 290,
+     LOOP = 291,
+     OR = 292,
+     LT = 293,
+     ASSIGNMENT = 294,
+     PROGRAM = 295
    };
 #endif
 /* Tokens.  */
 #define END 258
 #define FALSE 259
-#define EQSWAP 260
-#define VAR 261
-#define IDENTIFIER 262
-#define POW 263
-#define POOL 264
-#define IF 265
-#define READ 266
-#define REPEAT 267
-#define ELSE 268
-#define UNTIL 269
-#define THEN 270
-#define NE 271
-#define MOD 272
-#define GT 273
-#define EQ 274
-#define WHILE 275
-#define OUTPUT 276
-#define EXIT 277
-#define Eof 278
-#define GTE 279
-#define NOT 280
-#define DO 281
-#define BEGINX 282
-#define BOOLEAN 283
-#define INTEGER_NUM 284
-#define TRUE 285
-#define AND 286
-#define INTEGER 287
-#define LTE 288
-#define LOOP 289
-#define OR 290
-#define LT 291
-#define ASSIGNMENT 292
-#define PROGRAM 293
+#define TO 260
+#define EQSWAP 261
+#define VAR 262
+#define IDENTIFIER 263
+#define POW 264
+#define POOL 265
+#define IF 266
+#define READ 267
+#define REPEAT 268
+#define ELSE 269
+#define UNTIL 270
+#define FOR 271
+#define THEN 272
+#define NE 273
+#define MOD 274
+#define GT 275
+#define EQ 276
+#define WHILE 277
+#define OUTPUT 278
+#define EXIT 279
+#define Eof 280
+#define GTE 281
+#define NOT 282
+#define DO 283
+#define BEGINX 284
+#define BOOLEAN 285
+#define INTEGER_NUM 286
+#define TRUE 287
+#define AND 288
+#define INTEGER 289
+#define LTE 290
+#define LOOP 291
+#define OR 292
+#define LT 293
+#define ASSIGNMENT 294
+#define PROGRAM 295
 
 
 
@@ -126,7 +130,7 @@ typedef union YYSTYPE
    DLIST dlist;
 }
 /* Line 1489 of yacc.c.  */
-#line 130 "y.tab.h"
+#line 134 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

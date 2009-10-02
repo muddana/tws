@@ -15,6 +15,7 @@ Statement  -> Name ASSIGNMENT Expression          	=> "assign"
 	   -> LOOP Statement list ';' POOL    		=> "loop"
 	   -> EXIT					=> "exit"
 	   -> Name EQSWAP Name				=> "<swap>"
+	   -> FOR Name ASSIGNMENT Expression TO Expression DO Statement => "<upto>"
            -> Body
 	   ->                                        	=> "<null>";
 

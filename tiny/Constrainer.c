@@ -59,8 +59,9 @@
 #define LoopNode       37
 #define ExitNode       38
 #define SwapNode       39
+#define UptoNode       40
 
-#define NumberOfNodes  39
+#define NumberOfNodes  40
 
 typedef TreeNode UserType;
 
@@ -78,7 +79,7 @@ char *node[] = { "program", "types", "type", "dclns",
 		 "*", "/", "not", "neg",
 		 "pow", "read", "eof", "<true>", "<false>",
 		 "<integer>", "<identifier>",
-		 "repeat", "loop", "exit", "<swap>"
+		 "repeat", "loop", "exit", "<swap>", "<upto>"
                 };
 
 
@@ -319,6 +320,7 @@ void ProcessNode (TreeNode T)
       case ProgramNode : 
          OpenScope();
 	 /* for loop context */
+	 DTEnter("<for_ctxt>", T, T);
 	 DTEnter("<loop_ctxt>", T, T);
          Name1 = NodeName(Child(Child(T,1),1));
          Name2 = NodeName(Child(Child(T,NKids(T)),1));
@@ -377,6 +379,17 @@ void ProcessNode (TreeNode T)
 
 
       case AssignNode :
+	Temp = Lookup("<for_ctxt>", T);
+	 while(NodeName(Temp) != ProgramNode)
+	   {
+	     if(NodeName(Child(Child(Temp, 1), 1)) == NodeName(Child(Child(T, 1), 1)))
+	       {
+		 ErrorHeader(T);
+		 printf ("CANNOT ASSIGN FOR-LOOP VARIABLE\n");
+		 printf ("\n");
+	       }
+	       Temp = Decoration(Temp);
+	   };
          Type1 = Expression (Child(T,1));
          Type2 = Expression (Child(T,2));
 
@@ -441,8 +454,8 @@ void ProcessNode (TreeNode T)
      OpenScope();
      DTEnter("<loop_ctxt>", T, T);
      for(Kid = 1; Kid <= NKids(T); Kid++){
-          ProcessNode(Child(T,Kid));
-         };
+       ProcessNode(Child(T,Kid));
+     };
      CloseScope();
      if(Decoration(T)== 0){
        WarningHeader(T);
@@ -477,6 +490,35 @@ void ProcessNode (TreeNode T)
             printf ("\n");
          }
          break;
+
+   case UptoNode:
+        Temp = Lookup("<for_ctxt>", T);
+	Decorate(T, Temp);
+	OpenScope();
+	DTEnter("<for_ctxt>", T);
+	DTEnter("<loop_ctxt>", T);
+	Type1 = Expression(Child(T, 1));
+	Type2 = Expression(Child(T, 2));
+	Type3 = Expression(Child(T, 3));
+	if(Type1 != Type2 || Type2 != Type3)
+	  {
+	    ErrorHeader(T);
+            printf ("UPTO EXPECTS AN INTEGER IDENTIFIER AND EXPRESSION\n");
+            printf ("\n");
+	  };
+	ProcessNode(Child(T, 4));
+	while(NodeName(Temp)!= ProgramNode)
+	  {
+	    if(NodeName(Child(Child(Temp,1), 1)) == NodeName(Child(Child(T, 1),1)))
+	      {
+		ErrorHeader(T);
+		printf ("CANNOT ASSIGN FOR-LOOP VARIABLE\n");
+		printf ("\n");
+	      }
+	      Temp = Decoration(Temp);
+	  };
+	CloseScope();
+     break;
 
       case NullNode : 
          break;

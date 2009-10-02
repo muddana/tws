@@ -118,8 +118,9 @@
 #define LoopNode        84  /* 'loop' */
 #define ExitNode        85  /* 'exit' */
 #define SwapNode        86  /* '<swap>' */
+#define UptoNode        87  /* '<upto>' */
 
-#define NumberOfNodes   86 /* '<identifier>'*/
+#define NumberOfNodes   87 /* '<identifier>'*/
 typedef int Mode;
 
 FILE *CodeFile;
@@ -148,7 +149,7 @@ char *node_name[] = { "program", "types", "type", "dclns",
 		 "*", "/", "not", "neg",
 		      "pow", "read", "eof", "<true>", "<false>",
 		      "<integer>", "<identifier>" ,
-		      "repeat", "loop", "exit", "<swap>"
+		      "repeat", "loop", "exit", "<swap>", "<upto>"
                 };
 
 /*old_code for deletion in future
@@ -400,7 +401,7 @@ void Expression (TreeNode T, Clabel CurrLabel)
 Clabel ProcessNode (TreeNode T, Clabel CurrLabel)
 {
    int Kid, Num;
-   Clabel Label1, Label2, Label3;
+   Clabel Label1, Label2, Label3, LabelTemp;
 
    if (TraceSpecified)
    {
@@ -547,6 +548,30 @@ Clabel ProcessNode (TreeNode T, Clabel CurrLabel)
 	Reference (Child(T,2), LeftMode, NoLabel);
 	Reference (Child(T,1), LeftMode, NoLabel);
 	return (NoLabel);
+
+     case UptoNode:
+        Expression(Child(T,3), CurrLabel);
+	Expression (Child(T,2), NoLabel);
+        Reference (Child(T,1), LeftMode, NoLabel);
+	Label1 = MakeLabel();
+	Label2 = MakeLabel();
+	Label3 = MakeLabel();
+	CodeGen0(DUPOP, Label1);
+	Reference (Child(T,1), RightMode, NoLabel);
+	CodeGen1 (BOPOP, BGE, NoLabel);
+	CodeGen2 (CONDOP, Label2, Label3, NoLabel);
+	CodeGen0(NOP, Label2);
+
+	ProcessNode(Child(T, 4), NoLabel);
+
+	Reference (Child(T,1), RightMode, NoLabel);
+	CodeGen1(UOPOP, USUCC, NoLabel);
+	Reference (Child(T,1), LeftMode, NoLabel);
+	CodeGen1(GOTOOP, Label1, NoLabel);
+	CodeGen1(POPOP, MakeStringOf(1), Label3);
+	CodeGen1(LITOP, MakeStringOf(0), NoLabel);
+	Reference (Child(T,1), LeftMode, NoLabel);		
+       return (NoLabel);
 
        case NullNode : return(CurrLabel);
    
