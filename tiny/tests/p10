@@ -1,8 +1,13 @@
 
 program test_or:
-var num1, num2, num3, int : integer;
+var num1, int : integer;
 begin
 
-int := not ( num2 * num3)
+int := 10;
+num1 := 9;
 
+int :=: num1;
+
+output(num1);
+output(int);
 end test_or.

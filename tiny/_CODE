@@ -1,12 +1,18 @@
-L1     LIT    3             
-       SOS    INPUT         
-       BOP    BEQ           
-       COND   L3     L4     
-L3     LIT    3             
+       LIT    0             
+       LIT    0             
+       LIT    10            
+       SGV    1             
+       LIT    9             
+       SGV    0             
+       LGV    1             
+       LGV    0             
+       SWAP                 
+       SGV    0             
+       SGV    1             
+       LGV    0             
        SOS    OUTPUT        
        SOS    OUTPUTL       
-       GOTO   L5            
-L4     NOP                  
-L5     GOTO   L1            
-       GOTO   L2            
-L2     HALT                 
+       LGV    1             
+       SOS    OUTPUT        
+       SOS    OUTPUTL       
+       HALT                 

@@ -19,6 +19,7 @@ typedef struct {
 }
 %token <info>  END
 %token <info>  FALSE
+%token <info>  EQSWAP
 %token <info>  VAR
 %token <info>  IDENTIFIER
 %token <info>  POW
@@ -682,6 +683,45 @@ Statement : Name     ASSIGNMENT Expression
 		t->nodeptr = AllocTreeNode(TREETAG_STRING,"exit",
 		                                TREETAG_LINE,$1.line,
 		                                TREETAG_COLUMN,$1.column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		$$ = r;
+
+             }
+         | Name     EQSWAP   Name     
+             {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		if ($2.makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$2.string,
+		                                TREETAG_LINE,$2.line,
+		                                TREETAG_COLUMN,$2.column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&$3) > 0)
+		    DAddTail(&r,DRemHead(&$3));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"<swap>",
+		                                TREETAG_LINE,$2.line,
+		                                TREETAG_COLUMN,$2.column,
 		                           TREETAG_DONE);
 		while (DCount(&r) > 0) {
 		    T_NODE *t3 = DRemHead(&r);

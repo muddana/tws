@@ -117,8 +117,9 @@
 #define RepeatNode      83  /* 'repeat' */
 #define LoopNode        84  /* 'loop' */
 #define ExitNode        85  /* 'exit' */
+#define SwapNode        86  /* '<swap>' */
 
-#define NumberOfNodes   85 /* '<identifier>'*/
+#define NumberOfNodes   86 /* '<identifier>'*/
 typedef int Mode;
 
 FILE *CodeFile;
@@ -147,7 +148,7 @@ char *node_name[] = { "program", "types", "type", "dclns",
 		 "*", "/", "not", "neg",
 		      "pow", "read", "eof", "<true>", "<false>",
 		      "<integer>", "<identifier>" ,
-		      "repeat", "loop", "exit"
+		      "repeat", "loop", "exit", "<swap>"
                 };
 
 /*old_code for deletion in future
@@ -537,6 +538,14 @@ Clabel ProcessNode (TreeNode T, Clabel CurrLabel)
       case ExitNode:
 	Label1 = Decoration(Decoration(T));
 	CodeGen1(GOTOOP, Label1, CurrLabel);
+	return (NoLabel);
+
+      case SwapNode:
+	Reference (Child(T,1), RightMode, CurrLabel);
+	Reference (Child(T,2), RightMode, NoLabel);
+	CodeGen0(SWAPOP, NoLabel);
+	Reference (Child(T,2), LeftMode, NoLabel);
+	Reference (Child(T,1), LeftMode, NoLabel);
 	return (NoLabel);
 
        case NullNode : return(CurrLabel);

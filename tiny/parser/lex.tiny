@@ -45,6 +45,8 @@ STR     \"[^\"]+\"
 
 "exit"  	{ return rule(EXIT); }
 
+":=:"		{ return rule(EQSWAP); }
+
 ">"		{ return rule(GT); }
 "<"		{ return rule(LT); }
 ">=" 		{ return rule(GTE); }

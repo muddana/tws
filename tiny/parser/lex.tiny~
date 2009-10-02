@@ -37,6 +37,13 @@ STR     \"[^\"]+\"
 "else" 		{ return rule(ELSE); }
 "while" 	{ return rule(WHILE); }
 "do" 		{ return rule(DO); }
+"repeat" 	{ return rule(REPEAT); }
+"until" 	{ return rule(UNTIL); }
+
+"loop"		{ return rule(LOOP); }
+"pool" 		{ return rule(POOL); }
+
+"exit"  	{ return rule(EXIT); }
 
 ">"		{ return rule(GT); }
 "<"		{ return rule(LT); }

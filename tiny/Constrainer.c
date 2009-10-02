@@ -58,8 +58,9 @@
 #define RepeatNode     36
 #define LoopNode       37
 #define ExitNode       38
+#define SwapNode       39
 
-#define NumberOfNodes  38
+#define NumberOfNodes  39
 
 typedef TreeNode UserType;
 
@@ -77,7 +78,7 @@ char *node[] = { "program", "types", "type", "dclns",
 		 "*", "/", "not", "neg",
 		 "pow", "read", "eof", "<true>", "<false>",
 		 "<integer>", "<identifier>",
-		 "repeat", "loop", "exit"
+		 "repeat", "loop", "exit", "<swap>"
                 };
 
 
@@ -464,6 +465,18 @@ void ProcessNode (TreeNode T)
 	 Decorate(Temp, T);
        };
      break;
+
+   case SwapNode:
+         Type1 = Expression (Child(T,1));
+         Type2 = Expression (Child(T,2));
+
+         if (Type1 != Type2)
+         {
+            ErrorHeader(T);
+            printf ("SWAP TYPES DO NOT MATCH\n");
+            printf ("\n");
+         }
+         break;
 
       case NullNode : 
          break;
