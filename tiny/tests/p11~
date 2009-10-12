@@ -1,10 +1,13 @@
 program pr2c02:
+var i, j, k :integer;
 begin
-loop
-	if 3 = read then
-		output(3)
-	else
-	exit
 
-pool;
+
+   for i :=1 to 3 do
+      for j :=1 to 3 do
+	 begin
+	    k := i;
+	    k :=: i;
+	 end;
+output( i, j, k);
 end pr2c02.

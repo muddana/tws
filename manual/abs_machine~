@@ -230,6 +230,7 @@ their execution.
 
      and  Binop(i,Xl,Xr) means
      case i of
+           BEXP   : xl ** Xr
            BAND   : Xl and Xr
            BOR    : Xl or  Xr
            BPLUS  : Xl +   Xr

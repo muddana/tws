@@ -1,10 +1,19 @@
-puts Dir.glob("./tests/test-progs/pr1.{[a-z][0-9][0-9]}").sort
+#script for testing tiny
 
-Dir.glob("./tests/test-progs/pr1.{[a-z][0-9][0-9]}").sort.each do |test_file|
+$PATH = "./tests/test-progs/"
+format = ARGV[0] ||"pr2.{[a-z][0-9][0-9]}"
+
+puts Dir.glob($PATH + format).sort
+
+#ugly hack check wat the problem with gets
+ARGV.clear
+tiny_binary = "./tc"
+
+Dir.glob($PATH + format).sort.each do |test_file|
 	puts "%%%%%%%%Entering #{test_file}:%%%%%%%%"
 	system("cat #{test_file}")
-	system("./tc #{test_file}")
-	puts "%%%%%%%%Press Any key to continue.%%%%%%%%"
-	gets
+	puts "%%%%%%%%Press a key to execute:%%%%%%%%"
+	gets 
+	system("#{tiny_binary} #{test_file}")
 end
 

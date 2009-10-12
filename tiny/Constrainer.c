@@ -379,7 +379,7 @@ void ProcessNode (TreeNode T)
 
 
       case AssignNode :
-	Temp = Lookup("<for_ctxt>", T);
+	 Temp = Lookup("<for_ctxt>", T);
 	 while(NodeName(Temp) != ProgramNode)
 	   {
 	     if(NodeName(Child(Child(Temp, 1), 1)) == NodeName(Child(Child(T, 1), 1)))
@@ -445,7 +445,7 @@ void ProcessNode (TreeNode T)
          if (Expression (Child(T,NKids(T))) != TypeBoolean)
          {
             ErrorHeader(T);
-            printf ("WHILE EXPRESSION NOT OF TYPE BOOLEAN\n");
+            printf ("REPEAT EXPRESSION NOT OF TYPE BOOLEAN\n");
             printf ("\n");
          };
 	 break;
@@ -459,7 +459,7 @@ void ProcessNode (TreeNode T)
      CloseScope();
      if(Decoration(T)== 0){
        WarningHeader(T);
-       printf("no 'exit' for loop.");
+       printf("NO 'exit' FROM 'LOOP'.");
        printf("\n");
      }
      break;
@@ -469,7 +469,7 @@ void ProcessNode (TreeNode T)
      if(NodeName(Temp) != LoopNode)
        {
 	 ErrorHeader(T);
-	 printf("'exit'  CAN ONLY BE INSIDE A 'loop' statement");
+	 printf("'exit' CAN ONLY BE INSIDE A 'loop' statement");
 	 printf("\n");
        }
      else
@@ -480,6 +480,17 @@ void ProcessNode (TreeNode T)
      break;
 
    case SwapNode:
+         Temp = Lookup("<for_ctxt>", T);
+	 while(NodeName(Temp) != ProgramNode)
+	   {
+	     if(NodeName(Child(Child(Temp, 1), 1)) == NodeName(Child(Child(T, 1), 1)))
+	       {
+		 ErrorHeader(T);
+		 printf ("CANNOT SWAP WITH LOOP CONTROL VARIABLE\n");
+		 printf ("\n");
+	       }
+	       Temp = Decoration(Temp);
+	   };
          Type1 = Expression (Child(T,1));
          Type2 = Expression (Child(T,2));
 
@@ -503,7 +514,7 @@ void ProcessNode (TreeNode T)
 	if(Type1 != Type2 || Type2 != Type3)
 	  {
 	    ErrorHeader(T);
-            printf ("UPTO EXPECTS AN INTEGER IDENTIFIER AND EXPRESSION\n");
+            printf ("FOR LOOP VARIABLE DOESN'T MATCH THE START VALUE\n");
             printf ("\n");
 	  };
 	ProcessNode(Child(T, 4));
@@ -512,7 +523,7 @@ void ProcessNode (TreeNode T)
 	    if(NodeName(Child(Child(Temp,1), 1)) == NodeName(Child(Child(T, 1),1)))
 	      {
 		ErrorHeader(T);
-		printf ("CANNOT ASSIGN FOR-LOOP VARIABLE\n");
+		printf ("CANNOT RE-USE A LOOP CONTROL VARIABLE\n");
 		printf ("\n");
 	      }
 	      Temp = Decoration(Temp);
