@@ -50,33 +50,37 @@
      IF = 266,
      READ = 267,
      REPEAT = 268,
-     ELSE = 269,
-     UNTIL = 270,
-     FOR = 271,
-     THEN = 272,
-     NE = 273,
-     MOD = 274,
-     GT = 275,
-     EQ = 276,
-     WHILE = 277,
-     OUTPUT = 278,
-     EXIT = 279,
-     Eof = 280,
-     GTE = 281,
-     NOT = 282,
-     DO = 283,
-     BEGINX = 284,
-     BOOLEAN = 285,
-     INTEGER_NUM = 286,
-     TRUE = 287,
-     AND = 288,
-     INTEGER = 289,
-     LTE = 290,
-     LOOP = 291,
-     OR = 292,
-     LT = 293,
-     ASSIGNMENT = 294,
-     PROGRAM = 295
+     RANGE = 269,
+     ELSE = 270,
+     UNTIL = 271,
+     FOR = 272,
+     THEN = 273,
+     OF = 274,
+     NE = 275,
+     MOD = 276,
+     GT = 277,
+     CASE = 278,
+     EQ = 279,
+     WHILE = 280,
+     OUTPUT = 281,
+     EXIT = 282,
+     Eof = 283,
+     GTE = 284,
+     NOT = 285,
+     DO = 286,
+     BEGINX = 287,
+     BOOLEAN = 288,
+     TRUE = 289,
+     AND = 290,
+     INTEGER_NUM = 291,
+     INTEGER = 292,
+     LTE = 293,
+     LOOP = 294,
+     OR = 295,
+     LT = 296,
+     OTHERWISE = 297,
+     ASSIGNMENT = 298,
+     PROGRAM = 299
    };
 #endif
 /* Tokens.  */
@@ -91,33 +95,37 @@
 #define IF 266
 #define READ 267
 #define REPEAT 268
-#define ELSE 269
-#define UNTIL 270
-#define FOR 271
-#define THEN 272
-#define NE 273
-#define MOD 274
-#define GT 275
-#define EQ 276
-#define WHILE 277
-#define OUTPUT 278
-#define EXIT 279
-#define Eof 280
-#define GTE 281
-#define NOT 282
-#define DO 283
-#define BEGINX 284
-#define BOOLEAN 285
-#define INTEGER_NUM 286
-#define TRUE 287
-#define AND 288
-#define INTEGER 289
-#define LTE 290
-#define LOOP 291
-#define OR 292
-#define LT 293
-#define ASSIGNMENT 294
-#define PROGRAM 295
+#define RANGE 269
+#define ELSE 270
+#define UNTIL 271
+#define FOR 272
+#define THEN 273
+#define OF 274
+#define NE 275
+#define MOD 276
+#define GT 277
+#define CASE 278
+#define EQ 279
+#define WHILE 280
+#define OUTPUT 281
+#define EXIT 282
+#define Eof 283
+#define GTE 284
+#define NOT 285
+#define DO 286
+#define BEGINX 287
+#define BOOLEAN 288
+#define TRUE 289
+#define AND 290
+#define INTEGER_NUM 291
+#define INTEGER 292
+#define LTE 293
+#define LOOP 294
+#define OR 295
+#define LT 296
+#define OTHERWISE 297
+#define ASSIGNMENT 298
+#define PROGRAM 299
 
 
 
@@ -130,7 +138,7 @@ typedef union YYSTYPE
    DLIST dlist;
 }
 /* Line 1489 of yacc.c.  */
-#line 134 "y.tab.h"
+#line 142 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

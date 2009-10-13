@@ -30,6 +30,9 @@ STR     \"[^\"]+\"
 "boolean" 	{ return rule(BOOLEAN); }
 "begin" 	{ return rule(BEGINX); }
 "end" 		{ return rule(END); }
+
+":=:"		{ return rule(EQSWAP); }
+
 ":=" 		{ return rule(ASSIGNMENT); }
 "output" 	{ return rule(OUTPUT); }
 "if" 		{ return rule(IF); }
@@ -45,9 +48,14 @@ STR     \"[^\"]+\"
 
 "exit"  	{ return rule(EXIT); }
 
-":=:"		{ return rule(EQSWAP); }
+
 "for"		{ return rule(FOR); }
 "to"		{ return rule(TO); }
+
+"of"		{ return rule(OF); }
+"case"		{ return rule(CASE); }
+".."		{ return rule(RANGE); }
+"otherwise"	{ return rule(OTHERWISE); }
 
 ">"		{ return rule(GT); }
 "<"		{ return rule(LT); }

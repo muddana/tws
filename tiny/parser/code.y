@@ -28,13 +28,16 @@ typedef struct {
 %token <info>  IF
 %token <info>  READ
 %token <info>  REPEAT
+%token <info>  RANGE
 %token <info>  ELSE
 %token <info>  UNTIL
 %token <info>  FOR
 %token <info>  THEN
+%token <info>  OF
 %token <info>  NE
 %token <info>  MOD
 %token <info>  GT
+%token <info>  CASE
 %token <info>  EQ
 %token <info>  WHILE
 %token <info>  OUTPUT
@@ -45,17 +48,20 @@ typedef struct {
 %token <info>  DO
 %token <info>  BEGINX
 %token <info>  BOOLEAN
-%token <info>  INTEGER_NUM
 %token <info>  TRUE
 %token <info>  AND
+%token <info>  INTEGER_NUM
 %token <info>  INTEGER
 %token <info>  LTE
 %token <info>  LOOP
 %token <info>  OR
 %token <info>  LT
+%token <info>  OTHERWISE
 %token <info>  ASSIGNMENT
 %token <info>  PROGRAM
 %type <dlist> Statement_1_1
+%type <dlist> Statement_1_1_1_1_1
+%type <dlist> CaseClause
 %type <dlist> ModAndMulDiv
 %type <dlist> Unary
 %type <dlist> Statement_1_1_1
@@ -68,13 +74,16 @@ typedef struct {
 %type <dlist> Term
 %type <dlist> Dcln_1
 %type <dlist> Name
+%type <dlist> Clause
 %type <dlist> Body
 %type <dlist> Dclns_1
+%type <dlist> Statement_1_1_1_1_1_1
 %type <dlist> Statement_1_1_1_1
 %type <dlist> Type
 %type <dlist> Expression
 %type <dlist> Dclns
 %type <dlist> Primary
+%type <dlist> Statement_1_1_1_1_1_1_1
 %%
 
 Tiny     : PROGRAM  Name     ':'      Dclns    Body     Name     '.'      
@@ -812,6 +821,56 @@ Statement : Name     ASSIGNMENT Expression
 		$$ = r;
 
              }
+         | CASE     Expression OF       Statement_1_1_1_1_1 
+             {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		if ($1.makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$1.string,
+		                                TREETAG_LINE,$1.line,
+		                                TREETAG_COLUMN,$1.column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&$2) > 0)
+		    DAddTail(&r,DRemHead(&$2));
+
+		if ($3.makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$3.string,
+		                                TREETAG_LINE,$3.line,
+		                                TREETAG_COLUMN,$3.column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&$4) > 0)
+		    DAddTail(&r,DRemHead(&$4));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"case",
+		                                TREETAG_LINE,$1.line,
+		                                TREETAG_COLUMN,$1.column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		$$ = r;
+
+             }
          | Body     
              {
 		DLIST r;
@@ -841,6 +900,125 @@ Statement : Name     ASSIGNMENT Expression
 		    free(t3);
 		}
 		DAddTail(&r,&t->mynode);
+		$$ = r;
+
+             }
+         ;
+
+Statement_1_1_1_1_1 : Statement_1_1_1_1_1_1 
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		$$ = r;
+
+             }
+         | CaseClause Statement_1_1_1_1_1 
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		while (DCount(&$2) > 0)
+		    DAddTail(&r,DRemHead(&$2));
+
+		$$ = r;
+
+             }
+         ;
+
+Statement_1_1_1_1_1_1 : END      
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		if ($1.makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$1.string,
+		                                TREETAG_LINE,$1.line,
+		                                TREETAG_COLUMN,$1.column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		$$ = r;
+
+             }
+         | OTHERWISE Statement Statement_1_1_1_1_1_1_1 
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		if ($1.makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$1.string,
+		                                TREETAG_LINE,$1.line,
+		                                TREETAG_COLUMN,$1.column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&$2) > 0)
+		    DAddTail(&r,DRemHead(&$2));
+
+		while (DCount(&$3) > 0)
+		    DAddTail(&r,DRemHead(&$3));
+
+		$$ = r;
+
+             }
+         ;
+
+Statement_1_1_1_1_1_1_1 : END      
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		if ($1.makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$1.string,
+		                                TREETAG_LINE,$1.line,
+		                                TREETAG_COLUMN,$1.column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		$$ = r;
+
+             }
+         | ';'      END      
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		if ($2.makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$2.string,
+		                                TREETAG_LINE,$2.line,
+		                                TREETAG_COLUMN,$2.column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
 		$$ = r;
 
              }
@@ -987,6 +1165,108 @@ Statement_1 : Expression ')'
 		while (DCount(&$3) > 0)
 		    DAddTail(&r,DRemHead(&$3));
 
+		$$ = r;
+
+             }
+         ;
+
+CaseClause : Clause   ':'      Statement ';'      
+             {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		while (DCount(&$3) > 0)
+		    DAddTail(&r,DRemHead(&$3));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"<case_clause>",
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		$$ = r;
+
+             }
+         ;
+
+Clause   : INTEGER_NUM 
+             {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		if ($1.makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$1.string,
+		                                TREETAG_LINE,$1.line,
+		                                TREETAG_COLUMN,$1.column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"<integer>",
+		                                TREETAG_LINE,$1.line,
+		                                TREETAG_COLUMN,$1.column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		$$ = r;
+
+             }
+         | Primary  RANGE    Primary  
+             {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		if ($2.makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$2.string,
+		                                TREETAG_LINE,$2.line,
+		                                TREETAG_COLUMN,$2.column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&$3) > 0)
+		    DAddTail(&r,DRemHead(&$3));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"<range>",
+		                                TREETAG_LINE,$2.line,
+		                                TREETAG_COLUMN,$2.column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
 		$$ = r;
 
              }

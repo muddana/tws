@@ -60,8 +60,11 @@
 #define ExitNode       38
 #define SwapNode       39
 #define UptoNode       40
+#define CaseNode       41
+#define CaseClauseNode 42
+#define RangeNode      43
 
-#define NumberOfNodes  40
+#define NumberOfNodes  43
 
 typedef TreeNode UserType;
 
@@ -79,7 +82,7 @@ char *node[] = { "program", "types", "type", "dclns",
 		 "*", "/", "not", "neg",
 		 "pow", "read", "eof", "<true>", "<false>",
 		 "<integer>", "<identifier>",
-		 "repeat", "loop", "exit", "<swap>", "<upto>"
+		 "repeat", "loop", "exit", "<swap>", "<upto>", "case", "<case_clause>", "<range>"
                 };
 
 
@@ -288,6 +291,15 @@ UserType Expression (TreeNode T)
          else
             return (TypeInteger);
 
+   case RangeNode:
+     Type1 = Expression(Child(T,1));
+     Type2 = Expression(Child(T,2));
+     if(Type1 != Type2 || Type1 != TypeInteger){
+       ErrorHeader(T);
+       printf ("RANGE OPERATOR MUST BE OF TYPE INTEGER");
+       printf ("\n");
+     }
+     return (TypeInteger);
 
       default :
          ErrorHeader(T);
@@ -529,6 +541,20 @@ void ProcessNode (TreeNode T)
 	      Temp = Decoration(Temp);
 	  };
 	CloseScope();
+     break;
+
+   case CaseNode:
+     Type1 = Expression(Child(T,1));
+     for(Kid = 2; Kid <= NKids(T); Kid++){
+       if(NodeName(Child(T, Kid)) == CaseClauseNode){
+	 Type2 = Expression(Child(Child(T,Kid), 1)); 
+	 if(Type2 != Type1){
+	   ErrorHeader(Child(Child(T,Kid), 1));
+	   printf("CASE CLAUSE NOT OF TYPE OF THE CASE EXPRESSION");
+	   printf("\n");
+	 };
+       };
+     };
      break;
 
       case NullNode : 
