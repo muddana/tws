@@ -1,0 +1,11 @@
+program pr2c05:
+var a: integer;
+begin
+        a:=80;
+        repeat
+		begin
+		   a:=a-1;
+		   output(a);
+                end
+                until a<75;
+end pr2c05.

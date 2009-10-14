@@ -120,7 +120,13 @@
 #define SwapNode        86  /* '<swap>' */
 #define UptoNode        87  /* '<upto>' */
 
-#define NumberOfNodes   87 /* '<identifier>'*/
+#define CaseNode        88
+#define CaseClauseNode  89
+#define RangeNode       90
+
+#define OtherwiseNode   91
+
+#define NumberOfNodes   91 /* '<identifier>'*/
 typedef int Mode;
 
 FILE *CodeFile;
@@ -149,7 +155,7 @@ char *node_name[] = { "program", "types", "type", "dclns",
 		 "*", "/", "not", "neg",
 		      "pow", "read", "eof", "<true>", "<false>",
 		      "<integer>", "<identifier>" ,
-		      "repeat", "loop", "exit", "<swap>", "<upto>"
+		      "repeat", "loop", "exit", "<swap>", "<upto>", "case", "<case_clause>", "<range>", "<otherwise>"
                 };
 
 /*old_code for deletion in future
@@ -401,7 +407,7 @@ void Expression (TreeNode T, Clabel CurrLabel)
 Clabel ProcessNode (TreeNode T, Clabel CurrLabel)
 {
    int Kid, Num;
-   Clabel Label1, Label2, Label3, LabelTemp;
+   Clabel Label1, Label2, Label3, LabelTemp, LabelLoop;
 
    if (TraceSpecified)
    {
@@ -525,16 +531,16 @@ Clabel ProcessNode (TreeNode T, Clabel CurrLabel)
 	}
 	else
             Label2 = CurrLabel;
-	Label1 = MakeLabel();/*for decoration of the LoopNode so as to pass this to the next operation */
-	Decorate(T, Label1);
+	LabelLoop = MakeLabel();/*for decoration of the LoopNode so as to pass this to the next operation */
+	Decorate(T, LabelLoop);
 	for (Kid = 1; Kid <= NKids(T); Kid++)
 	  CurrLabel = ProcessNode (Child(T,Kid), CurrLabel);
 	CodeGen1(GOTOOP, Label2, CurrLabel);
 	/*printf("Decoration of LoopNode is : %d\n", Decoration(T));
 	  printf("Decoration of Label1:%d", Label1);*/
 	/* I need a way for the loop Node to remember if it has atleast one exit in it so as to decide if to pass NoLabel or Label1 */
-	CodeGen1(GOTOOP, Label1, NoLabel);
-        return (Label1);
+	CodeGen1(GOTOOP, LabelLoop, NoLabel);
+        return (LabelLoop);
      
       case ExitNode:
 	Label1 = Decoration(Decoration(T));
@@ -562,9 +568,9 @@ Clabel ProcessNode (TreeNode T, Clabel CurrLabel)
 	CodeGen2 (CONDOP, Label2, Label3, NoLabel);
 	CodeGen0(NOP, Label2);
 
-	ProcessNode(Child(T, 4), NoLabel);
+	CurrLabel = ProcessNode(Child(T, 4), NoLabel);
 
-	Reference (Child(T,1), RightMode, NoLabel);
+	Reference (Child(T,1), RightMode, CurrLabel);
 	CodeGen1(UOPOP, USUCC, NoLabel);
 	Reference (Child(T,1), LeftMode, NoLabel);
 	CodeGen1(GOTOOP, Label1, NoLabel);
@@ -573,6 +579,40 @@ Clabel ProcessNode (TreeNode T, Clabel CurrLabel)
 	Reference (Child(T,1), LeftMode, NoLabel);		
        return (NoLabel);
 
+   case CaseNode:
+     Expression(Child(T,1), CurrLabel);
+     LabelTemp = MakeLabel();
+     Label3 = NoLabel;
+
+     for(Kid = 2; Kid <= NKids(T); Kid++)
+       {
+	if(NodeName(Child(T, Kid)) != OtherwiseNode)
+	  {
+	    CodeGen0(DUPOP, Label3);
+	    if(NodeName(Child(Child(T, Kid),1)) == IntegerNode){
+	      CodeGen1(LITOP, NodeName(Child(Child(Child(T, Kid),1),1)) , NoLabel);
+	      CodeGen1(BOPOP, BEQ, NoLabel);
+	    }
+	    else if(NodeName(Child(Child(T, Kid),1)) == RangeNode){
+	    }
+	    else{/* output error */};
+	    Label1 = MakeLabel();
+	    Label2 = MakeLabel();
+	    CodeGen2(CONDOP, Label1, Label2, NoLabel);
+	    CodeGen1(POPOP, MakeStringOf(1), Label1);
+	    
+	    CurrLabel = ProcessNode(Child(Child(T, Kid), 2), NoLabel);
+
+	    CodeGen1(GOTOOP, LabelTemp, CurrLabel);
+
+	    Label3 = Label2;
+	  }
+       };
+     
+     CodeGen1(POPOP, MakeStringOf(1), Label2);
+
+     return (LabelTemp);
+       
        case NullNode : return(CurrLabel);
    
 

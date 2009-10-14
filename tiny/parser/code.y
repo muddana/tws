@@ -75,15 +75,16 @@ typedef struct {
 %type <dlist> Dcln_1
 %type <dlist> Name
 %type <dlist> Clause
+%type <dlist> Otherwise
 %type <dlist> Body
 %type <dlist> Dclns_1
 %type <dlist> Statement_1_1_1_1_1_1
 %type <dlist> Statement_1_1_1_1
+%type <dlist> Otherwise_1
 %type <dlist> Type
 %type <dlist> Expression
 %type <dlist> Dclns
 %type <dlist> Primary
-%type <dlist> Statement_1_1_1_1_1_1_1
 %%
 
 Tiny     : PROGRAM  Name     ':'      Dclns    Body     Name     '.'      
@@ -954,59 +955,14 @@ Statement_1_1_1_1_1_1 : END
 		$$ = r;
 
              }
-         | OTHERWISE Statement Statement_1_1_1_1_1_1_1 
+         | Otherwise END      
              {
 		DLIST r;
 
 		InitDList(&r);
 
-		if ($1.makenode) {
-		    T_NODE *t2;
-		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
-		    assert(t2);
-		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$1.string,
-		                                TREETAG_LINE,$1.line,
-		                                TREETAG_COLUMN,$1.column,
-		                                TREETAG_DONE);
-		    DAddTail(&r,&t2->mynode);
-		}
-
-		while (DCount(&$2) > 0)
-		    DAddTail(&r,DRemHead(&$2));
-
-		while (DCount(&$3) > 0)
-		    DAddTail(&r,DRemHead(&$3));
-
-		$$ = r;
-
-             }
-         ;
-
-Statement_1_1_1_1_1_1_1 : END      
-             {
-		DLIST r;
-
-		InitDList(&r);
-
-		if ($1.makenode) {
-		    T_NODE *t2;
-		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
-		    assert(t2);
-		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$1.string,
-		                                TREETAG_LINE,$1.line,
-		                                TREETAG_COLUMN,$1.column,
-		                                TREETAG_DONE);
-		    DAddTail(&r,&t2->mynode);
-		}
-
-		$$ = r;
-
-             }
-         | ';'      END      
-             {
-		DLIST r;
-
-		InitDList(&r);
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
 
 		if ($2.makenode) {
 		    T_NODE *t2;
@@ -1164,6 +1120,67 @@ Statement_1 : Expression ')'
 
 		while (DCount(&$3) > 0)
 		    DAddTail(&r,DRemHead(&$3));
+
+		$$ = r;
+
+             }
+         ;
+
+Otherwise : OTHERWISE Statement Otherwise_1 
+             {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		if ($1.makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$1.string,
+		                                TREETAG_LINE,$1.line,
+		                                TREETAG_COLUMN,$1.column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&$2) > 0)
+		    DAddTail(&r,DRemHead(&$2));
+
+		while (DCount(&$3) > 0)
+		    DAddTail(&r,DRemHead(&$3));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"<otherwise>",
+		                                TREETAG_LINE,$1.line,
+		                                TREETAG_COLUMN,$1.column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		$$ = r;
+
+             }
+         ;
+
+Otherwise_1 : 
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		$$ = r;
+
+             }
+         | ';'      
+             {
+		DLIST r;
+
+		InitDList(&r);
 
 		$$ = r;
 

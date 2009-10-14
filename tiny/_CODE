@@ -1,48 +1,21 @@
        LIT    0             
-       LIT    0             
+L1     SOS    INPUT         
+       SGV    0             
        LGV    0             
-       SGV    1             
-       LIT    6             
+       DUP                  
        LIT    1             
-       SGV    1             
-L1     DUP                  
-       LGV    1             
-       BOP    BGE           
-       COND   L2     L3     
-L2     NOP                  
-       LIT    23            
-       LIT    2             
-       LIT    2             
-       BOP    BDIV          
-       BOP    BMULT         
-       LGV    1             
-       SGV    0             
-L4     DUP                  
+       BOP    BEQ           
+       COND   L4     L5     
+L4     POP    1             
        LGV    0             
-       BOP    BGE           
-       COND   L5     L6     
-L5     NOP                  
-       LGV    1             
        LIT    1             
-       BOP    BMINUS        
-       LIT    46            
-       BOP    BMULT         
-       LGV    0             
-       BOP    BPLUS         
-       SOS    OUTPUT        
-       SOS    OUTPUTL       
-       LGV    0             
-       UOP    USUCC         
-       SGV    0             
-       GOTO   L4            
-L6     POP    1             
-       LIT    0             
-       SGV    0             
-       LGV    1             
-       UOP    USUCC         
-       SGV    1             
-       GOTO   L1            
-L3     POP    1             
-       LIT    0             
-       SGV    1             
-       HALT                 
+       BOP    BEQ           
+       COND   L6     L7     
+L6     GOTO   L2            
+       GOTO   L8            
+L7     NOP                  
+L8     GOTO   L3            
+L5     POP    1             
+L3     GOTO   L1            
+       GOTO   L2            
+L2     HALT                 

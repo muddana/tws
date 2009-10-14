@@ -1,0 +1,15 @@
+program pr2c05:
+var a: integer;
+begin
+   a := read;
+   while a < 2 do
+        begin
+		   loop
+		      a:=a+1;
+		      if a=15 then
+			 exit
+                      else
+                        output(a);
+                   pool;
+      end;
+end pr2c05.

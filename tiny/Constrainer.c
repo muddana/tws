@@ -64,7 +64,9 @@
 #define CaseClauseNode 42
 #define RangeNode      43
 
-#define NumberOfNodes  43
+#define OtherwiseNode  44
+
+#define NumberOfNodes  44
 
 typedef TreeNode UserType;
 
@@ -82,7 +84,7 @@ char *node[] = { "program", "types", "type", "dclns",
 		 "*", "/", "not", "neg",
 		 "pow", "read", "eof", "<true>", "<false>",
 		 "<integer>", "<identifier>",
-		 "repeat", "loop", "exit", "<swap>", "<upto>", "case", "<case_clause>", "<range>"
+		 "repeat", "loop", "exit", "<swap>", "<upto>", "case", "<case_clause>", "<range>", "<otherwise>"
                 };
 
 
@@ -474,6 +476,8 @@ void ProcessNode (TreeNode T)
        printf("NO 'exit' FROM 'LOOP'.");
        printf("\n");
      }
+     else 
+       { printf("DECORATON OF 'LOOP'.%d", Decoration(T)); };
      break;
 
    case ExitNode:
@@ -553,11 +557,18 @@ void ProcessNode (TreeNode T)
 	   printf("CASE CLAUSE NOT OF TYPE OF THE CASE EXPRESSION");
 	   printf("\n");
 	 };
-       };
+
+	 ProcessNode(Child(Child(T,Kid), 2)); 
+       }
+       else if(NodeName(Child(T, Kid)) == OtherwiseNode)
+	 {
+	   ProcessNode(Child(Child(T,Kid), 1)); 
+	 }
+       else {/* machine error  */};
      };
      break;
 
-      case NullNode : 
+      case NullNode :  
          break;
 
       default :

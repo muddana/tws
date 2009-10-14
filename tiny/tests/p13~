@@ -1,0 +1,13 @@
+program pr2c15:
+var x,y: integer;
+begin
+loop
+        if x = read then
+                exit
+        else 
+             output(x);
+                
+
+pool;
+
+end pr2c15.

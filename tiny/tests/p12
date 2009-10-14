@@ -1,10 +1,10 @@
 program pr2c15:
 var x,y: integer;
 begin
-	 case x of
-	    1 : output(x);
-            10: output(999);
-	1..5: output(999);
+	 
+		   loop
 
-	end;
+                   pool;
+		   output(a);
+         
 end pr2c15.
