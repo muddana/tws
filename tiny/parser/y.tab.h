@@ -70,9 +70,9 @@
      DO = 286,
      BEGINX = 287,
      BOOLEAN = 288,
-     TRUE = 289,
-     AND = 290,
-     INTEGER_NUM = 291,
+     INTEGER_NUM = 289,
+     TRUE = 290,
+     AND = 291,
      INTEGER = 292,
      LTE = 293,
      LOOP = 294,
@@ -115,9 +115,9 @@
 #define DO 286
 #define BEGINX 287
 #define BOOLEAN 288
-#define TRUE 289
-#define AND 290
-#define INTEGER_NUM 291
+#define INTEGER_NUM 289
+#define TRUE 290
+#define AND 291
 #define INTEGER 292
 #define LTE 293
 #define LOOP 294

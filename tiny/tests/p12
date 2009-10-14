@@ -1,10 +1,11 @@
 program pr2c15:
 var x,y: integer;
 begin
-	 
+	case x of
+		1: 
 		   loop
 
                    pool;
-		   output(a);
-         
+		   
+         end;
 end pr2c15.

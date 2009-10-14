@@ -48,9 +48,9 @@ typedef struct {
 %token <info>  DO
 %token <info>  BEGINX
 %token <info>  BOOLEAN
+%token <info>  INTEGER_NUM
 %token <info>  TRUE
 %token <info>  AND
-%token <info>  INTEGER_NUM
 %token <info>  INTEGER
 %token <info>  LTE
 %token <info>  LOOP
@@ -1215,36 +1215,15 @@ CaseClause : Clause   ':'      Statement ';'
              }
          ;
 
-Clause   : INTEGER_NUM 
+Clause   : Primary  
              {
 		DLIST r;
-		T_NODE *t;
 
 		InitDList(&r);
 
-		if ($1.makenode) {
-		    T_NODE *t2;
-		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
-		    assert(t2);
-		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$1.string,
-		                                TREETAG_LINE,$1.line,
-		                                TREETAG_COLUMN,$1.column,
-		                                TREETAG_DONE);
-		    DAddTail(&r,&t2->mynode);
-		}
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
 
-		t = (T_NODE *)malloc(sizeof(T_NODE));
-		assert(t);
-		t->nodeptr = AllocTreeNode(TREETAG_STRING,"<integer>",
-		                                TREETAG_LINE,$1.line,
-		                                TREETAG_COLUMN,$1.column,
-		                           TREETAG_DONE);
-		while (DCount(&r) > 0) {
-		    T_NODE *t3 = DRemHead(&r);
-		    AddChild(t->nodeptr,t3->nodeptr);
-		    free(t3);
-		}
-		DAddTail(&r,&t->mynode);
 		$$ = r;
 
              }

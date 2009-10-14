@@ -476,8 +476,6 @@ void ProcessNode (TreeNode T)
        printf("NO 'exit' FROM 'LOOP'.");
        printf("\n");
      }
-     else 
-       { printf("DECORATON OF 'LOOP'.%d", Decoration(T)); };
      break;
 
    case ExitNode:

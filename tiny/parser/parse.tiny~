@@ -16,8 +16,16 @@ Statement  -> Name ASSIGNMENT Expression          	=> "assign"
 	   -> EXIT					=> "exit"
 	   -> Name EQSWAP Name				=> "<swap>"
 	   -> FOR Name ASSIGNMENT Expression TO Expression DO Statement => "<upto>"
+	   -> CASE Expression OF (CaseClause)* (Otherwise)? END => "case"
            -> Body
 	   ->                                        	=> "<null>";
+
+Otherwise  -> OTHERWISE Statement (';')?		=> "<otherwise>";
+
+CaseClause -> Clause ':' Statement ';'			=> "<case_clause>";
+
+Clause	   -> INTEGER_NUM  				=> "<integer>"
+	   -> Primary RANGE Primary			=> "<range>";
 
 Expression -> Term
 	   -> Term GT Term				=> ">"	                         		

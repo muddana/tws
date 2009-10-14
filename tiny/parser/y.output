@@ -64,7 +64,7 @@ Grammar
 
    41 CaseClause: Clause ':' Statement ';'
 
-   42 Clause: INTEGER_NUM
+   42 Clause: Primary
    43       | Primary RANGE Primary
 
    44 Expression: Term
@@ -150,9 +150,9 @@ NOT (285) 61
 DO (286) 17 22
 BEGINX (287) 11
 BOOLEAN (288) 10
-TRUE (289) 69
-AND (290) 57
-INTEGER_NUM (291) 42 71
+INTEGER_NUM (289) 71
+TRUE (290) 69
+AND (291) 57
 INTEGER (292) 9
 LTE (293) 50
 LOOP (294) 19
@@ -218,7 +218,7 @@ Unary (78)
 Misc (79)
     on left: 64 65, on right: 60 65
 Primary (80)
-    on left: 66 67 68 69 70 71 72, on right: 43 64 65
+    on left: 66 67 68 69 70 71 72, on right: 42 43 64 65
 Name (81)
     on left: 73, on right: 1 7 8 14 21 22 68
 
@@ -408,8 +408,8 @@ state 18
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -464,8 +464,8 @@ state 21
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -488,8 +488,8 @@ state 22
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -644,8 +644,8 @@ state 39
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -658,16 +658,16 @@ state 39
 
 state 40
 
-   69 Primary: TRUE .
+   71 Primary: INTEGER_NUM .
 
-    $default  reduce using rule 69 (Primary)
+    $default  reduce using rule 71 (Primary)
 
 
 state 41
 
-   71 Primary: INTEGER_NUM .
+   69 Primary: TRUE .
 
-    $default  reduce using rule 71 (Primary)
+    $default  reduce using rule 69 (Primary)
 
 
 state 42
@@ -679,8 +679,8 @@ state 42
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -703,8 +703,8 @@ state 43
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -724,8 +724,8 @@ state 44
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -863,8 +863,8 @@ state 57
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -943,8 +943,8 @@ state 63
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -1024,8 +1024,8 @@ state 70
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -1047,8 +1047,8 @@ state 71
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -1070,8 +1070,8 @@ state 72
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -1093,8 +1093,8 @@ state 73
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -1116,8 +1116,8 @@ state 74
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -1139,8 +1139,8 @@ state 75
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -1162,8 +1162,8 @@ state 76
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -1185,8 +1185,8 @@ state 77
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -1208,8 +1208,8 @@ state 78
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -1231,8 +1231,8 @@ state 79
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -1253,8 +1253,8 @@ state 80
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -1275,8 +1275,8 @@ state 81
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -1297,8 +1297,8 @@ state 82
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -1318,8 +1318,8 @@ state 83
     IDENTIFIER   shift, and go to state 3
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
 
     Misc     go to state 111
@@ -1336,8 +1336,8 @@ state 84
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -1383,8 +1383,8 @@ state 86
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
@@ -1407,17 +1407,17 @@ state 87
     IDENTIFIER   shift, and go to state 3
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 116
-    OTHERWISE    shift, and go to state 117
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
+    OTHERWISE    shift, and go to state 116
     '('          shift, and go to state 42
 
-    Statement_1_1_1_1_1    go to state 118
-    Statement_1_1_1_1_1_1  go to state 119
-    Otherwise              go to state 120
-    CaseClause             go to state 121
-    Clause                 go to state 122
-    Primary                go to state 123
+    Statement_1_1_1_1_1    go to state 117
+    Statement_1_1_1_1_1_1  go to state 118
+    Otherwise              go to state 119
+    CaseClause             go to state 120
+    Clause                 go to state 121
+    Primary                go to state 122
     Name                   go to state 51
 
 
@@ -1439,7 +1439,7 @@ state 88
     $default  reduce using rule 25 (Statement)
 
     Body       go to state 26
-    Statement  go to state 124
+    Statement  go to state 123
     Name       go to state 29
 
 
@@ -1455,8 +1455,8 @@ state 90
    36 Statement_1: Expression . ')'
    37            | Expression . ',' Statement_1
 
-    ','  shift, and go to state 125
-    ')'  shift, and go to state 126
+    ','  shift, and go to state 124
+    ')'  shift, and go to state 125
 
 
 state 91
@@ -1485,7 +1485,7 @@ state 92
 
     Body               go to state 26
     Statement          go to state 58
-    Statement_1_1_1_1  go to state 127
+    Statement_1_1_1_1  go to state 126
     Name               go to state 29
 
 
@@ -1521,12 +1521,12 @@ state 97
 
    16 Statement: IF Expression THEN Statement . Statement_1_1
 
-    ELSE  shift, and go to state 128
+    ELSE  shift, and go to state 127
 
     ELSE      [reduce using rule 34 (Statement_1_1)]
     $default  reduce using rule 34 (Statement_1_1)
 
-    Statement_1_1  go to state 129
+    Statement_1_1  go to state 128
 
 
 state 98
@@ -1645,7 +1645,7 @@ state 114
 
    22 Statement: FOR Name ASSIGNMENT Expression . TO Expression DO Statement
 
-    TO  shift, and go to state 130
+    TO  shift, and go to state 129
 
 
 state 115
@@ -1656,15 +1656,6 @@ state 115
 
 
 state 116
-
-   42 Clause: INTEGER_NUM .
-   71 Primary: INTEGER_NUM .
-
-    RANGE     reduce using rule 71 (Primary)
-    $default  reduce using rule 42 (Clause)
-
-
-state 117
 
    38 Otherwise: OTHERWISE . Statement Otherwise_1
 
@@ -1682,32 +1673,32 @@ state 117
     $default  reduce using rule 25 (Statement)
 
     Body       go to state 26
-    Statement  go to state 131
+    Statement  go to state 130
     Name       go to state 29
 
 
-state 118
+state 117
 
    23 Statement: CASE Expression OF Statement_1_1_1_1_1 .
 
     $default  reduce using rule 23 (Statement)
 
 
-state 119
+state 118
 
    26 Statement_1_1_1_1_1: Statement_1_1_1_1_1_1 .
 
     $default  reduce using rule 26 (Statement_1_1_1_1_1)
 
 
-state 120
+state 119
 
    29 Statement_1_1_1_1_1_1: Otherwise . END
 
-    END  shift, and go to state 132
+    END  shift, and go to state 131
 
 
-state 121
+state 120
 
    27 Statement_1_1_1_1_1: CaseClause . Statement_1_1_1_1_1
 
@@ -1716,42 +1707,45 @@ state 121
     IDENTIFIER   shift, and go to state 3
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 116
-    OTHERWISE    shift, and go to state 117
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
+    OTHERWISE    shift, and go to state 116
     '('          shift, and go to state 42
 
-    Statement_1_1_1_1_1    go to state 133
-    Statement_1_1_1_1_1_1  go to state 119
-    Otherwise              go to state 120
-    CaseClause             go to state 121
-    Clause                 go to state 122
-    Primary                go to state 123
+    Statement_1_1_1_1_1    go to state 132
+    Statement_1_1_1_1_1_1  go to state 118
+    Otherwise              go to state 119
+    CaseClause             go to state 120
+    Clause                 go to state 121
+    Primary                go to state 122
     Name                   go to state 51
+
+
+state 121
+
+   41 CaseClause: Clause . ':' Statement ';'
+
+    ':'  shift, and go to state 133
 
 
 state 122
 
-   41 CaseClause: Clause . ':' Statement ';'
+   42 Clause: Primary .
+   43       | Primary . RANGE Primary
 
-    ':'  shift, and go to state 134
+    RANGE  shift, and go to state 134
+
+    $default  reduce using rule 42 (Clause)
 
 
 state 123
-
-   43 Clause: Primary . RANGE Primary
-
-    RANGE  shift, and go to state 135
-
-
-state 124
 
    17 Statement: WHILE Expression DO Statement .
 
     $default  reduce using rule 17 (Statement)
 
 
-state 125
+state 124
 
    37 Statement_1: Expression ',' . Statement_1
 
@@ -1760,13 +1754,13 @@ state 125
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
 
-    Statement_1   go to state 136
+    Statement_1   go to state 135
     Expression    go to state 90
     Term          go to state 46
     ModAndMulDiv  go to state 47
@@ -1776,21 +1770,21 @@ state 125
     Name          go to state 51
 
 
-state 126
+state 125
 
    36 Statement_1: Expression ')' .
 
     $default  reduce using rule 36 (Statement_1)
 
 
-state 127
+state 126
 
    31 Statement_1_1_1_1: Statement ';' Statement_1_1_1_1 .
 
     $default  reduce using rule 31 (Statement_1_1_1_1)
 
 
-state 128
+state 127
 
    35 Statement_1_1: ELSE . Statement
 
@@ -1808,18 +1802,18 @@ state 128
     $default  reduce using rule 25 (Statement)
 
     Body       go to state 26
-    Statement  go to state 137
+    Statement  go to state 136
     Name       go to state 29
 
 
-state 129
+state 128
 
    16 Statement: IF Expression THEN Statement Statement_1_1 .
 
     $default  reduce using rule 16 (Statement)
 
 
-state 130
+state 129
 
    22 Statement: FOR Name ASSIGNMENT Expression TO . Expression DO Statement
 
@@ -1828,13 +1822,13 @@ state 130
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
     NOT          shift, and go to state 39
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
     '+'          shift, and go to state 43
     '-'          shift, and go to state 44
 
-    Expression    go to state 138
+    Expression    go to state 137
     Term          go to state 46
     ModAndMulDiv  go to state 47
     Unary         go to state 48
@@ -1843,32 +1837,32 @@ state 130
     Name          go to state 51
 
 
-state 131
+state 130
 
    38 Otherwise: OTHERWISE Statement . Otherwise_1
 
-    ';'  shift, and go to state 139
+    ';'  shift, and go to state 138
 
     $default  reduce using rule 39 (Otherwise_1)
 
-    Otherwise_1  go to state 140
+    Otherwise_1  go to state 139
 
 
-state 132
+state 131
 
    29 Statement_1_1_1_1_1_1: Otherwise END .
 
     $default  reduce using rule 29 (Statement_1_1_1_1_1_1)
 
 
-state 133
+state 132
 
    27 Statement_1_1_1_1_1: CaseClause Statement_1_1_1_1_1 .
 
     $default  reduce using rule 27 (Statement_1_1_1_1_1)
 
 
-state 134
+state 133
 
    41 CaseClause: Clause ':' . Statement ';'
 
@@ -1886,11 +1880,11 @@ state 134
     $default  reduce using rule 25 (Statement)
 
     Body       go to state 26
-    Statement  go to state 141
+    Statement  go to state 140
     Name       go to state 29
 
 
-state 135
+state 134
 
    43 Clause: Primary RANGE . Primary
 
@@ -1898,64 +1892,64 @@ state 135
     IDENTIFIER   shift, and go to state 3
     READ         shift, and go to state 37
     Eof          shift, and go to state 38
-    TRUE         shift, and go to state 40
-    INTEGER_NUM  shift, and go to state 41
+    INTEGER_NUM  shift, and go to state 40
+    TRUE         shift, and go to state 41
     '('          shift, and go to state 42
 
-    Primary  go to state 142
+    Primary  go to state 141
     Name     go to state 51
 
 
-state 136
+state 135
 
    37 Statement_1: Expression ',' Statement_1 .
 
     $default  reduce using rule 37 (Statement_1)
 
 
-state 137
+state 136
 
    35 Statement_1_1: ELSE Statement .
 
     $default  reduce using rule 35 (Statement_1_1)
 
 
-state 138
+state 137
 
    22 Statement: FOR Name ASSIGNMENT Expression TO Expression . DO Statement
 
-    DO  shift, and go to state 143
+    DO  shift, and go to state 142
 
 
-state 139
+state 138
 
    40 Otherwise_1: ';' .
 
     $default  reduce using rule 40 (Otherwise_1)
 
 
-state 140
+state 139
 
    38 Otherwise: OTHERWISE Statement Otherwise_1 .
 
     $default  reduce using rule 38 (Otherwise)
 
 
-state 141
+state 140
 
    41 CaseClause: Clause ':' Statement . ';'
 
-    ';'  shift, and go to state 144
+    ';'  shift, and go to state 143
 
 
-state 142
+state 141
 
    43 Clause: Primary RANGE Primary .
 
     $default  reduce using rule 43 (Clause)
 
 
-state 143
+state 142
 
    22 Statement: FOR Name ASSIGNMENT Expression TO Expression DO . Statement
 
@@ -1973,18 +1967,18 @@ state 143
     $default  reduce using rule 25 (Statement)
 
     Body       go to state 26
-    Statement  go to state 145
+    Statement  go to state 144
     Name       go to state 29
 
 
-state 144
+state 143
 
    41 CaseClause: Clause ':' Statement ';' .
 
     $default  reduce using rule 41 (CaseClause)
 
 
-state 145
+state 144
 
    22 Statement: FOR Name ASSIGNMENT Expression TO Expression DO Statement .
 
