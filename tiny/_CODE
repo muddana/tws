@@ -13,8 +13,7 @@ L5     DUP
        LGV    0             
        BOP    BGE           
        COND   L6     L7     
-L6     NOP                  
-       LGV    0             
+L6     LGV    0             
        LIT    5             
        BOP    BGT           
        COND   L8     L9     

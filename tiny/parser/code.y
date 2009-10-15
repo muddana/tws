@@ -59,6 +59,7 @@ typedef struct {
 %token <info>  OTHERWISE
 %token <info>  ASSIGNMENT
 %token <info>  PROGRAM
+%token <info>  DOWNTO
 %type <dlist> Statement_1_1
 %type <dlist> Statement_1_1_1_1_1
 %type <dlist> CaseClause
@@ -705,7 +706,7 @@ Statement : Name     ASSIGNMENT Expression
 		$$ = r;
 
              }
-         | Name     EQSWAP   Name     
+         | Primary  EQSWAP   Primary  
              {
 		DLIST r;
 		T_NODE *t;
@@ -810,6 +811,84 @@ Statement : Name     ASSIGNMENT Expression
 		t = (T_NODE *)malloc(sizeof(T_NODE));
 		assert(t);
 		t->nodeptr = AllocTreeNode(TREETAG_STRING,"<upto>",
+		                                TREETAG_LINE,$1.line,
+		                                TREETAG_COLUMN,$1.column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		$$ = r;
+
+             }
+         | FOR      Name     ASSIGNMENT Expression DOWNTO   Expression DO       Statement 
+             {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		if ($1.makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$1.string,
+		                                TREETAG_LINE,$1.line,
+		                                TREETAG_COLUMN,$1.column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&$2) > 0)
+		    DAddTail(&r,DRemHead(&$2));
+
+		if ($3.makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$3.string,
+		                                TREETAG_LINE,$3.line,
+		                                TREETAG_COLUMN,$3.column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&$4) > 0)
+		    DAddTail(&r,DRemHead(&$4));
+
+		if ($5.makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$5.string,
+		                                TREETAG_LINE,$5.line,
+		                                TREETAG_COLUMN,$5.column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&$6) > 0)
+		    DAddTail(&r,DRemHead(&$6));
+
+		if ($7.makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$7.string,
+		                                TREETAG_LINE,$7.line,
+		                                TREETAG_COLUMN,$7.column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&$8) > 0)
+		    DAddTail(&r,DRemHead(&$8));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"<downto>",
 		                                TREETAG_LINE,$1.line,
 		                                TREETAG_COLUMN,$1.column,
 		                           TREETAG_DONE);

@@ -51,6 +51,7 @@ STR     \"[^\"]+\"
 
 "for"		{ return rule(FOR); }
 "to"		{ return rule(TO); }
+"downto"	{ return rule(DOWNTO); }
 
 "of"		{ return rule(OF); }
 "case"		{ return rule(CASE); }

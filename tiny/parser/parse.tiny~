@@ -24,7 +24,7 @@ Otherwise  -> OTHERWISE Statement (';')?		=> "<otherwise>";
 
 CaseClause -> Clause ':' Statement ';'			=> "<case_clause>";
 
-Clause	   -> INTEGER_NUM  				=> "<integer>"
+Clause	   -> Primary	   				
 	   -> Primary RANGE Primary			=> "<range>";
 
 Expression -> Term

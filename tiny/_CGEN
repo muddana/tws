@@ -40,13 +40,12 @@ Incrementing Framesize to 4
        LGV    0             
        BOP    BGE           
        COND   L6     L7     
-L6     NOP                  
-<<< CODE GENERATOR >>> Processing Node block , Label is  
-<<< CODE GENERATOR >>> Processing Node if , Label is  
-<<< CODE GENERATOR >>> Processing Node > , Label is  
-<<< CODE GENERATOR >>> Processing Node <identifier> , Label is  
+<<< CODE GENERATOR >>> Processing Node block , Label is  L6
+<<< CODE GENERATOR >>> Processing Node if , Label is  L6
+<<< CODE GENERATOR >>> Processing Node > , Label is  L6
+<<< CODE GENERATOR >>> Processing Node <identifier> , Label is  L6
 Incrementing Framesize to 5
-       LGV    0             
+L6     LGV    0             
 <<< CODE GENERATOR >>> Processing Node <integer> , Label is  
        LIT    5             
 Incrementing Framesize to 6

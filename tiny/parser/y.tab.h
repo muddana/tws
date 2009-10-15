@@ -80,7 +80,8 @@
      LT = 296,
      OTHERWISE = 297,
      ASSIGNMENT = 298,
-     PROGRAM = 299
+     PROGRAM = 299,
+     DOWNTO = 300
    };
 #endif
 /* Tokens.  */
@@ -126,6 +127,7 @@
 #define OTHERWISE 297
 #define ASSIGNMENT 298
 #define PROGRAM 299
+#define DOWNTO 300
 
 
 
@@ -138,7 +140,7 @@ typedef union YYSTYPE
    DLIST dlist;
 }
 /* Line 1489 of yacc.c.  */
-#line 142 "y.tab.h"
+#line 144 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

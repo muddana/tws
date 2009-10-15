@@ -594,6 +594,13 @@ Clabel ProcessNode (TreeNode T, Clabel CurrLabel)
 	      CodeGen1(BOPOP, BEQ, NoLabel);
 	    }
 	    else if(NodeName(Child(Child(T, Kid),1)) == RangeNode){
+	      CodeGen0(DUPOP, NoLabel);
+	      CodeGen1(LITOP, NodeName(Child(Child(Child(Child(T, Kid),1),1), 1)), NoLabel);
+	      CodeGen1(BOPOP, BGE, NoLabel);
+	      CodeGen0(SWAPOP, NoLabel);
+	      CodeGen1(LITOP, NodeName(Child(Child(Child(Child(T, Kid),1),2), 1)), NoLabel);
+	      CodeGen1(BOPOP, BLE, NoLabel);
+	      CodeGen1(BOPOP, BAND, NoLabel);
 	    }
 	    else{/* output error */};
 	    Label1 = MakeLabel();
@@ -610,7 +617,15 @@ Clabel ProcessNode (TreeNode T, Clabel CurrLabel)
        };
      
      CodeGen1(POPOP, MakeStringOf(1), Label2);
-
+     if(NodeName(Child(T, NKids(T))) == OtherwiseNode)
+       {
+	 CurrLabel = ProcessNode(Child(Child(T, NKids(T)),1), NoLabel);
+	 if(CurrLabel == NoLabel)
+	   {
+	     CodeGen0(NOP, CurrLabel);
+	   };
+       };
+     /*take care of other wise node */
      return (LabelTemp);
        
        case NullNode : return(CurrLabel);

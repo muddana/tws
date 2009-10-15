@@ -123,10 +123,10 @@
 #define CaseNode        88
 #define CaseClauseNode  89
 #define RangeNode       90
-
 #define OtherwiseNode   91
+#define DownToNode      92
 
-#define NumberOfNodes   91 /* '<identifier>'*/
+#define NumberOfNodes   92 /* '<identifier>'*/
 typedef int Mode;
 
 FILE *CodeFile;
@@ -155,7 +155,9 @@ char *node_name[] = { "program", "types", "type", "dclns",
 		 "*", "/", "not", "neg",
 		      "pow", "read", "eof", "<true>", "<false>",
 		      "<integer>", "<identifier>" ,
-		      "repeat", "loop", "exit", "<swap>", "<upto>", "case", "<case_clause>", "<range>", "<otherwise>"
+		      "repeat", "loop", "exit", "<swap>",
+		      "<upto>", "case", "<case_clause>", "<range>",
+		      "<otherwise>", "<downto>"
                 };
 
 /*old_code for deletion in future
@@ -566,9 +568,9 @@ Clabel ProcessNode (TreeNode T, Clabel CurrLabel)
 	Reference (Child(T,1), RightMode, NoLabel);
 	CodeGen1 (BOPOP, BGE, NoLabel);
 	CodeGen2 (CONDOP, Label2, Label3, NoLabel);
-	CodeGen0(NOP, Label2);
+	/*CodeGen0(NOP, Label2);*/
 
-	CurrLabel = ProcessNode(Child(T, 4), NoLabel);
+	CurrLabel = ProcessNode(Child(T, 4), Label2);
 
 	Reference (Child(T,1), RightMode, CurrLabel);
 	CodeGen1(UOPOP, USUCC, NoLabel);
@@ -576,8 +578,31 @@ Clabel ProcessNode (TreeNode T, Clabel CurrLabel)
 	CodeGen1(GOTOOP, Label1, NoLabel);
 	CodeGen1(POPOP, MakeStringOf(1), Label3);
 	CodeGen1(LITOP, MakeStringOf(0), NoLabel);
-	Reference (Child(T,1), LeftMode, NoLabel);		
+	Reference (Child(T,1), LeftMode, NoLabel);
        return (NoLabel);
+
+     case DownToNode:
+       Expression(Child(T,3), CurrLabel);
+       Expression (Child(T,2), NoLabel);
+        Reference (Child(T,1), LeftMode, NoLabel);
+	Label1 = MakeLabel();
+	Label2 = MakeLabel();
+	Label3 = MakeLabel();
+	CodeGen0(DUPOP, Label1);
+	Reference (Child(T,1), RightMode, NoLabel);
+	CodeGen1 (BOPOP, BLE, NoLabel);
+	CodeGen2 (CONDOP, Label2, Label3, NoLabel);
+
+	CurrLabel = ProcessNode(Child(T, 4), Label2);
+
+	Reference (Child(T,1), RightMode, CurrLabel);
+	CodeGen1(UOPOP, UPRED, NoLabel);
+	Reference (Child(T,1), LeftMode, NoLabel);
+	CodeGen1(GOTOOP, Label1, NoLabel);
+	CodeGen1(POPOP, MakeStringOf(1), Label3);
+	CodeGen1(LITOP, MakeStringOf(0), NoLabel);
+	Reference (Child(T,1), LeftMode, NoLabel);
+     return (NoLabel);
 
    case CaseNode:
      Expression(Child(T,1), CurrLabel);

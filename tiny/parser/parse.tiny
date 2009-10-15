@@ -14,8 +14,9 @@ Statement  -> Name ASSIGNMENT Expression          	=> "assign"
 	   -> REPEAT Statement list ';' UNTIL Expression => "repeat"
 	   -> LOOP Statement list ';' POOL    		=> "loop"
 	   -> EXIT					=> "exit"
-	   -> Name EQSWAP Name				=> "<swap>"
+	   -> Primary EQSWAP Primary			=> "<swap>"
 	   -> FOR Name ASSIGNMENT Expression TO Expression DO Statement => "<upto>"
+	   -> FOR Name ASSIGNMENT Expression DOWNTO Expression DO Statement => "<downto>"
 	   -> CASE Expression OF (CaseClause)* (Otherwise)? END => "case"
            -> Body
 	   ->                                        	=> "<null>";

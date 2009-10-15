@@ -63,10 +63,10 @@
 #define CaseNode       41
 #define CaseClauseNode 42
 #define RangeNode      43
-
 #define OtherwiseNode  44
+#define DownToNode     45
 
-#define NumberOfNodes  44
+#define NumberOfNodes  45
 
 typedef TreeNode UserType;
 
@@ -84,7 +84,9 @@ char *node[] = { "program", "types", "type", "dclns",
 		 "*", "/", "not", "neg",
 		 "pow", "read", "eof", "<true>", "<false>",
 		 "<integer>", "<identifier>",
-		 "repeat", "loop", "exit", "<swap>", "<upto>", "case", "<case_clause>", "<range>", "<otherwise>"
+		 "repeat", "loop", "exit", "<swap>", 
+		 "<upto>", "case", "<case_clause>", "<range>",
+		 "<otherwise>", "<downto>"
                 };
 
 
@@ -94,6 +96,7 @@ FILE *TraceFile;
 char *TraceFileName;
 int NumberTreesRead, index;
 
+void AnnounceContext(TreeNode);
 
 void Constrain(void)    
 {
@@ -334,8 +337,7 @@ void ProcessNode (TreeNode T)
       case ProgramNode : 
          OpenScope();
 	 /* for loop context */
-	 DTEnter("<for_ctxt>", T, T);
-	 DTEnter("<loop_ctxt>", T, T);
+	 AnnounceContext(T);
          Name1 = NodeName(Child(Child(T,1),1));
          Name2 = NodeName(Child(Child(T,NKids(T)),1));
 
@@ -494,41 +496,70 @@ void ProcessNode (TreeNode T)
      break;
 
    case SwapNode:
-         Temp = Lookup("<for_ctxt>", T);
-	 while(NodeName(Temp) != ProgramNode)
-	   {
-	     if(NodeName(Child(Child(Temp, 1), 1)) == NodeName(Child(Child(T, 1), 1)))
-	       {
-		 ErrorHeader(T);
-		 printf ("CANNOT SWAP WITH LOOP CONTROL VARIABLE\n");
-		 printf ("\n");
-	       }
-	       Temp = Decoration(Temp);
-	   };
          Type1 = Expression (Child(T,1));
          Type2 = Expression (Child(T,2));
-
-         if (Type1 != Type2)
-         {
+         if (Type1 != Type2 || NodeName(Child(T,1)) != IdentifierNode || NodeName(Child(T,2)) != IdentifierNode)
+	   {
             ErrorHeader(T);
-            printf ("SWAP TYPES DO NOT MATCH\n");
+            printf ("SWAP TYPES ARE ILLEGAL OR DO NOT MATCH\n");
             printf ("\n");
          }
+	 else
+	   {
+	     Temp = Lookup("<for_ctxt>", T);
+	     while(NodeName(Temp) != ProgramNode)
+	       {
+		 if(NodeName(Child(Child(Temp, 1), 1)) == NodeName(Child(Child(T, 1), 1)))
+		   {
+		     ErrorHeader(T);
+		     printf ("CANNOT SWAP WITH LOOP CONTROL VARIABLE\n");
+		     printf ("\n");
+		   }
+		 Temp = Decoration(Temp);
+	       };
+	   }
          break;
 
    case UptoNode:
         Temp = Lookup("<for_ctxt>", T);
 	Decorate(T, Temp);
 	OpenScope();
-	DTEnter("<for_ctxt>", T);
-	DTEnter("<loop_ctxt>", T);
+	AnnounceContext(T);
 	Type1 = Expression(Child(T, 1));
 	Type2 = Expression(Child(T, 2));
 	Type3 = Expression(Child(T, 3));
 	if(Type1 != Type2 || Type2 != Type3)
 	  {
 	    ErrorHeader(T);
-            printf ("FOR LOOP VARIABLE DOESN'T MATCH THE START VALUE\n");
+            printf ("FOR LOOP VARIABLE DOESN'T MATCH THE TYPE OF START VALUE\n");
+            printf ("\n");
+	  };
+	ProcessNode(Child(T, 4));
+	while(NodeName(Temp)!= ProgramNode)
+	  {
+	    if(NodeName(Child(Child(Temp,1), 1)) == NodeName(Child(Child(T, 1),1)))
+	      {
+		ErrorHeader(T);
+		printf ("CANNOT RE-USE A LOOP CONTROL VARIABLE\n");
+		printf ("\n");
+	      }
+	      Temp = Decoration(Temp);
+	  };
+	CloseScope();
+     break;
+
+   case DownToNode:
+     Temp = Lookup("<downto_ctxt>", T);
+     Decorate(T, Temp);
+     OpenScope();
+     AnnounceContext(T);
+     Type1 = Expression(Child(T, 1));
+     Type2 = Expression(Child(T, 2));
+     Type3 = Expression(Child(T, 3));
+     if(Type1 != Type2 || Type2 != Type3)
+	  {
+	    ErrorHeader(T);
+            printf ("DOWNTO LOOP VARIABLE DOESN'T MATCH THE TYPE OF START VALUE\n");
             printf ("\n");
 	  };
 	ProcessNode(Child(T, 4));
@@ -577,3 +608,11 @@ void ProcessNode (TreeNode T)
 
    }  /* end switch */
 }  /* end ProcessNode */
+
+
+void AnnounceContext(TreeNode T)
+{
+  DTEnter("<for_ctxt>", T);
+  DTEnter("<downto_ctxt>", T);
+  DTEnter("<loop_ctxt>", T);
+}
