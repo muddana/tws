@@ -29,3 +29,22 @@ begin
          x := t;
       end;
 end pr3c06.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+4 
+3 
+2 
+1 
+0 
+255 
+254 
+253 
+252 
+   End Execution.
+ACTUAL_OUTPUT}

@@ -13,3 +13,17 @@ begin
 	output(ord(one));
 	output(ord(zero))
 end pr3c09.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+3 
+2 
+1 
+0 
+   End Execution.
+ACTUAL_OUTPUT}

@@ -17,3 +17,14 @@ begin
 	i :=: j;
 	output(i,j);
 end pr3c17.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+4 1 
+   End Execution.
+ACTUAL_OUTPUT}

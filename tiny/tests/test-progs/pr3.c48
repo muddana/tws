@@ -12,3 +12,14 @@ begin
 	i :=: j;
 	output(ord(i),ord(j));
 end pr3c48.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+4 1 
+   End Execution.
+ACTUAL_OUTPUT}

@@ -30,3 +30,16 @@ begin
 	otherwise output(4)
 	end
 end pr3c52.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+3 
+4 
+2 
+   End Execution.
+ACTUAL_OUTPUT}

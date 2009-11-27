@@ -33,3 +33,14 @@ begin
   end
 
 end pr3c34.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+x = lowercase a
+   End Execution.
+ACTUAL_OUTPUT}

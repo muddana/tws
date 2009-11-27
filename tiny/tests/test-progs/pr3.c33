@@ -42,3 +42,24 @@ begin
 		end;
 	output("YAHOO! ... aw PHOOEY!, I am through.");
 end pr3c33.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+Letter => b
+Letter => c
+Letter => d
+Letter => e
+Letter => f
+Letter => g
+Letter => h
+Letter => i
+Letter => j
+Letter => k
+YAHOO! ... aw PHOOEY!, I am through.
+   End Execution.
+ACTUAL_OUTPUT}

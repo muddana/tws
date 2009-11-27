@@ -12,3 +12,14 @@ The output should be on a single line as follows:
  begin
   output("","","","Nulls test.")
  end pr3c28.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+Nulls test.
+   End Execution.
+ACTUAL_OUTPUT}

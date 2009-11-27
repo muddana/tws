@@ -23,3 +23,14 @@ begin
       'b': ;
       end
 end pr3c38.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+This is Mark and Sunjay's test program.
+   End Execution.
+ACTUAL_OUTPUT}

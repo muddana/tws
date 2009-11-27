@@ -45,3 +45,17 @@ begin
 
 
 end pr3c32.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+Bo knows Football.
+Bo knows Baseball.
+but...
+Bo don't know Translators.
+   End Execution.
+ACTUAL_OUTPUT}

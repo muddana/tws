@@ -20,3 +20,20 @@ ascii code and character:         70 F
     for lp := start to stop do
       output("ascii code and character: ",lp,' ',chr(lp));
 end pr3c20.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+Ascii Table from A to F
+ascii code and character: 65  A
+ascii code and character: 66  B
+ascii code and character: 67  C
+ascii code and character: 68  D
+ascii code and character: 69  E
+ascii code and character: 70  F
+   End Execution.
+ACTUAL_OUTPUT}

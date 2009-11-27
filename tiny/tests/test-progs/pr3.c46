@@ -13,3 +13,17 @@ begin
 		i := succ(i);
 	until i = e;
 end pr3c46.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+0 
+1 
+2 
+3 
+   End Execution.
+ACTUAL_OUTPUT}

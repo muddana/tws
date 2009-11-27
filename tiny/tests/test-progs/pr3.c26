@@ -19,3 +19,16 @@ begin
    val := val + small;
    output("chr(",val,") = ",chr(val));
 end pr3c26.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+Big is   1000 
+Small is 10 
+chr(65 ) = A
+   End Execution.
+ACTUAL_OUTPUT}

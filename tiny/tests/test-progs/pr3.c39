@@ -22,3 +22,27 @@ begin
      end;
    pool;
 end pr3c39.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+k is 12  m is 12 
+k is 12  m is 12 
+k is 12  m is 12 
+k is 12  m is 12 
+k is 12  m is 12 
+k is 12  m is 12 
+k is 12  m is 12 
+k is 12  m is 12 
+k is 12  m is 12 
+k is 12  m is 12 
+k is 12  m is 12 
+k is 12  m is 12 
+letter = w
+letter = w
+   End Execution.
+ACTUAL_OUTPUT}

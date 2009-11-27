@@ -20,3 +20,16 @@ begin
 	output(one);
 
 end pr3c21.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+33 
+22 
+57 
+   End Execution.
+ACTUAL_OUTPUT}

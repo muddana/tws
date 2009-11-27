@@ -30,3 +30,16 @@ begin
 	i :=: j;
 	if ( (i = c) and (j = a) ) then output(3) else output(10000);
 end pr3c50.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+1 
+2 
+3 
+   End Execution.
+ACTUAL_OUTPUT}

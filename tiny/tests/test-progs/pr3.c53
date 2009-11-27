@@ -41,3 +41,23 @@ begin
 	end;
 
 end pr3c53.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+1 
+2 
+3 
+4 
+5 
+6 
+2 
+3 
+4 
+5 
+   End Execution.
+ACTUAL_OUTPUT}

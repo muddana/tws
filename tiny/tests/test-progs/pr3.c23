@@ -15,3 +15,14 @@ begin
   output (5,'5',constintfive,constcharfive,intfive,charfive);
 
 end pr3c23.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+5 55 55 5
+   End Execution.
+ACTUAL_OUTPUT}

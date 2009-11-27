@@ -66,3 +66,50 @@ begin
       pool;
    end;
 end pr3c08.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+111 222 333 444 
+666 4 
+666 6 
+666 8 
+666 10 
+666 12 
+666 14 
+666 16 
+666 18 
+1 
+2 
+3 
+4 
+5 
+5 
+4 
+3 
+2 
+1 
+5 
+7 
+9 
+0 0 
+1 777 777 777 
+2 777 777 777 
+3 777 777 777 
+4 777 777 777 
+5 777 777 777 
+111 
+111 
+111 
+999 
+999 
+111 222 333 444 
+999 
+111 222 333 444 
+999 
+   End Execution.
+ACTUAL_OUTPUT}

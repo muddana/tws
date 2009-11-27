@@ -23,3 +23,19 @@ begin
 	   output(c1,c2)
 	end
 end pr3c47.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+aA
+bB
+cC
+dD
+eE
+fF
+   End Execution.
+ACTUAL_OUTPUT}

@@ -34,3 +34,14 @@ begin
 	 t := true;
    end;
 end pr3c02.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+98 b
+   End Execution.
+ACTUAL_OUTPUT}

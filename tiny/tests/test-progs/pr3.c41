@@ -9,3 +9,16 @@ begin
 	if pred(pred(three)) = pred(succ(one)) then output('2');
 	if pred(two) = pred(pred(succ(succ(one)))) then output('1');
 end pr3c41.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+3
+2
+1
+   End Execution.
+ACTUAL_OUTPUT}

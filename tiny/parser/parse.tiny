@@ -1,10 +1,28 @@
 %%
-Tiny       -> PROGRAM Name ':' Dclns Body Name '.' 	=> "program";
+Tiny       -> PROGRAM Name ':' Consts TypesRule Dclns Body Name '.' => "program";
+
+TypesRule  -> TYPE (TypeRule ';')* 	     	    	=> "types"
+	   -> 						=> "types";
+
+TypeRule   -> Name EQ (Name | LitRule)		=> "type";
+
+LitRule	   -> '('Name list ',' ')'			=> "lit";
+
 Dclns      -> VAR (Dcln ';')*				=> "dclns"
            -> 					     	=> "dclns";
-Dcln       -> Name list ',' ':' Type			=> "dcln";
-Type       -> INTEGER 		             		=> "integer"
-           -> BOOLEAN				     	=> "boolean";
+
+Dcln       -> Name list ',' ':' Name			=> "var";
+
+Consts	   -> CONST (ConstDcln ';')*			=> "<consts>"
+	   -> 						=> "<consts>";
+
+ConstDcln  -> Name EQ ConstVals 			=> "const";
+	   
+ConstVals  -> INTEGER_NUM				=> "<integer>"
+	   -> CHARACTER_ALPHA				=> "<char>"
+	   -> Name;
+	   					
+
 Body       -> BEGINX Statement list ';' END      	=> "block";
 Statement  -> Name ASSIGNMENT Expression          	=> "assign"
            -> OUTPUT '(' Expression list ',' ')'       	=> "output"
@@ -18,6 +36,7 @@ Statement  -> Name ASSIGNMENT Expression          	=> "assign"
 	   -> FOR Name ASSIGNMENT Expression TO Expression DO Statement => "<upto>"
 	   -> FOR Name ASSIGNMENT Expression DOWNTO Expression DO Statement => "<downto>"
 	   -> CASE Expression OF (CaseClause)* (Otherwise)? END => "case"
+	   -> READ '(' Name list ',' ')'               	=> "read"
            -> Body
 	   ->                                        	=> "<null>";
 
@@ -55,12 +74,17 @@ Unary      -> Misc
 Misc	   -> Primary
 	   -> Primary POW Misc				=> "pow";
 
-Primary	   -> READ                                 	=> "read"
-	   -> Eof					=> "eof"
+Primary	   -> Eof					=> "eof"
            -> Name
-	   -> TRUE					=> "<true>"
-	   -> FALSE					=> "<false>"
            -> INTEGER_NUM				=> "<integer>"
+	   -> CHARACTER_ALPHA				=> "<char>"
+	   -> PRED '(' Expression ')'			=> "pred"
+	   -> SUCC '(' Expression ')' 			=> "succ"
+	   -> CHR '(' Expression ')' 			=> "chr"
+	   -> ORD '(' Expression ')'			=> "ord"
+	   -> STR_ALPHA		 			=> "<string>"
            -> '(' Expression ')';
 
-Name       -> IDENTIFIER				=> "<identifier>";
+Name       -> IDENTIFIER | CAPIDENTIFIER		=> "<identifier>";
+
+

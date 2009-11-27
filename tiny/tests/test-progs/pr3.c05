@@ -31,3 +31,22 @@ begin
       output(y,x,a);
    pool
 end pr3c05.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+1 -1 U
+2 0 V
+3 1 W
+4 2 X
+5 3 Y
+6 4 Z
+7 5 [
+8 6 \
+9 7 ]
+   End Execution.
+ACTUAL_OUTPUT}

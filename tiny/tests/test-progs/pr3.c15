@@ -17,3 +17,18 @@ begin
 		i := pred(i);
 	until i = a;
 end pr3c15.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+5 
+4 
+3 
+2 
+1 
+   End Execution.
+ACTUAL_OUTPUT}

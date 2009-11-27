@@ -30,3 +30,19 @@ begin
       output( k, j, l, u );
    end;
 end pr3c24.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+117 127 20 u
+118 245 21 v
+119 364 22 w
+120 484 23 x
+121 605 24 y
+122 727 25 z
+   End Execution.
+ACTUAL_OUTPUT}

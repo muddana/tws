@@ -18,3 +18,15 @@ begin
    if c then output(777);
    if b then output(666);
 end pr3c07.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+999 
+777 
+   End Execution.
+ACTUAL_OUTPUT}

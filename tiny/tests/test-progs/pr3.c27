@@ -19,3 +19,16 @@ begin
       three := succ(one);
    end;
 end pr3c27.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+1 5 
+2 8 
+3 11 
+   End Execution.
+ACTUAL_OUTPUT}

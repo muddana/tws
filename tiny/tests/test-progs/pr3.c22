@@ -23,3 +23,16 @@ begin
 
 
 end pr3c22.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+49 2332 0 
+97 2 0 
+50 223 0 
+   End Execution.
+ACTUAL_OUTPUT}

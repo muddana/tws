@@ -17,3 +17,18 @@ begin
          output(x,int1,char1,int3,char3,int2,char2);
       end;
 end pr3c03.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+4 1 a3 c2 b
+3 1 a3 c2 b
+2 1 a3 c2 b
+1 1 a3 c2 b
+0 1 a3 c2 b
+   End Execution.
+ACTUAL_OUTPUT}

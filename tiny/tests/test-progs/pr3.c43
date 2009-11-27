@@ -9,3 +9,18 @@ var
 begin
 	for i := monday to friday do output(ord(i)-ord(sunday));
 end pr3c43.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+1 
+2 
+3 
+4 
+5 
+   End Execution.
+ACTUAL_OUTPUT}

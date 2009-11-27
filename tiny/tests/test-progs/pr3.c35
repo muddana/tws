@@ -25,3 +25,25 @@ for i := 10 downto 0 do
   end;
 output(pred(x));
 end pr3c35.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+9 10 11 
+8 9 10 
+7 8 9 
+6 7 8 
+5 6 7 
+4 5 6 
+3 4 5 
+2 3 4 
+1 2 3 
+0 1 2 
+-1 0 1 
+`
+   End Execution.
+ACTUAL_OUTPUT}

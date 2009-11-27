@@ -27,3 +27,23 @@ begin
                 else
 		   output(i,11-i);
 end pr3c01.
+{<<ACTUAL_OUTPUTYAHOO ! The Tiny Compiler-Interpreter:
+
+Done parsing.
+Enter Constrainer ...
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+1 10 
+2 9 
+3 8 
+4 7 
+5 6 
+6 5 
+7 4 
+8 3 
+9 2 
+10 1 
+   End Execution.
+ACTUAL_OUTPUT}

@@ -18,7 +18,7 @@
 #define TypesNode      2
 #define TypeNode       3
 #define DclnsNode      4
-#define DclnNode       5
+#define VarNode        5
 #define IntegerTNode   6
 #define BooleanTNode   7
 #define BlockNode      8
@@ -66,7 +66,18 @@
 #define OtherwiseNode  44
 #define DownToNode     45
 
-#define NumberOfNodes  45
+#define CharacterTNode 46
+#define CharacterNode  47
+#define ConstsNode     48
+#define ConstNode      49
+#define LitNode        50
+#define SuccNode       51
+#define PredNode       52
+#define ChrNode        53
+#define OrdNode        54
+#define StringNode     55
+
+#define NumberOfNodes  55
 
 typedef TreeNode UserType;
 
@@ -76,26 +87,31 @@ typedef TreeNode UserType;
   control variable in InitializeConstrainer().
 *****************************************************************/
 char *node[] = { "program", "types", "type", "dclns",
-                 "dcln", "integer", "boolean", "block",
+                 "var", "integer", "boolean", "block",
                  "assign", "output", "if", "while", 
                  "<null>", ">", "<", ">=",
 		 "<>", "=", "<=", "+",
 		 "-", "or", "mod", "and",
 		 "*", "/", "not", "neg",
-		 "pow", "read", "eof", "<true>", "<false>",
+		 "pow", "read", "eof", "true", "false",
 		 "<integer>", "<identifier>",
 		 "repeat", "loop", "exit", "<swap>", 
 		 "<upto>", "case", "<case_clause>", "<range>",
-		 "<otherwise>", "<downto>"
+		 "<otherwise>", "<downto>", "char", "<char>",
+		 "<consts>", "const", "lit", "succ",
+		 "pred", "chr", "ord", "<string>"
                 };
 
 
-UserType TypeInteger, TypeBoolean;
+UserType TypeInteger, TypeBoolean, TypeCharacter;
 boolean TraceSpecified;
 FILE *TraceFile;
 char *TraceFileName;
 int NumberTreesRead, index;
 
+
+TreeNode GetMode(TreeNode);
+void CheckModeForAssignmentIdentifier(TreeNode);
 void AnnounceContext(TreeNode);
 
 void Constrain(void)    
@@ -148,24 +164,59 @@ void InitializeConstrainer (int argc, char *argv[])
       TraceSpecified = false;          
 }                        
 
+#define GetTypesTree TypesTree = Child (RootOfTree(1), 2); /*typesnode*/
 
 void AddIntrinsics (void)
 {
-   TreeNode TempTree;
+  TreeNode LitTree, TypesTree, TypeBoolTree, TypeIntTree, TypeCharTree;
 
    AddTree (TypesNode, RootOfTree(1), 2);
-
-   TempTree = Child (RootOfTree(1), 2);
-   AddTree (TypeNode, TempTree, 1);
-
-   TempTree = Child (RootOfTree(1), 2);
-   AddTree (TypeNode, TempTree, 1);
-
-   TempTree = Child (Child (RootOfTree(1), 2), 1);
-   AddTree (BooleanTNode, TempTree, 1);
  
-   TempTree = Child (Child (RootOfTree(1), 2), 2);
-   AddTree (IntegerTNode, TempTree, 1);
+   /*bool*/
+   TypesTree = Child (RootOfTree(1), 2);
+   AddTree (TypeNode, TypesTree, 1);
+   TypesTree = Child (RootOfTree(1), 2);
+   TypeBoolTree = Child(Child (RootOfTree(1), 2), 1);
+   AddTree(IdentifierNode, TypeBoolTree, 1);
+   TypeBoolTree = Child(Child (RootOfTree(1), 2), 1);
+   AddTree(BooleanTNode, Child(TypeBoolTree, 1), 1);
+   TypeBoolTree = Child(Child (RootOfTree(1), 2), 1);
+   
+   AddTree(LitNode, TypeBoolTree, 2);
+   TypeBoolTree = Child(Child (RootOfTree(1), 2), 1);
+   LitTree = Child(Child(Child (RootOfTree(1), 2), 1), 2);
+   AddTree(IdentifierNode, LitTree, 1);
+   LitTree = Child(Child(Child (RootOfTree(1), 2), 1), 2);
+   AddTree(FalseNode, Child( Child(Child(Child (RootOfTree(1), 2), 1), 2), 1), 1);
+
+   LitTree = Child(Child(Child (RootOfTree(1), 2), 1), 2);
+   AddTree(IdentifierNode, LitTree, 2);
+   LitTree = Child(Child(Child (RootOfTree(1), 2), 1), 2);
+   AddTree(TrueNode, Child(LitTree, 2), 1);
+
+   /*int*/
+   TypesTree = Child (RootOfTree(1), 2);
+   AddTree (TypeNode, TypesTree, 2);
+   TypesTree = Child (RootOfTree(1), 2);
+   TypeIntTree = Child(Child (RootOfTree(1), 2), 2);
+   AddTree(IdentifierNode, TypeIntTree, 1);
+   TypeIntTree = Child(Child (RootOfTree(1), 2), 2);
+   AddTree(IntegerTNode, Child(TypeIntTree, 1), 1);
+
+   /*char*/
+   TypesTree = Child (RootOfTree(1), 2);
+   AddTree (TypeNode, TypesTree, 3);
+   TypesTree = Child (RootOfTree(1), 2);
+   TypeCharTree = Child(Child (RootOfTree(1), 2), 3);
+   AddTree(IdentifierNode, TypeCharTree, 1);
+   TypeCharTree = Child(Child (RootOfTree(1), 2), 3);
+   AddTree(CharacterTNode, Child(TypeCharTree, 1), 1);
+
+
+   TypeBoolean = Child(Child (RootOfTree(1), 2),1);
+   TypeInteger = Child(Child (RootOfTree(1), 2),2);
+   TypeCharacter = Child(Child (RootOfTree(1), 2),3);
+
 }
 
 void PrintHeader(TreeNode T, char * message)
@@ -196,7 +247,7 @@ int NKids (TreeNode T)
 UserType Expression (TreeNode T)
 {
    UserType Type1, Type2;
-   TreeNode Declaration, Temp1, Temp2;
+   TreeNode Declaration, Temp1, Temp2, Mode, Mode1, Mode2;
    int NodeCount;
 
    if (TraceSpecified)
@@ -216,11 +267,10 @@ UserType Expression (TreeNode T)
       case LTENode :    
          Type1 = Expression (Child(T,1));
          Type2 = Expression (Child(T,2));
-
          if (Type1 != Type2)
          {
             ErrorHeader(Child(T,1));
-            printf ("ARGUMENTS OF '>=', '<','>', '<=', '=' and '<>' MUST BE TYPE INTEGER\n");
+            printf ("ARGUMENTS OF '>=', '<','>', '<=', '=' and '<>' MUST BE OF SAME TYPE\n");
             printf ("\n");
          }
          return (TypeBoolean);
@@ -272,40 +322,108 @@ UserType Expression (TreeNode T)
             printf ("\n");
          }
          return (TypeInteger);
-
-      case ReadNode :
-         return (TypeInteger);
-
-     case EofNode:
+     
+      case EofNode:
          return (TypeBoolean);
 
       case IntegerNode : 
          return (TypeInteger);
 
-      case TrueNode : 
-      case FalseNode :
-         return (TypeBoolean);
+      case CharacterNode:
+       return (TypeCharacter);
 
       case IdentifierNode :
-         Declaration = Lookup (NodeName(Child(T,1)), T);
+	Declaration = Lookup (NodeName(Child(T,1)), T);	  
+	Mode = NodeName(Decoration(Child(Declaration, 1)));
+	 
          if (Declaration != NullDeclaration)
          {
             Decorate (T, Declaration);
-            return (Decoration(Declaration));
+	    
+	    if(Mode == TypeNode){
+	      ErrorHeader(T);
+	      printf ("CANNOT HAVE A TYPE IN EXPRESSIONS");
+	      printf ("\n");
+	    }
+	    else if(Mode == VarNode){
+	      if(Decoration(Declaration) == TypeBoolean)
+		return (TypeBoolean);
+	      else if(NodeName(Decoration(Declaration)) == TypeNode && NKids(Decoration(Declaration)) >1  && NodeName(Child(Decoration(Declaration),2) ) == LitNode){
+		return (Decoration(Declaration));
+		/*return (TypeInteger);*/
+	      }
+	      else{
+		return (Decoration(Declaration));
+		/*printf("Internal Error Cannot decide the type\n");*/
+	      };
+	    }
+	    else if(Decoration(Declaration) == TypeBoolean)
+		return (TypeBoolean);
+	    /*else if(Mode == LitNode)
+	      return (Decoration(Child(Declaration, 1)));
+	      /*return (TypeInteger);*/
+	    else
+	      return (Decoration(Declaration));
          }
-         else
-            return (TypeInteger);
+         else{
+	   ErrorHeader(T);
+	   printf ("INTERNAL ERROR NULL DECLARATION FOUND ");
+	   printf ("\n");
+	 };
+	 return (TypeInteger);
 
    case RangeNode:
      Type1 = Expression(Child(T,1));
      Type2 = Expression(Child(T,2));
-     if(Type1 != Type2 || Type1 != TypeInteger){
+     if(Type1 != Type2){/* || (Type1 != TypeInteger && Type1 != TypeCharacter)){*/
        ErrorHeader(T);
-       printf ("RANGE OPERATOR MUST BE OF TYPE INTEGER");
+       printf ("RANGE OPERATOR MUST BE OF SAME TYPE");
        printf ("\n");
      }
-     return (TypeInteger);
+     return (Type1);
 
+      case SuccNode:
+	Type1 = Expression(Child(T, 1));
+	Decorate(T, Type1);
+	/*printf("The type of expression in succ is :%d\n", Type1);*/
+	if(Type1 != TypeInteger && Type1 != TypeCharacter && !(NodeName(Type1) == TypeNode && NKids(Type1)>1 && NodeName(Child(Type1,2)) == LitNode)){
+	  ErrorHeader(T);
+	  printf ("SUCC OPERATES ON INTEGERS/CHARACTER/ENUMERATED EXPRESSIONS.");
+	  printf ("\n");
+	};
+	return (Type1);
+
+   case PredNode:
+	Type1 = Expression(Child(T, 1));
+	Decorate(T, Type1);
+	if(Type1 != TypeInteger && Type1 != TypeCharacter && !(NodeName(Type1) == TypeNode && NKids(Type1)>1 && NodeName(Child(Type1,2)) == LitNode)){
+	  ErrorHeader(T);
+	  printf ("PRED OPERATES ON INTEGER/CHARACTER/ENUMERATED EXPRESSIONS.%d", Type1);
+	  printf ("\n");
+	};
+	return (Type1);
+
+   case ChrNode:
+     Type1 = Expression(Child(T,1));
+     Decorate(T, TypeCharacter);
+     if(Type1 != TypeInteger){
+       ErrorHeader(T);
+       printf ("ARGUEMENTS OF CHR MUST BE OF TYPE INTEGER.");
+	  printf ("\n");
+     };
+     return (TypeCharacter);
+
+   case OrdNode:
+     Type1 = Expression(Child(T,1));
+     /*Mode = GetMode(Child(T, 1));*/
+     Decorate(T, TypeInteger);
+     if(Type1 != TypeInteger && Type1 != TypeCharacter && !(NodeName(Type1) == TypeNode && NKids(Type1)>1 && NodeName(Child(Type1,2)) == LitNode)){
+       ErrorHeader(T);
+       printf ("ARGUEMENTS OF ORD FUNCTION SHOULD BE OF TYPE LITERAL.");
+       printf ("\n");
+     };
+     return (TypeInteger);
+     
       default :
          ErrorHeader(T);
          printf ( "UNKNOWN NODE NAME ");
@@ -322,7 +440,7 @@ void ProcessNode (TreeNode T)
 {
    int Kid, N;
    String Name1, Name2;
-   TreeNode Type1, Type2, Type3, Temp;
+   TreeNode Type1, Type2, Type3, Temp, Dcln1, Mode, Declaration;
 
    if (TraceSpecified)
    {
@@ -352,41 +470,91 @@ void ProcessNode (TreeNode T)
             ProcessNode (Child(T,Kid));
          CloseScope();
          break;
-
-
-      case TypesNode :  
-         for (Kid = 1; Kid <= NKids(T); Kid++)
-            ProcessNode (Child(T,Kid));
-         TypeBoolean = Child(T,1);
-         TypeInteger = Child(T,2);
-         break;
-
-
+        
       case TypeNode :
-         DTEnter (NodeName(Child(T,1)),T,T);
+	DTEnter (NodeName(Child(Child(T,1), 1)),Child(T, 1),T);
+	Decorate(Child(T, 1), T);
+	Decorate(Child(Child(T,1), 1), T);
+	/*DTEnter (NodeName(Child(Child(T,1), 1)),T,T);*/
+	/*printf("Adding Type %d\n", NodeName(Child(Child(T,1),1)));*/
+	if(NKids(T) > 1){
+	  if(NodeName(Child(T, 2)) == LitNode){
+	    /*printf("Processing LitNode\n");*/
+	    for(Kid = 1; Kid <= NKids(Child(T, 2)); Kid++){
+	      /*printf("Adding Lit %d\n", NodeName(Child(Child(Child(T,2), Kid),1)));*/
+	      DTEnter (NodeName(Child(Child(Child(T,2), Kid),1)), Child(Child(T, 2), Kid),T);
+	      Decorate(Child(Child(Child(T,2),Kid), 1), Child(T, 2));
+	      Decorate(Child(Child(T,2), Kid), T);
+	    };
+	  }
+	  else if(NodeName(Child(T,2)) == IdentifierNode){
+	      Dcln1 = Lookup(NodeName(Child(Child(T, 2), 1)), T);
+	      Decorate(Child(T, 2), Dcln1);
+	      /* redocorating the type for the user define type */ 	      
+	      Decorate(Child(T, 1),Decoration(Dcln1));
+	  }
+	  else{
+	    ErrorHeader(T);
+	    printf ("Compiler Error : The second child of TypeNode should be LitNode or Identifier Node.\n");
+	    printf("found %d", NodeName(Child(T,2)));
+	    printf ("\n");
+	  };
+	};
          break;
 
-
+      case TypesNode :
+      case  ConstsNode:
       case DclnsNode :
          for (Kid = 1; Kid <= NKids(T); Kid++)
             ProcessNode (Child(T,Kid));
          break;
 
 
-      case DclnNode :
+      case VarNode :
 
-	 Name1 = NodeName (Child(T, NKids(T)));
+	Name1 = NodeName(Child((Child(T, NKids(T))),1));
 
-         Type1 = Lookup (Name1,T);
-
+         Type1 =  Lookup (Name1,T);
+	 Decorate(Child(T, NKids(T)) , Type1);
          for (Kid  = 1; Kid < NKids(T); Kid++)
          {
             DTEnter (NodeName(Child(Child(T,Kid),1)), Child(T,Kid), T);
-            Decorate (Child(T,Kid), Type1);
-
-         }
+            Decorate (Child(T,Kid), Decoration(Type1));
+	    Decorate( Child(Child(T,Kid),1), T);
+         };
+	 /*Decorate(Child(T, NKids(T)) , Child(Type1, 1));*/
          break;
 
+   case ConstNode:
+     switch(NodeName(Child(T,2))){
+     case IntegerNode:
+       Name1 = IntegerTNode;
+       Type1 =  Lookup (Name1,T);
+       break;
+     case CharacterNode:
+       Name1 = CharacterTNode;
+       Type1 =  Lookup (Name1,T);
+       break;
+     case IdentifierNode:
+       Mode = GetMode(Child(T, 2));
+       if(Mode != LitNode && Mode != ConstNode){
+	 ErrorHeader(T);
+	 printf ("CONSTANTS CANNOT BE ASSIGNED A TYPE\n");
+	 printf ("\n");
+       };
+       Type1 = Lookup(NodeName(Child(Child(T, 2), 1)), T);
+       Decorate(Child(T, 2), Type1);
+       break;
+     default:
+       printf("Const Node Type Could not be inferred.");
+       /*     case BooleanNode;
+       Name1 = BooleanTNode;
+       break;*/
+     }
+     DTEnter(NodeName(Child(Child(T,1),1)), Child(T,1), T);
+     Decorate(Child(T, 1), Decoration(Type1));
+     Decorate(Child(Child(T,1),1), T);
+     break;
 
       case BlockNode :
          for (Kid = 1; Kid <= NKids(T); Kid++)
@@ -409,6 +577,14 @@ void ProcessNode (TreeNode T)
          Type1 = Expression (Child(T,1));
          Type2 = Expression (Child(T,2));
 
+	 CheckModeForAssignmentIdentifier(Child(T, 1));
+	 /*Declaration = Lookup(NodeName(Child(Child(T, 1), 1)),Child(T,1));
+	   Mode = NodeName(Decoration(Declaration));
+	 if(Mode != VarNode){
+	   ErrorHeader(Child(T, 1));
+            printf ("CANNOT ASSIGN TYPES, CONSTANTS, LITERALS\n");
+            printf ("\n");
+	    };*/
          if (Type1 != Type2)
          {
             ErrorHeader(T);
@@ -419,14 +595,26 @@ void ProcessNode (TreeNode T)
 
 
       case OutputNode :
-         for (Kid = 1; Kid <= NKids(T); Kid++)
-            if (Expression (Child(T,Kid)) != TypeInteger)
-            {
-               ErrorHeader(T);
-               printf ("OUTPUT EXPRESSION MUST BE TYPE INTEGER\n");
-               printf ("\n");
+	for (Kid = 1; Kid <= NKids(T); Kid++){
+	  if(NodeName(Child(T, Kid)) != StringNode)
+	    Type1 = Expression(Child(T, Kid));  
+	  if(NodeName(Child(T,Kid)) == IdentifierNode){
+	    Mode = GetMode(Child(T,Kid));
+	    if(Mode == LitNode){
+	      ErrorHeader(T);
+	      printf ("CANNOT OUTPUT ENUMERATED TYPES\n");
+	      printf ("\n");
+	      continue;
+	    };
+	  };
+	  if (Type1 != TypeInteger && Type1 != TypeCharacter && NodeName(Child(T,Kid)) != StringNode)
+	    {
+	      ErrorHeader(T);
+	      printf ("OUTPUT EXPRESSION MUST BE TYPE INTEGER OR CHARACTER OR STRINGS\n");
+	      printf ("\n");
             }
-         break;
+	}
+	break;
 
 
       case IfNode :
@@ -506,6 +694,9 @@ void ProcessNode (TreeNode T)
          }
 	 else
 	   {
+	     CheckModeForAssignmentIdentifier(Child(T,1));
+	     CheckModeForAssignmentIdentifier(Child(T,2));
+
 	     Temp = Lookup("<for_ctxt>", T);
 	     while(NodeName(Temp) != ProgramNode)
 	       {
@@ -531,7 +722,7 @@ void ProcessNode (TreeNode T)
 	if(Type1 != Type2 || Type2 != Type3)
 	  {
 	    ErrorHeader(T);
-            printf ("FOR LOOP VARIABLE DOESN'T MATCH THE TYPE OF START VALUE\n");
+            printf ("FOR LOOP VARIABLE DOESN'T MATCH THE TYPE OF START VALUE");/*, Type1 : %d , Type2: %d, Type3: %d", Type1, Type2, Type3);*/
             printf ("\n");
 	  };
 	ProcessNode(Child(T, 4));
@@ -581,9 +772,16 @@ void ProcessNode (TreeNode T)
      for(Kid = 2; Kid <= NKids(T); Kid++){
        if(NodeName(Child(T, Kid)) == CaseClauseNode){
 	 Type2 = Expression(Child(Child(T,Kid), 1)); 
+	 if(NodeName(Child(Child(T,Kid), 1)) == IdentifierNode){
+	   if(NodeName(Decoration(Child(Decoration(Child(Child(T,Kid), 1)),1))) == VarNode){
+	     ErrorHeader(Child(Child(T,Kid), 1));
+	     printf("CASE CLAUSE CAN ONLY HAVE LIT OR CONST AS LABEL");/*,Type1 %d, Type2 %d", Type1, Type2);*/
+	     printf("\n");
+	   };
+	 };
 	 if(Type2 != Type1){
 	   ErrorHeader(Child(Child(T,Kid), 1));
-	   printf("CASE CLAUSE NOT OF TYPE OF THE CASE EXPRESSION");
+	   printf("CASE CLAUSE NOT OF TYPE OF THE CASE EXPRESSION");/*,Type1 %d, Type2 %d", Type1, Type2);*/
 	   printf("\n");
 	 };
 
@@ -597,6 +795,33 @@ void ProcessNode (TreeNode T)
      };
      break;
 
+      case ReadNode :	
+	for(Kid = 1; Kid <= NKids(T); Kid++){
+	  Type1 = Expression(Child(T, Kid));
+	  
+	  Temp = Lookup("<for_ctxt>", T);
+	  while(NodeName(Temp) != ProgramNode)
+	    {
+	      if(NodeName(Child(Child(Temp, 1), 1)) == NodeName(Child(Child(T, 1), 1)))
+		{
+		  ErrorHeader(T);
+		  printf ("CANNOT READ IN A FOR-LOOP VARIABLE\n");
+		  printf ("\n");
+		}
+	      Temp = Decoration(Temp);
+	    };
+	  
+	  /*printf("The type of expression is : %d\n", Type1);*/
+	  if(Type1 != TypeInteger && Type1 != TypeCharacter)
+	    {
+	    ErrorHeader(Child(T,Kid));
+	    printf("Read STATEMENT ALLOWS INTEGERS AND CHARACTERS TO BE READ");
+	    printf("\n");
+	  };
+	};
+	  break;
+
+
       case NullNode :  
          break;
 
@@ -607,7 +832,7 @@ void ProcessNode (TreeNode T)
          printf ("\n");
 
    }  /* end switch */
-}  /* end ProcessNode */
+};  /* end ProcessNode */
 
 
 void AnnounceContext(TreeNode T)
@@ -615,4 +840,22 @@ void AnnounceContext(TreeNode T)
   DTEnter("<for_ctxt>", T);
   DTEnter("<downto_ctxt>", T);
   DTEnter("<loop_ctxt>", T);
-}
+};
+
+TreeNode GetMode(T){
+  TreeNode Declaration, Mode;
+  Declaration = Lookup(NodeName(Child(T, 1)),T);
+  Mode = NodeName(Decoration(Child(Declaration,1)));  
+  return Mode;
+};
+
+void CheckModeForAssignmentIdentifier(TreeNode T){
+  TreeNode Declaration, Mode;
+  Mode = GetMode(T);
+  if(Mode != VarNode){
+    ErrorHeader(T);
+    printf ("CANNOT ASSIGN/SWAP TYPES, CONSTANTS, LITERALS\n");
+    /*printf("Mode is : %d\n", Mode);*/
+    printf ("\n");
+  };
+};
