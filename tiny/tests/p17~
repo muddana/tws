@@ -1,0 +1,29 @@
+program pr3c01:
+{
+   the output should be:
+   1    10
+   2     9
+   3     8
+   4     7
+   5     6
+   6     5
+   7     4
+   8     3
+   9     2
+   10    1
+}
+const pi=3;
+      e=2;
+      ten=10;
+var i,x,y,z: integer;
+begin
+   for i := 1 to 10 do
+      if (i=pi) then
+	 output(pi,11-pi)
+      else if (i=e) then
+	      output(e,11-e)
+           else if (i=ten) then
+		   output(ten,11-ten)
+                else
+		   output(i,11-i);
+end pr3c01.

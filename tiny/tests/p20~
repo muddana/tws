@@ -1,0 +1,7 @@
+program pr3c11:
+#
+#	outputs 0 2 on one line
+#
+begin
+	output(ord(3=2),chr(ord('1')+1) );
+end pr3c11.

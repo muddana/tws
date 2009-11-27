@@ -1,0 +1,8 @@
+program pr3c10:
+const pi=345;
+      e='a';
+
+type Color = ( red, blue, green, yellow, violet);
+begin
+	output( e, 34, 5 , 'z', ord(violet), succ(pi), succ(e), 'z' );
+end pr3c10.

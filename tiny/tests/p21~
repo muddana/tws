@@ -1,0 +1,31 @@
+program pr3c13:
+#
+#	outputs 1 2 3 on separate lines
+#
+const red   = 0;
+      white = 1;
+      blue  = 2;
+      yellow= 3;
+      green = 4;
+var
+	i : integer;
+begin
+	i := red;
+	case i of
+	red..white  : output(1);
+	blue..yellow: output(2);
+	green       : output(3);
+	end;
+	i := succ(succ(succ(i)));
+	case i of
+	red..white  : output(1);
+	blue..yellow: output(2);
+	green       : output(3);
+	end;
+	i := pred(succ(succ(i)));
+	case i of
+	red..white  : output(1);
+	blue..yellow: output(2);
+	green       : output(3);
+	end;
+end pr3c13.

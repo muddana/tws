@@ -1,0 +1,44 @@
+---------------------------
+[  158]   program(7) @ L1/C1
+[    4]   . <identifier>(1) @ L1/C9
+[    1]   . . pr3c10(0) @ L1/C9
+[   61]   . types(3) @ 
+[   34]   . . type(2) @ 
+[   11]   . . . <identifier>(1) @  Decoration: 34
+[    8]   . . . . boolean(0) @  Decoration: 34
+[   29]   . . . lit(2) @ 
+[   18]   . . . . <identifier>(1) @  Decoration: 127
+[   15]   . . . . . false(0) @  Decoration: 29
+[   25]   . . . . <identifier>(1) @  Decoration: 128
+[   22]   . . . . . true(0) @  Decoration: 29
+[   46]   . . type(1) @ 
+[   42]   . . . <identifier>(1) @  Decoration: 46
+[   39]   . . . . integer(0) @  Decoration: 46
+[   57]   . . type(1) @ 
+[   53]   . . . <identifier>(1) @  Decoration: 57
+[   50]   . . . . char(0) @  Decoration: 57
+[  105]   . <consts>(2) @ L2/C1
+[   81]   . . const(2) @ L2/C9
+[   70]   . . . <identifier>(1) @ L2/C7 Decoration: 109
+[   67]   . . . . pi(0) @ L2/C7 Decoration: 81
+[   77]   . . . <integer>(1) @ L2/C10
+[   74]   . . . . 345(0) @ L2/C10
+[  100]   . . const(2) @ L3/C8
+[   89]   . . . <identifier>(1) @ L3/C7 Decoration: 97
+[   86]   . . . . e(0) @ L3/C7 Decoration: 100
+[   96]   . . . <char>(1) @ L3/C9
+[   93]   . . . . a(0) @ L3/C9
+[  110]   . types(0) @ L0/C0
+[  113]   . dclns(0) @ L0/C0
+[  146]   . block(2) @ L6/C1
+[  138]   . . output(2) @ L7/C2
+[  123]   . . . succ(1) @ L7/C10 Decoration: 46
+[  119]   . . . . <identifier>(1) @ L7/C15 Decoration: 70
+[  116]   . . . . . pi(0) @ L7/C15
+[  134]   . . . succ(1) @ L7/C20 Decoration: 57
+[  130]   . . . . <identifier>(1) @ L7/C25 Decoration: 89
+[  127]   . . . . . e(0) @ L7/C25
+[  143]   . . <null>(0) @ L0/C0
+[  154]   . <identifier>(1) @ L8/C5
+[  151]   . . pr3c10(0) @ L8/C5
+---------------------------
