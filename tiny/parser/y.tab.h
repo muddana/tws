@@ -48,45 +48,48 @@
      POW = 264,
      POOL = 265,
      IF = 266,
-     CHARACTER_ALPHA = 267,
-     STR_ALPHA = 268,
-     READ = 269,
-     REPEAT = 270,
-     RANGE = 271,
-     ELSE = 272,
-     CAPIDENTIFIER = 273,
-     UNTIL = 274,
-     FOR = 275,
-     THEN = 276,
-     OF = 277,
-     NE = 278,
-     MOD = 279,
-     GT = 280,
-     CASE = 281,
-     WHILE = 282,
-     OUTPUT = 283,
-     EQ = 284,
-     EXIT = 285,
-     CONST = 286,
-     Eof = 287,
-     GTE = 288,
-     PRED = 289,
-     NOT = 290,
-     DO = 291,
-     BEGINX = 292,
-     ORD = 293,
-     AND = 294,
-     INTEGER_NUM = 295,
-     LTE = 296,
-     LOOP = 297,
-     SUCC = 298,
-     TYPE = 299,
-     OR = 300,
-     LT = 301,
-     OTHERWISE = 302,
-     ASSIGNMENT = 303,
-     PROGRAM = 304,
-     DOWNTO = 305
+     FUNCTION = 267,
+     CHARACTER_ALPHA = 268,
+     STR_ALPHA = 269,
+     READ = 270,
+     REPEAT = 271,
+     RANGE = 272,
+     ELSE = 273,
+     RETURN = 274,
+     CAPIDENTIFIER = 275,
+     UNTIL = 276,
+     FOR = 277,
+     THEN = 278,
+     OF = 279,
+     NE = 280,
+     MOD = 281,
+     GT = 282,
+     CASE = 283,
+     WHILE = 284,
+     OUTPUT = 285,
+     EQ = 286,
+     EXIT = 287,
+     PROCEDURE = 288,
+     CONST = 289,
+     Eof = 290,
+     GTE = 291,
+     PRED = 292,
+     NOT = 293,
+     DO = 294,
+     BEGINX = 295,
+     ORD = 296,
+     AND = 297,
+     INTEGER_NUM = 298,
+     LTE = 299,
+     LOOP = 300,
+     SUCC = 301,
+     TYPE = 302,
+     OR = 303,
+     LT = 304,
+     OTHERWISE = 305,
+     ASSIGNMENT = 306,
+     PROGRAM = 307,
+     DOWNTO = 308
    };
 #endif
 /* Tokens.  */
@@ -99,45 +102,48 @@
 #define POW 264
 #define POOL 265
 #define IF 266
-#define CHARACTER_ALPHA 267
-#define STR_ALPHA 268
-#define READ 269
-#define REPEAT 270
-#define RANGE 271
-#define ELSE 272
-#define CAPIDENTIFIER 273
-#define UNTIL 274
-#define FOR 275
-#define THEN 276
-#define OF 277
-#define NE 278
-#define MOD 279
-#define GT 280
-#define CASE 281
-#define WHILE 282
-#define OUTPUT 283
-#define EQ 284
-#define EXIT 285
-#define CONST 286
-#define Eof 287
-#define GTE 288
-#define PRED 289
-#define NOT 290
-#define DO 291
-#define BEGINX 292
-#define ORD 293
-#define AND 294
-#define INTEGER_NUM 295
-#define LTE 296
-#define LOOP 297
-#define SUCC 298
-#define TYPE 299
-#define OR 300
-#define LT 301
-#define OTHERWISE 302
-#define ASSIGNMENT 303
-#define PROGRAM 304
-#define DOWNTO 305
+#define FUNCTION 267
+#define CHARACTER_ALPHA 268
+#define STR_ALPHA 269
+#define READ 270
+#define REPEAT 271
+#define RANGE 272
+#define ELSE 273
+#define RETURN 274
+#define CAPIDENTIFIER 275
+#define UNTIL 276
+#define FOR 277
+#define THEN 278
+#define OF 279
+#define NE 280
+#define MOD 281
+#define GT 282
+#define CASE 283
+#define WHILE 284
+#define OUTPUT 285
+#define EQ 286
+#define EXIT 287
+#define PROCEDURE 288
+#define CONST 289
+#define Eof 290
+#define GTE 291
+#define PRED 292
+#define NOT 293
+#define DO 294
+#define BEGINX 295
+#define ORD 296
+#define AND 297
+#define INTEGER_NUM 298
+#define LTE 299
+#define LOOP 300
+#define SUCC 301
+#define TYPE 302
+#define OR 303
+#define LT 304
+#define OTHERWISE 305
+#define ASSIGNMENT 306
+#define PROGRAM 307
+#define DOWNTO 308
 
 
 
@@ -150,7 +156,7 @@ typedef union YYSTYPE
    DLIST dlist;
 }
 /* Line 1489 of yacc.c.  */
-#line 154 "y.tab.h"
+#line 160 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

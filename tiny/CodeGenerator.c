@@ -141,7 +141,14 @@
 #define OrdNode        101
 #define StringNode     102
 
-#define NumberOfNodes  102 /* '<identifier>'*/
+#define SubProgsNode   103 
+#define FunctionNode   104
+#define ProcedureNode  105
+#define ParamsNode     106
+#define ReturnNode     107
+#define CallNode       108
+
+#define NumberOfNodes  108 /* '<identifier>'*/
 typedef int Mode;
 typedef TreeNode UserType;
 
@@ -177,7 +184,9 @@ char *node_name[] = { "program", "types", "type", "dclns",
 		      "<upto>", "case", "<case_clause>", "<range>",
 		      "<otherwise>", "<downto>", "char", "<char>",
 		      "<consts>", "const", "lit", "succ",
-		      "pred", "chr", "ord", "<string>"
+		      "pred", "chr", "ord", "<string>",
+		      "<subprogs>", "<fnc>", "<prc>", "<params>",
+		      "<return>", "<call>" 
                 };
 
 
@@ -198,7 +207,7 @@ void CodeGenerate(int argc, char *argv[])
 
    HaltLabel = ProcessNode (RootOfTree(1), NoLabel);
    CodeGen0 (HALTOP, HaltLabel); 
-
+   
    CodeFile = Open_File (CodeFileName, "w");
    DumpCode (CodeFile);
    fclose(CodeFile); 
@@ -280,6 +289,7 @@ void Reference(TreeNode T, Mode M, Clabel L)
 
    AddrOrVal = Decoration(Decoration(T));
    OFFSET = FrameDisplacement (AddrOrVal) ;
+
 
    switch (M)
    {
@@ -368,6 +378,7 @@ void ProcessOutputNodeForIdentifier(TreeNode T, Clabel CurrLabel){
   else{
     printf("internal error cannot print identifier : %d", Decoration(Child(Decoration(Child(T,1)), NKids(Decoration(Child(T,1))))));
   };
+  /*DecrementFrameSize();*/
 };
 
 void ProcessInputNodeForIdentifier(TreeNode T, Clabel CurrLabel){
@@ -381,6 +392,7 @@ void ProcessInputNodeForIdentifier(TreeNode T, Clabel CurrLabel){
   else{
     printf("internal error cannot allow for read except for char and integer");
   };
+  IncrementFrameSize();
 };
 
 void Expression (TreeNode T, Clabel CurrLabel)
@@ -476,31 +488,40 @@ void Expression (TreeNode T, Clabel CurrLabel)
        CodeGen1 (LITOP, MakeStringOf(Character(NodeName(Child(T,1)),1)), CurrLabel);
          IncrementFrameSize();
          break;
-
       
       case IdentifierNode :
          Reference (T,RightMode,CurrLabel);
          break;
+
       case OrdNode:
 	Expression(Child(T,1), CurrLabel);
 	break;
 	 
       case SuccNode:
 	PutUpperLowerLimitOnStackForSuccPred(T, CurrLabel, USUCC);
-	/*Expression(Child(T,1), CurrLabel);
-	  CodeGen1(UOPOP, USUCC, NoLabel);*/
 	break;
 
       case PredNode:
 	PutUpperLowerLimitOnStackForSuccPred(T, CurrLabel, UPRED);
-	/*Expression(Child(T,1), CurrLabel);
-	  CodeGen1(UOPOP, UPRED, NoLabel);*/
-	break;
-      case ChrNode:
-	Expression(Child(T,1), CurrLabel);
-	
 	break;
 
+      case ChrNode:
+	Expression(Child(T,1), CurrLabel);
+	break;
+
+      case CallNode:
+	CodeGen1(LITOP, MakeStringOf(0), CurrLabel);
+	IncrementFrameSize();
+	Label1 = Decoration(Decoration(Child( Decoration(Child(T,1)),1)));
+	for(Kid =2 ;Kid <= NKids(T); Kid++)
+	  Expression(Child(T, Kid), NoLabel);
+	CodeGen1(CODEOP, Label1, NoLabel);
+	for(Kid =2 ;Kid <= NKids(T); Kid++)
+	  DecrementFrameSize();
+	CodeGen1(CALLOP, MakeStringOf(FrameSize-1), NoLabel);
+	break;
+
+	
       default :
          ReportTreeErrorAt(T);
          printf ("<<< CODE GENERATOR >>> : UNKNOWN NODE NAME ");
@@ -524,7 +545,7 @@ void PutUpperLowerLimitOnStackForSuccPred(TreeNode T, Clabel CurrLabel, int PRED
 
 Clabel ProcessNode(TreeNode T, Clabel CurrLabel)
 {
-  int Kid, Num, Mode, Type;
+  int Kid, Num, Mode, Type, i;
    Clabel Label1, Label2, Label3, LabelTemp, LabelLoop;
 
    if (TraceSpecified)
@@ -535,17 +556,88 @@ Clabel ProcessNode(TreeNode T, Clabel CurrLabel)
       Write_String (TraceFile, CurrLabel);
       fprintf (TraceFile, "\n");
    }
-
    switch (NodeName(T))
    {
       case ProgramNode :
 	/*CurrLabel = ProcessNode (Child(T,NKids(T)-2),CurrLabel);
 	  CurrLabel = ProcessNode (Child(T,NKids(T)-1),NoLabel);*/
-	for(Kid = 2; Kid < NKids(T); Kid++){
+	for(Kid = 2; Kid <= 5; Kid++){
 	  CurrLabel = ProcessNode(Child(T, Kid), CurrLabel);
 	};
+	Label1 = MakeLabel();
+	CodeGen1(GOTOOP, Label1, CurrLabel);
+	ProcessNode(Child(T, 6), NoLabel);
+	CurrLabel = ProcessNode(Child(T, 7), Label1);
          return (CurrLabel);
 
+      case SubProgsNode:
+	for(Kid = 1; Kid <= NKids(T); Kid++)
+	  CurrLabel = ProcessNode(Child(T, Kid), CurrLabel);
+	return (CurrLabel);
+
+      case FunctionNode :
+	OpenFrame();
+	Decorate(Child(T,1), MakeAddress());
+	IncrementFrameSize();
+	Label1 = MakeLabel();
+	Decorate(T, Label1);
+	ProcessNode(Child(T,2), CurrLabel);
+	for(Kid = 4; Kid <= 5; Kid++)
+	  CurrLabel = ProcessNode(Child(T,Kid), CurrLabel);
+	CurrLabel = ProcessNode(Child(T,6), Label1);
+	CurrLabel = ProcessNode(Child(T,7), CurrLabel);
+	CodeGen1(LLVOP, MakeStringOf(0), CurrLabel);
+	CodeGen1(RTNOP, MakeStringOf(1), NoLabel);
+	CloseFrame();
+	return (NoLabel);
+
+   case ProcedureNode :
+	OpenFrame();
+	Decorate(Child(T,1), MakeAddress());
+	IncrementFrameSize();
+	Label1 = MakeLabel();
+	Decorate(T, Label1);
+	ProcessNode(Child(T,2), CurrLabel);
+	for(Kid = 3; Kid <= 4; Kid++)
+	  CurrLabel = ProcessNode(Child(T,Kid), CurrLabel);
+	CurrLabel = ProcessNode(Child(T,5), Label1);
+	CurrLabel = ProcessNode(Child(T,6), CurrLabel);
+	CodeGen1(LLVOP, MakeStringOf(0), CurrLabel);
+	CodeGen1(RTNOP, MakeStringOf(0), NoLabel);
+	CloseFrame();
+	return (NoLabel);     
+
+   case CallNode:
+	CodeGen1(LITOP, MakeStringOf(0), CurrLabel);
+	IncrementFrameSize();
+	Label1 = Decoration(Decoration(Child( Decoration(Child(T,1)),1)));
+	for(Kid =2 ;Kid <= NKids(T); Kid++)
+	  Expression(Child(T, Kid), NoLabel);
+	CodeGen1(CODEOP, Label1, NoLabel);
+	for(Kid =2 ;Kid <= NKids(T); Kid++)
+	  DecrementFrameSize();
+	CodeGen1(CALLOP, MakeStringOf(FrameSize-1), NoLabel);
+	DecrementFrameSize();
+	return (NoLabel);
+
+      case ParamsNode :
+	for(i = 1; i <= NKids(T); i++){
+	  for (Kid = 1; Kid < NKids(Child(T,i)); Kid++)
+	    {
+	      Num = MakeAddress();
+	      Decorate ( Child(Child(T, i), Kid), Num);
+	      IncrementFrameSize();
+	    }
+	};
+	return (NoLabel);
+
+      case ReturnNode:
+	if(NKids(T) >0)
+	  Expression(Child(T,1), CurrLabel);
+	CodeGen1(RTNOP, MakeStringOf(1), NoLabel);
+	DecrementFrameSize();
+	return (NoLabel);
+	
       case TypesNode :
          for (Kid = 1; Kid <= NKids(T); Kid++)
             CurrLabel = ProcessNode (Child(T,Kid), CurrLabel);
@@ -636,7 +728,7 @@ Clabel ProcessNode(TreeNode T, Clabel CurrLabel)
          Reference (Child(T,1), LeftMode, NoLabel);
          return (NoLabel);
 
-      case OutputNode : 
+      case OutputNode :
          for (Kid = 1; Kid <= NKids(T); Kid++)
          {
 	   if(Kid > 1){
@@ -650,15 +742,18 @@ Clabel ProcessNode(TreeNode T, Clabel CurrLabel)
 		 CurrLabel = NoLabel;
 	       if(Character(NodeName(Child(Child(T,Kid),1)),n) == '\\' && Character(NodeName(Child(Child(T,Kid),1)),n+1)!= '"' ){
 		 GenerateCodeForEscapeSeqs(Character(NodeName(Child(Child(T,Kid),1)),n+1), CurrLabel);
+		 IncrementFrameSize();
 		 n++;
 	       }
 	       else{
 		 CodeGen1 (LITOP, MakeStringOf(Character(NodeName(Child(Child(T,Kid),1)),n)), CurrLabel);	  
+		 IncrementFrameSize();
 	       };
 	       CodeGen1 (SOSOP, OSOUTPUTC, NoLabel);
+	       DecrementFrameSize();
 	       n++;
 	     };
-	     IncrementFrameSize();	     
+	     IncrementFrameSize();
 	   }
 	   else {
 	      Expression (Child(T,Kid), CurrLabel);
@@ -675,20 +770,15 @@ Clabel ProcessNode(TreeNode T, Clabel CurrLabel)
 		  CodeGen1 (SOSOP, OSOUTPUTC, NoLabel);
 		else
 		  printf("Error in decorating CONST NODES ? Type is : %d, TypeInteger is : %d, TypeCharacter is : %d\n", Type, TypeInteger, TypeCharacter);
-		
-		/*if(NodeName(Child(Decoration(Child(Decoration(Child(T, Kid)),1)),2)) == CharacterNode){
-		  CodeGen1 (SOSOP, OSOUTPUTC, NoLabel);
-		}
-		else if(NodeName(Child(Decoration(Child(Decoration(Child(T, Kid)),1)),2)) == IntegerNode){
+	      }
+	      else if(NodeName(Decoration(Child(Decoration(Child(T, Kid)),1))) == FunctionNode){
+		Type = Decoration(Decoration(Child(T,Kid)));
+		if(Type == TypeInteger)
 		  CodeGen1 (SOSOP, OSOUTPUT, NoLabel);
-		}
-		else if(NodeName(Child(Decoration(Child(Decoration(Child(T, Kid)),1)),2)) == IdentifierNode){
-		  TreeNode dclnTreeNode = Decoration(Child(Decoration(Child(Decoration(Child(T, Kid)),1)),2));
-		  ProcessOutputNodeForIdentifier(dclnTreeNode, NoLabel);
-		}
+		else if(Type == TypeCharacter)
+		  CodeGen1 (SOSOP, OSOUTPUTC, NoLabel);
 		else
-		  printf("1Oops internal error in output node for kid: %d\n", Kid);
-		*/
+		  printf("Error in decorating Function Nodes ? Type is : %d, TypeInteger is : %d, TypeCharacter is : %d\n", Type, TypeInteger, TypeCharacter);
 	      }
 	      else if(NodeName(Decoration(Child(Decoration(Child(T, Kid)),1))) == VarNode){
 		TreeNode dclnTreeNode = Decoration(Child(T, Kid));
@@ -706,10 +796,9 @@ Clabel ProcessNode(TreeNode T, Clabel CurrLabel)
 	    }
 	    else{
 	      CodeGen1 (SOSOP, OSOUTPUT, NoLabel);
-	      /*printf("3Oops internal error in output node for kid: %d\n", Kid);*/
-	    };
-	   };
-            DecrementFrameSize();
+	    };	    
+	   }; 
+	   DecrementFrameSize();           
          }
          CodeGen1 (SOSOP, OSOUTPUTL, NoLabel);
          return (NoLabel);
@@ -728,8 +817,6 @@ Clabel ProcessNode(TreeNode T, Clabel CurrLabel)
             CodeGen0 (NOP, Label2);
 	 CodeGen0(NOP, Label3);
 	 return (NoLabel);
-         /*return (Label3);                */
-
 
       case WhileNode :
          if (CurrLabel == NoLabel) 
@@ -742,7 +829,8 @@ Clabel ProcessNode(TreeNode T, Clabel CurrLabel)
          CodeGen2 (CONDOP, Label2, Label3, NoLabel);
          DecrementFrameSize();
          CodeGen1 (GOTOOP, Label1, ProcessNode (Child(T,2), Label2) );
-         return (Label3);
+	 CodeGen0(NOP, Label3);
+         return (NoLabel);
 
 
       case RepeatNode:
@@ -799,11 +887,13 @@ Clabel ProcessNode(TreeNode T, Clabel CurrLabel)
 	Label2 = MakeLabel();
 	Label3 = MakeLabel();
 	CodeGen0(DUPOP, Label1);
+	IncrementFrameSize();
 	Reference (Child(T,1), RightMode, NoLabel);
 	CodeGen1 (BOPOP, BGE, NoLabel);
+	DecrementFrameSize();
 	CodeGen2 (CONDOP, Label2, Label3, NoLabel);
 	/*CodeGen0(NOP, Label2);*/
-
+	DecrementFrameSize();
 	CurrLabel = ProcessNode(Child(T, 4), Label2);
 
 	Reference (Child(T,1), RightMode, CurrLabel);
@@ -823,10 +913,12 @@ Clabel ProcessNode(TreeNode T, Clabel CurrLabel)
 	Label2 = MakeLabel();
 	Label3 = MakeLabel();
 	CodeGen0(DUPOP, Label1);
+	IncrementFrameSize();
 	Reference (Child(T,1), RightMode, NoLabel);
 	CodeGen1 (BOPOP, BLE, NoLabel);
+	DecrementFrameSize();
 	CodeGen2 (CONDOP, Label2, Label3, NoLabel);
-
+	DecrementFrameSize();
 	CurrLabel = ProcessNode(Child(T, 4), Label2);
 
 	Reference (Child(T,1), RightMode, CurrLabel);
@@ -848,29 +940,35 @@ Clabel ProcessNode(TreeNode T, Clabel CurrLabel)
 	if(NodeName(Child(T, Kid)) != OtherwiseNode)
 	  {
 	    CodeGen0(DUPOP, Label3);
+	    IncrementFrameSize();
 	    if(NodeName(Child(Child(T, Kid),1)) == IntegerNode){
 	      CodeGen1(LITOP, NodeName(Child(Child(Child(T, Kid),1),1)) , NoLabel);
+	      IncrementFrameSize();
 	      CodeGen1(BOPOP, BEQ, NoLabel);
+	      DecrementFrameSize();
 	    }
 	    else if(NodeName(Child(Child(T, Kid),1)) == RangeNode){
 	      CodeGen0(DUPOP, NoLabel);
-	      /*CodeGen1(LITOP, NodeName(Child(Child(Child(Child(T, Kid),1),1), 1)), NoLabel);*/
+	      IncrementFrameSize();
 	      Expression(Child(Child(Child(T, Kid),1),1), NoLabel);
 	      CodeGen1(BOPOP, BGE, NoLabel);
+	      DecrementFrameSize();
 	      CodeGen0(SWAPOP, NoLabel);
 	      Expression(Child(Child(Child(T, Kid),1),2), NoLabel);
-	      /*CodeGen1(LITOP, NodeName(Child(Child(Child(Child(T, Kid),1),2), 1)), NoLabel);*/
 	      CodeGen1(BOPOP, BLE, NoLabel);
+	      DecrementFrameSize();
 	      CodeGen1(BOPOP, BAND, NoLabel);
+	      DecrementFrameSize();
 	    }
 	    else{
-	      /*printf("unknown node found in case \n");/* output error */
 	      Expression(Child(Child(T, Kid),1), NoLabel);
 	      CodeGen1(BOPOP, BEQ, NoLabel);
+	      DecrementFrameSize();
 	    };
 	    Label1 = MakeLabel();
 	    Label2 = MakeLabel();
 	    CodeGen2(CONDOP, Label1, Label2, NoLabel);
+	    DecrementFrameSize();
 	    CodeGen1(POPOP, MakeStringOf(1), Label1);
 	    
 	    CurrLabel = ProcessNode(Child(Child(T, Kid), 2), NoLabel);
@@ -882,6 +980,8 @@ Clabel ProcessNode(TreeNode T, Clabel CurrLabel)
        };
      
      CodeGen1(POPOP, MakeStringOf(1), Label2);
+
+     DecrementFrameSize();
      if(NodeName(Child(T, NKids(T))) == OtherwiseNode)
        {
 	 CurrLabel = ProcessNode(Child(Child(T, NKids(T)),1), NoLabel);
@@ -901,8 +1001,7 @@ Clabel ProcessNode(TreeNode T, Clabel CurrLabel)
 	    CurrLabel = NoLabel;
 	  };
 	  ProcessInputNodeForIdentifier(Decoration(Child(T, Kid)), CurrLabel);
-	    /*CodeGen1 (SOSOP, OSINPUT, CurrLabel);*/
-	 Reference (Child(T,Kid), LeftMode, NoLabel);
+	  Reference (Child(T,Kid), LeftMode, NoLabel);
 	};
 	 return (NoLabel);
 

@@ -1,5 +1,5 @@
 %%
-Tiny       -> PROGRAM Name ':' Consts TypesRule Dclns Body Name '.' => "program";
+Tiny       -> PROGRAM Name ':' Consts TypesRule Dclns SubProgs Body Name '.' => "program";
 
 TypesRule  -> TYPE (TypeRule ';')* 	     	    	=> "types"
 	   -> 						=> "types";
@@ -22,8 +22,16 @@ ConstVals  -> INTEGER_NUM				=> "<integer>"
 	   -> CHARACTER_ALPHA				=> "<char>"
 	   -> Name;
 	   					
+SubProgs   -> (FuncsAndProcs)* 				=> "<subprogs>";
+
+FuncsAndProcs -> PROCEDURE Name OptionalParams ';' Consts TypesRule Dclns Body Name ';' => "<prc>"
+	      -> FUNCTION Name OptionalParams ':' Name ';' Consts TypesRule Dclns Body Name ';' => "<fnc>";
+
+OptionalParams -> '(' ( Dcln list ';' )? ')'            => "<params>"
+	       ->     					=> "<params>";
 
 Body       -> BEGINX Statement list ';' END      	=> "block";
+
 Statement  -> Name ASSIGNMENT Expression          	=> "assign"
            -> OUTPUT '(' Expression list ',' ')'       	=> "output"
            -> IF Expression THEN Statement
@@ -37,6 +45,8 @@ Statement  -> Name ASSIGNMENT Expression          	=> "assign"
 	   -> FOR Name ASSIGNMENT Expression DOWNTO Expression DO Statement => "<downto>"
 	   -> CASE Expression OF (CaseClause)* (Otherwise)? END => "case"
 	   -> READ '(' Name list ',' ')'               	=> "read"
+	   -> RETURN ( Expression ) ?  			=> "<return>"
+	   -> FuncCall
            -> Body
 	   ->                                        	=> "<null>";
 
@@ -83,8 +93,10 @@ Primary	   -> Eof					=> "eof"
 	   -> CHR '(' Expression ')' 			=> "chr"
 	   -> ORD '(' Expression ')'			=> "ord"
 	   -> STR_ALPHA		 			=> "<string>"
+	   -> FuncCall
            -> '(' Expression ')';
 
 Name       -> IDENTIFIER | CAPIDENTIFIER		=> "<identifier>";
 
 
+FuncCall   -> Name '(' (Expression list ',')? ')'	=> "<call>";	   

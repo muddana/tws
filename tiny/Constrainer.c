@@ -77,7 +77,14 @@
 #define OrdNode        54
 #define StringNode     55
 
-#define NumberOfNodes  55
+#define SubProgsNode   56 
+#define FunctionNode   57
+#define ProcedureNode  58
+#define ParamsNode     59
+#define ReturnNode     60
+#define CallNode       61
+
+#define NumberOfNodes  61
 
 typedef TreeNode UserType;
 
@@ -99,7 +106,9 @@ char *node[] = { "program", "types", "type", "dclns",
 		 "<upto>", "case", "<case_clause>", "<range>",
 		 "<otherwise>", "<downto>", "char", "<char>",
 		 "<consts>", "const", "lit", "succ",
-		 "pred", "chr", "ord", "<string>"
+		 "pred", "chr", "ord", "<string>",
+		 "<subprogs>", "<fnc>", "<prc>", "<params>",
+		 "<return>", "<call>" 
                 };
 
 
@@ -248,7 +257,7 @@ UserType Expression (TreeNode T)
 {
    UserType Type1, Type2;
    TreeNode Declaration, Temp1, Temp2, Mode, Mode1, Mode2;
-   int NodeCount;
+   int NodeCount, Kid, i;
 
    if (TraceSpecified)
    {
@@ -424,6 +433,45 @@ UserType Expression (TreeNode T)
      };
      return (TypeInteger);
      
+      case CallNode:
+	Mode = GetMode(Child(T,1));
+	if(Mode == ProcedureNode){
+	  ErrorHeader(Child(T,1));
+	  printf("PROCEDURE CALLED AS A FUNCTION.\n");
+	  printf("\n");
+	};
+	return HandleCallNode(T);
+	/*Type1 = Expression(Child(T,1));
+	Mode = GetMode(Child(T,1));
+	if(Mode == FunctionNode){
+	  Temp1 = Decoration(Child(Decoration(Child(T,1)),1)); 
+	  Temp1 = Child(Temp1,2);
+	  if( NKids(Temp1) == NKids(T) -1 ){
+	    NodeCount = 0;
+	    for( Kid = 1; Kid <= NKids(Temp1) ; Kid++){
+	      for( i = 1; i <= NKids(Child(Temp1,Kid)) -1; i++){
+		NodeCount++;
+		if( Decoration(Child(Child(Temp1,Kid), i)) != Expression(Child(T, NodeCount+1)) ){
+		  ErrorHeader(Child(T, NodeCount +1));
+		  printf ("PARAMETERS OF FUNCTION CALL DOESN'T MATCH THE DEFINITION. ");
+		  printf ("\n");
+		};
+	      }
+	    };
+	  }
+	  else{
+	    ErrorHeader(Child(T,1));
+	    printf ("Number of parameters for the function call doesnt match its definition. ");
+	    printf ("\n");
+	  }
+	}
+	else{
+	  ErrorHeader(Child(T,1));
+	  printf ("VARIABLE NAME SHOULD BE A FUNCTION.");
+	  printf ("\n");
+	};	  
+	return (Type1);*/
+
       default :
          ErrorHeader(T);
          printf ( "UNKNOWN NODE NAME ");
@@ -434,7 +482,71 @@ UserType Expression (TreeNode T)
 }  /* end Expression */
 
 
+int CountParams(TreeNode ParamNode){
+  int Kid, ChildCount;
+  for( Kid=1,ChildCount = 0; Kid <= NKids(ParamNode); Kid++)
+    ChildCount = ChildCount + NKids(Child(ParamNode,Kid)) - 1;
+  return ChildCount;      
+};
 
+UserType HandleCallNode(TreeNode T){
+  int i, Kid, NodeCount;
+  UserType Type1;
+  TreeNode  Temp1, Mode;
+
+	Type1 = Expression(Child(T,1));
+	Mode = GetMode(Child(T,1));
+	if(Mode == FunctionNode){
+	  Temp1 = Decoration(Child(Decoration(Child(T,1)),1)); /* FunctionNode defintion node*/
+	  Temp1 = Child(Temp1,2); /*paramsNode in the function definition */
+	  if( CountParams(Temp1) == NKids(T) -1 ){
+	    NodeCount = 0;
+	    for( Kid = 1; Kid <= NKids(Temp1) ; Kid++){
+	      for( i = 1; i <= NKids(Child(Temp1,Kid)) -1; i++){
+		NodeCount++;
+		if( Decoration(Child(Child(Temp1,Kid), i)) != Expression(Child(T, NodeCount+1)) ){
+		  ErrorHeader(Child(T, NodeCount +1));
+		  printf ("PARAMETERS OF FUNCTION CALL DOESN'T MATCH THE DEFINITION. ");
+		  printf ("\n");
+		};
+	      }
+	    };
+	  }
+	  else{
+	    ErrorHeader(Child(T,1));
+	    printf ("Number of parameters for the function call doesnt match its definition. ");
+	    printf ("\n");
+	  }
+	}
+	else if(Mode == ProcedureNode){
+	  Temp1 = Decoration(Child(Decoration(Child(T,1)),1)); /* Proc defintion node*/
+	  Temp1 = Child(Temp1,2); /*paramsNode in the Proc definition */
+	  if( CountParams(Temp1) == NKids(T) -1 ){
+	    NodeCount = 0;
+	    for( Kid = 1; Kid <= NKids(Temp1) ; Kid++){
+	      for( i = 1; i <= NKids(Child(Temp1,Kid)) -1; i++){
+		NodeCount++;
+		if( Decoration(Child(Child(Temp1,Kid), i)) != Expression(Child(T, NodeCount+1)) ){
+		  ErrorHeader(Child(T, NodeCount +1));
+		  printf ("PARAMETERS OF PROCEDURE CALL DOESN'T MATCH THE DEFINITION. ");
+		  printf ("\n");
+		};
+	      }
+	    };
+	  }
+	  else{
+	    ErrorHeader(Child(T,1));
+	    printf ("Number of parameters for the PROCEDURE call doesnt match its definition. ");
+	    printf ("\n");
+	  }
+	}
+	else{
+	  ErrorHeader(Child(T,1));
+	  printf ("CALL VARIABLE NAME SHOULD BE EITHER OF TYPE FUNCTION/PROCEDURE.");
+	  printf ("\n");
+	};
+	return (Type1);
+}
 
 void ProcessNode (TreeNode T) 
 {
@@ -452,9 +564,9 @@ void ProcessNode (TreeNode T)
 
    switch (NodeName(T))
    {
-      case ProgramNode : 
+      case ProgramNode :
+	 DTEnter("<subprog_ctxt>", T, T);
          OpenScope();
-	 /* for loop context */
 	 AnnounceContext(T);
          Name1 = NodeName(Child(Child(T,1),1));
          Name2 = NodeName(Child(Child(T,NKids(T)),1));
@@ -470,18 +582,85 @@ void ProcessNode (TreeNode T)
             ProcessNode (Child(T,Kid));
          CloseScope();
          break;
-        
+	 
+      case SubProgsNode :
+	for (Kid = 1; Kid <= NKids(T); Kid++)
+            ProcessNode (Child(T,Kid));
+	break;
+
+      case FunctionNode :
+	if(NodeName(Child(Child(T,1),1)) != NodeName(Child(Child(T,NKids(T)),1))){
+	  ErrorHeader(T);
+	  printf ("FUNCTION NAMES DO NOT MATCH\n");
+	  printf ("\n");
+	}
+	
+	  DTEnter(NodeName(Child(Child(T,1),1)) , Child(T,1));
+	  OpenScope();
+	  DTEnter("<subprog_ctxt>", T, T);
+	  Dcln1 = Lookup(NodeName(Child(Child(T,3),1)), Child(T,3)); /* 3rd child is the return type */
+	  Decorate(Child(T,1), Decoration(Dcln1));/*function's return type */
+	  Decorate(Child(Child(T,1),1), T);
+	  ProcessNode(Child(T,2));
+	  for (Kid = 4; Kid <= NKids(T)-1; Kid++){
+            ProcessNode (Child(T,Kid));
+	  };
+	  CloseScope();
+	break;
+     
+      case ProcedureNode :
+	if(NodeName(Child(Child(T,1),1)) != NodeName(Child(Child(T,NKids(T)),1))){
+	  ErrorHeader(T);
+	  printf ("PROCEDURE NAMES DO NOT MATCH\n");
+	  printf ("\n");
+	};
+	
+	DTEnter(NodeName(Child(Child(T,1),1)) , Child(T,1));
+	OpenScope();
+	DTEnter("<subprog_ctxt>", T, T);
+	Decorate(Child(Child(T,1),1), T);
+	ProcessNode(Child(T,2));
+	for (Kid = 3; Kid <= NKids(T)-1; Kid++){
+	  ProcessNode (Child(T,Kid));
+	};	
+	CloseScope();
+	break;
+	
+      case ParamsNode:
+	for (Kid = 1; Kid <= NKids(T); Kid++){
+            ProcessNode (Child(T,Kid));
+	  };
+	break;
+     
+      case ReturnNode:	
+	Temp = Lookup("<subprog_ctxt>", T);
+	if(NodeName(Temp) != FunctionNode){
+	  ErrorHeader(T);
+	  printf ("RETURN STATEMENT ONLY ALLOWED IN FUNCTIONS.\n");
+	  printf ("\n");
+	};
+	if(NKids(T) > 0){
+	  Type1 = Expression(Child(T,1));
+	  if(Decoration(Child(Temp,1)) != Type1 && NodeName(Temp) != ProcedureNode){
+	    ErrorHeader(T);
+	    printf ("RETURN TYPE DOESNT MATCH THE FUNCTION DEFINITIONS RETURN TYPE.\n");
+	    printf ("\n");
+	  }
+	}
+	else{
+	  /*WarningHeader(T);
+	  printf("RETURN FROM THE FUNCTION MIGHT RETURN A PROPER VALUE.");
+	  printf("\n");*/
+	};
+	break;
+     
       case TypeNode :
 	DTEnter (NodeName(Child(Child(T,1), 1)),Child(T, 1),T);
 	Decorate(Child(T, 1), T);
 	Decorate(Child(Child(T,1), 1), T);
-	/*DTEnter (NodeName(Child(Child(T,1), 1)),T,T);*/
-	/*printf("Adding Type %d\n", NodeName(Child(Child(T,1),1)));*/
 	if(NKids(T) > 1){
 	  if(NodeName(Child(T, 2)) == LitNode){
-	    /*printf("Processing LitNode\n");*/
 	    for(Kid = 1; Kid <= NKids(Child(T, 2)); Kid++){
-	      /*printf("Adding Lit %d\n", NodeName(Child(Child(Child(T,2), Kid),1)));*/
 	      DTEnter (NodeName(Child(Child(Child(T,2), Kid),1)), Child(Child(T, 2), Kid),T);
 	      Decorate(Child(Child(Child(T,2),Kid), 1), Child(T, 2));
 	      Decorate(Child(Child(T,2), Kid), T);
@@ -490,7 +669,6 @@ void ProcessNode (TreeNode T)
 	  else if(NodeName(Child(T,2)) == IdentifierNode){
 	      Dcln1 = Lookup(NodeName(Child(Child(T, 2), 1)), T);
 	      Decorate(Child(T, 2), Dcln1);
-	      /* redocorating the type for the user define type */ 	      
 	      Decorate(Child(T, 1),Decoration(Dcln1));
 	  }
 	  else{
@@ -578,13 +756,6 @@ void ProcessNode (TreeNode T)
          Type2 = Expression (Child(T,2));
 
 	 CheckModeForAssignmentIdentifier(Child(T, 1));
-	 /*Declaration = Lookup(NodeName(Child(Child(T, 1), 1)),Child(T,1));
-	   Mode = NodeName(Decoration(Declaration));
-	 if(Mode != VarNode){
-	   ErrorHeader(Child(T, 1));
-            printf ("CANNOT ASSIGN TYPES, CONSTANTS, LITERALS\n");
-            printf ("\n");
-	    };*/
          if (Type1 != Type2)
          {
             ErrorHeader(T);
@@ -698,9 +869,18 @@ void ProcessNode (TreeNode T)
 	     CheckModeForAssignmentIdentifier(Child(T,2));
 
 	     Temp = Lookup("<for_ctxt>", T);
-	     while(NodeName(Temp) != ProgramNode)
-	       {
+	     while(NodeName(Temp) != ProgramNode){
 		 if(NodeName(Child(Child(Temp, 1), 1)) == NodeName(Child(Child(T, 1), 1)))
+		   {
+		     ErrorHeader(T);
+		     printf ("CANNOT SWAP WITH LOOP CONTROL VARIABLE\n");
+		     printf ("\n");
+		   }
+		 Temp = Decoration(Temp);
+	       };
+	     Temp = Lookup("<for_ctxt>", T);
+	     while(NodeName(Temp) != ProgramNode){
+		 if(NodeName(Child(Child(Temp, 1), 1)) == NodeName(Child(Child(T, 2), 1)))
 		   {
 		     ErrorHeader(T);
 		     printf ("CANNOT SWAP WITH LOOP CONTROL VARIABLE\n");
@@ -775,13 +955,13 @@ void ProcessNode (TreeNode T)
 	 if(NodeName(Child(Child(T,Kid), 1)) == IdentifierNode){
 	   if(NodeName(Decoration(Child(Decoration(Child(Child(T,Kid), 1)),1))) == VarNode){
 	     ErrorHeader(Child(Child(T,Kid), 1));
-	     printf("CASE CLAUSE CAN ONLY HAVE LIT OR CONST AS LABEL");/*,Type1 %d, Type2 %d", Type1, Type2);*/
+	     printf("CASE CLAUSE CAN ONLY HAVE LIT OR CONST AS LABEL\n");/*,Type1 %d, Type2 %d", Type1, Type2);*/
 	     printf("\n");
 	   };
 	 };
 	 if(Type2 != Type1){
 	   ErrorHeader(Child(Child(T,Kid), 1));
-	   printf("CASE CLAUSE NOT OF TYPE OF THE CASE EXPRESSION");/*,Type1 %d, Type2 %d", Type1, Type2);*/
+	   printf("CASE CLAUSE NOT OF TYPE OF THE CASE EXPRESSION\n");/*,Type1 %d, Type2 %d", Type1, Type2);*/
 	   printf("\n");
 	 };
 
@@ -815,12 +995,22 @@ void ProcessNode (TreeNode T)
 	  if(Type1 != TypeInteger && Type1 != TypeCharacter)
 	    {
 	    ErrorHeader(Child(T,Kid));
-	    printf("Read STATEMENT ALLOWS INTEGERS AND CHARACTERS TO BE READ");
+	    printf("READ STATEMENT ALLOWS ONLY INTEGERS AND CHARACTERS TO BE READ");
 	    printf("\n");
 	  };
 	};
 	  break;
 
+
+   case CallNode:
+     Mode = GetMode(Child(T,1));
+     if(Mode == FunctionNode){
+       ErrorHeader(Child(T,1));
+       printf("FUNCTIONS CALLED AS PROCEDURE.\n");
+       printf("\n");
+     };
+     HandleCallNode(T);
+     break;
 
       case NullNode :  
          break;
@@ -850,11 +1040,14 @@ TreeNode GetMode(T){
 };
 
 void CheckModeForAssignmentIdentifier(TreeNode T){
-  TreeNode Declaration, Mode;
+  TreeNode Declaration, Mode, TempNode;
+
+  TempNode =  Lookup("<subprog_ctxt>", T);
+
   Mode = GetMode(T);
-  if(Mode != VarNode){
+  if(Mode != VarNode && Child(TempNode,1) != Decoration(T) ){
     ErrorHeader(T);
-    printf ("CANNOT ASSIGN/SWAP TYPES, CONSTANTS, LITERALS\n");
+    printf ("CANNOT ASSIGN/SWAP TYPES, CONSTANTS, LITERALS, FUNCTIONS(UNLESS THE ASSIGNMENT IS IN THE SAME FUNCTION), PROCEDURES.\n");
     /*printf("Mode is : %d\n", Mode);*/
     printf ("\n");
   };

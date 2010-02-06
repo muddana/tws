@@ -26,12 +26,14 @@ typedef struct {
 %token <info>  POW
 %token <info>  POOL
 %token <info>  IF
+%token <info>  FUNCTION
 %token <info>  CHARACTER_ALPHA
 %token <info>  STR_ALPHA
 %token <info>  READ
 %token <info>  REPEAT
 %token <info>  RANGE
 %token <info>  ELSE
+%token <info>  RETURN
 %token <info>  CAPIDENTIFIER
 %token <info>  UNTIL
 %token <info>  FOR
@@ -45,6 +47,7 @@ typedef struct {
 %token <info>  OUTPUT
 %token <info>  EQ
 %token <info>  EXIT
+%token <info>  PROCEDURE
 %token <info>  CONST
 %token <info>  Eof
 %token <info>  GTE
@@ -65,17 +68,23 @@ typedef struct {
 %token <info>  ASSIGNMENT
 %token <info>  PROGRAM
 %token <info>  DOWNTO
+%type <dlist> Statement_1_1_1_1_1_1_1_1
 %type <dlist> LitRule_1
 %type <dlist> LitRule
 %type <dlist> Statement_1_1
 %type <dlist> Statement_1_1_1_1_1
 %type <dlist> Consts_1
 %type <dlist> CaseClause
+%type <dlist> OptionalParams_1_1
 %type <dlist> ModAndMulDiv
+%type <dlist> OptionalParams_1
 %type <dlist> TypesRule
+%type <dlist> FuncCall_1_1
 %type <dlist> TypeRule
 %type <dlist> Unary
 %type <dlist> Statement_1_1_1
+%type <dlist> OptionalParams
+%type <dlist> FuncsAndProcs
 %type <dlist> Tiny
 %type <dlist> Statement_1
 %type <dlist> Body_1
@@ -86,23 +95,27 @@ typedef struct {
 %type <dlist> Statement
 %type <dlist> Term
 %type <dlist> Dcln_1
+%type <dlist> FuncCall
 %type <dlist> Name
 %type <dlist> Clause
 %type <dlist> Otherwise
 %type <dlist> Body
 %type <dlist> Dclns_1
 %type <dlist> Statement_1_1_1_1_1_1
+%type <dlist> SubProgs_1
 %type <dlist> ConstDcln
 %type <dlist> Statement_1_1_1_1
 %type <dlist> Otherwise_1
+%type <dlist> FuncCall_1
 %type <dlist> Expression
 %type <dlist> Dclns
 %type <dlist> Primary
 %type <dlist> Statement_1_1_1_1_1_1_1
+%type <dlist> SubProgs
 %type <dlist> TypesRule_1
 %%
 
-Tiny     : PROGRAM  Name     ':'      Consts   TypesRule Dclns    Body     Name     '.'      
+Tiny     : PROGRAM  Name     ':'      Consts   TypesRule Dclns    SubProgs Body     Name     '.'      
              {
 		DLIST r;
 		T_NODE *t;
@@ -137,6 +150,9 @@ Tiny     : PROGRAM  Name     ':'      Consts   TypesRule Dclns    Body     Name 
 
 		while (DCount(&$8) > 0)
 		    DAddTail(&r,DRemHead(&$8));
+
+		while (DCount(&$9) > 0)
+		    DAddTail(&r,DRemHead(&$9));
 
 		t = (T_NODE *)malloc(sizeof(T_NODE));
 		assert(t);
@@ -714,6 +730,267 @@ ConstVals : INTEGER_NUM
 
 		while (DCount(&$1) > 0)
 		    DAddTail(&r,DRemHead(&$1));
+
+		$$ = r;
+
+             }
+         ;
+
+SubProgs : SubProgs_1 
+             {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"<subprogs>",
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		$$ = r;
+
+             }
+         ;
+
+SubProgs_1 : 
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		$$ = r;
+
+             }
+         | FuncsAndProcs SubProgs_1 
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		while (DCount(&$2) > 0)
+		    DAddTail(&r,DRemHead(&$2));
+
+		$$ = r;
+
+             }
+         ;
+
+FuncsAndProcs : PROCEDURE Name     OptionalParams ';'      Consts   TypesRule Dclns    Body     Name     ';'      
+             {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		if ($1.makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$1.string,
+		                                TREETAG_LINE,$1.line,
+		                                TREETAG_COLUMN,$1.column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&$2) > 0)
+		    DAddTail(&r,DRemHead(&$2));
+
+		while (DCount(&$3) > 0)
+		    DAddTail(&r,DRemHead(&$3));
+
+		while (DCount(&$5) > 0)
+		    DAddTail(&r,DRemHead(&$5));
+
+		while (DCount(&$6) > 0)
+		    DAddTail(&r,DRemHead(&$6));
+
+		while (DCount(&$7) > 0)
+		    DAddTail(&r,DRemHead(&$7));
+
+		while (DCount(&$8) > 0)
+		    DAddTail(&r,DRemHead(&$8));
+
+		while (DCount(&$9) > 0)
+		    DAddTail(&r,DRemHead(&$9));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"<prc>",
+		                                TREETAG_LINE,$1.line,
+		                                TREETAG_COLUMN,$1.column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		$$ = r;
+
+             }
+         | FUNCTION Name     OptionalParams ':'      Name     ';'      Consts   TypesRule Dclns    Body     Name     ';'      
+             {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		if ($1.makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$1.string,
+		                                TREETAG_LINE,$1.line,
+		                                TREETAG_COLUMN,$1.column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&$2) > 0)
+		    DAddTail(&r,DRemHead(&$2));
+
+		while (DCount(&$3) > 0)
+		    DAddTail(&r,DRemHead(&$3));
+
+		while (DCount(&$5) > 0)
+		    DAddTail(&r,DRemHead(&$5));
+
+		while (DCount(&$7) > 0)
+		    DAddTail(&r,DRemHead(&$7));
+
+		while (DCount(&$8) > 0)
+		    DAddTail(&r,DRemHead(&$8));
+
+		while (DCount(&$9) > 0)
+		    DAddTail(&r,DRemHead(&$9));
+
+		while (DCount(&$10) > 0)
+		    DAddTail(&r,DRemHead(&$10));
+
+		while (DCount(&$11) > 0)
+		    DAddTail(&r,DRemHead(&$11));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"<fnc>",
+		                                TREETAG_LINE,$1.line,
+		                                TREETAG_COLUMN,$1.column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		$$ = r;
+
+             }
+         ;
+
+OptionalParams : '('      OptionalParams_1 
+             {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&$2) > 0)
+		    DAddTail(&r,DRemHead(&$2));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"<params>",
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		$$ = r;
+
+             }
+         | 
+             {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"<params>",
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		$$ = r;
+
+             }
+         ;
+
+OptionalParams_1 : ')'      
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		$$ = r;
+
+             }
+         | OptionalParams_1_1 
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		$$ = r;
+
+             }
+         ;
+
+OptionalParams_1_1 : Dcln     ')'      
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		$$ = r;
+
+             }
+         | Dcln     ';'      OptionalParams_1_1 
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		while (DCount(&$3) > 0)
+		    DAddTail(&r,DRemHead(&$3));
 
 		$$ = r;
 
@@ -1362,6 +1639,54 @@ Statement : Name     ASSIGNMENT Expression
 		$$ = r;
 
              }
+         | RETURN   Statement_1_1_1_1_1_1_1 
+             {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		if ($1.makenode) {
+		    T_NODE *t2;
+		    t2 = (T_NODE *)malloc(sizeof(T_NODE));
+		    assert(t2);
+		    t2->nodeptr = AllocTreeNode(TREETAG_STRING,$1.string,
+		                                TREETAG_LINE,$1.line,
+		                                TREETAG_COLUMN,$1.column,
+		                                TREETAG_DONE);
+		    DAddTail(&r,&t2->mynode);
+		}
+
+		while (DCount(&$2) > 0)
+		    DAddTail(&r,DRemHead(&$2));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"<return>",
+		                                TREETAG_LINE,$1.line,
+		                                TREETAG_COLUMN,$1.column,
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		$$ = r;
+
+             }
+         | FuncCall 
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		$$ = r;
+
+             }
          | Body     
              {
 		DLIST r;
@@ -1396,6 +1721,29 @@ Statement : Name     ASSIGNMENT Expression
              }
          ;
 
+Statement_1_1_1_1_1_1_1 : 
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		$$ = r;
+
+             }
+         | Expression 
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		$$ = r;
+
+             }
+         ;
+
 Statement_1_1_1_1_1_1 : Name     ')'      
              {
 		DLIST r;
@@ -1425,7 +1773,7 @@ Statement_1_1_1_1_1_1 : Name     ')'
              }
          ;
 
-Statement_1_1_1_1_1 : Statement_1_1_1_1_1_1_1 
+Statement_1_1_1_1_1 : Statement_1_1_1_1_1_1_1_1 
              {
 		DLIST r;
 
@@ -1454,7 +1802,7 @@ Statement_1_1_1_1_1 : Statement_1_1_1_1_1_1_1
              }
          ;
 
-Statement_1_1_1_1_1_1_1 : END      
+Statement_1_1_1_1_1_1_1_1 : END      
              {
 		DLIST r;
 
@@ -2710,6 +3058,18 @@ Primary  : Eof
 		$$ = r;
 
              }
+         | FuncCall 
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		$$ = r;
+
+             }
          | '('      Expression ')'      
              {
 		DLIST r;
@@ -2787,6 +3147,86 @@ Name     : IDENTIFIER
 		    free(t3);
 		}
 		DAddTail(&r,&t->mynode);
+		$$ = r;
+
+             }
+         ;
+
+FuncCall : Name     '('      FuncCall_1 
+             {
+		DLIST r;
+		T_NODE *t;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		while (DCount(&$3) > 0)
+		    DAddTail(&r,DRemHead(&$3));
+
+		t = (T_NODE *)malloc(sizeof(T_NODE));
+		assert(t);
+		t->nodeptr = AllocTreeNode(TREETAG_STRING,"<call>",
+		                           TREETAG_DONE);
+		while (DCount(&r) > 0) {
+		    T_NODE *t3 = DRemHead(&r);
+		    AddChild(t->nodeptr,t3->nodeptr);
+		    free(t3);
+		}
+		DAddTail(&r,&t->mynode);
+		$$ = r;
+
+             }
+         ;
+
+FuncCall_1 : ')'      
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		$$ = r;
+
+             }
+         | FuncCall_1_1 
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		$$ = r;
+
+             }
+         ;
+
+FuncCall_1_1 : Expression ')'      
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		$$ = r;
+
+             }
+         | Expression ','      FuncCall_1_1 
+             {
+		DLIST r;
+
+		InitDList(&r);
+
+		while (DCount(&$1) > 0)
+		    DAddTail(&r,DRemHead(&$1));
+
+		while (DCount(&$3) > 0)
+		    DAddTail(&r,DRemHead(&$3));
+
 		$$ = r;
 
              }

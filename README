@@ -6,3 +6,76 @@ To install the TWS:
 
 2. While in 'tws' directory, simply type 'make'.
 
+About Tiny:
+CodeGenerator.c: This is the source file for the code generator.
+
+Constrainer.c:  This  is  the source file for the contextual constrainer.
+
+lex.tiny, parse.tiny. These are lexical and parsing specifi-
+cations  for  Tiny. parse.tiny describes Tiny's syntax.
+
+tc:   This  is  the Tiny Compiler/Interpreter.  It's nothing more than a shell script, that invokes  the  scanner/parser,
+then  the  constrainer, then the code generator, and finally the interpreter.  As these as executed, their effect  is  as
+follows:
+
+1)   The  parser  produces a file called _TREE, in your current directory (the 'tiny' directory).
+
+2)   The constrainer reads in the _TREE file, traverses  the tree,  adds  constraining information to it, and writes
+     it back out.
+
+3)   The code generator reads in the tree, traverses  it  to generate code, and produces a file called _CODE in your
+     current directory. It also updates the new (slightly) modified tree.
+
+4)   The  interpreter reads in the _CODE file, and simulates the execution of the program in it.
+
+Features of Tiny:
+ * Types: integer
+          char
+          bool
+          enum
+          const
+ * For statement
+ * repeat statement
+ * case statement
+ * loop statement with exit statement
+ * swap statement A :=: B
+ * succ, pred and ord for integers and characters and enumerated types
+ * read statement
+ * output statement
+ * Functions and Procedures
+ * commenting using curly braces '{' '}'
+
+sample program:
+
+program pr3c01:
+{  This is a comment
+   the output should be:
+   1    10
+   2     9
+   3     8
+   4     7
+   5     6
+   6     5
+   7     4
+   8     3
+   9     2
+   10    1
+}
+const pi=3;
+      e=2;
+      ten=10;
+var i,x,y,z: integer;
+begin
+   for i := 1 to 10 do
+      if (i=pi) then
+	 output(pi,11-pi)
+      else if (i=e) then
+	      output(e,11-e)
+           else if (i=ten) then
+		   output(ten,11-ten)
+                else
+		   output(i,11-i);
+end pr3c01.
+
+ 
+More sample programs in : tests/test-progs/

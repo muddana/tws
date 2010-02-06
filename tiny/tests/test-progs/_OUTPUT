@@ -2,9 +2,18 @@ YAHOO ! The Tiny Compiler-Interpreter:
 
 Done parsing.
 Enter Constrainer ...
-<<< CONSTRAINER ERROR >>> AT L15/C2 : 
-CASE CLAUSE NOT OF TYPE OF THE CASE EXPRESSION
-<<< CONSTRAINER ERROR >>> AT L21/C2 : 
-CASE CLAUSE NOT OF TYPE OF THE CASE EXPRESSION
-<<< CONSTRAINER ERROR >>> AT L27/C2 : 
-CASE CLAUSE NOT OF TYPE OF THE CASE EXPRESSION
+Enter CodeGenerator ...
+Starting Interpreter ...
+   Loading and Resolving References ...
+   Begin Execution:
+1 
+2 
+1 
+3 
+1 
+2 
+4 
+1 
+2 
+4 
+   End Execution.

@@ -1,11 +1,11 @@
-State 141 conflicts: 1 shift/reduce
+State 175 conflicts: 1 shift/reduce
 
 
 Grammar
 
     0 $accept: Tiny $end
 
-    1 Tiny: PROGRAM Name ':' Consts TypesRule Dclns Body Name '.'
+    1 Tiny: PROGRAM Name ':' Consts TypesRule Dclns SubProgs Body Name '.'
 
     2 TypesRule: TYPE TypesRule_1
     3          | /* empty */
@@ -44,240 +44,295 @@ Grammar
    24          | CHARACTER_ALPHA
    25          | Name
 
-   26 Body: BEGINX Body_1
+   26 SubProgs: SubProgs_1
 
-   27 Body_1: Statement END
-   28       | Statement ';' Body_1
+   27 SubProgs_1: /* empty */
+   28           | FuncsAndProcs SubProgs_1
 
-   29 Statement: Name ASSIGNMENT Expression
-   30          | OUTPUT '(' Statement_1
-   31          | IF Expression THEN Statement Statement_1_1
-   32          | WHILE Expression DO Statement
-   33          | REPEAT Statement_1_1_1
-   34          | LOOP Statement_1_1_1_1
-   35          | EXIT
-   36          | Primary EQSWAP Primary
-   37          | FOR Name ASSIGNMENT Expression TO Expression DO Statement
-   38          | FOR Name ASSIGNMENT Expression DOWNTO Expression DO Statement
-   39          | CASE Expression OF Statement_1_1_1_1_1
-   40          | READ '(' Statement_1_1_1_1_1_1
-   41          | Body
-   42          | /* empty */
+   29 FuncsAndProcs: PROCEDURE Name OptionalParams ';' Consts TypesRule Dclns Body Name ';'
+   30              | FUNCTION Name OptionalParams ':' Name ';' Consts TypesRule Dclns Body Name ';'
 
-   43 Statement_1_1_1_1_1_1: Name ')'
-   44                      | Name ',' Statement_1_1_1_1_1_1
+   31 OptionalParams: '(' OptionalParams_1
+   32               | /* empty */
 
-   45 Statement_1_1_1_1_1: Statement_1_1_1_1_1_1_1
-   46                    | CaseClause Statement_1_1_1_1_1
+   33 OptionalParams_1: ')'
+   34                 | OptionalParams_1_1
 
-   47 Statement_1_1_1_1_1_1_1: END
-   48                        | Otherwise END
+   35 OptionalParams_1_1: Dcln ')'
+   36                   | Dcln ';' OptionalParams_1_1
 
-   49 Statement_1_1_1_1: Statement POOL
-   50                  | Statement ';' Statement_1_1_1_1
+   37 Body: BEGINX Body_1
 
-   51 Statement_1_1_1: Statement UNTIL Expression
-   52                | Statement ';' Statement_1_1_1
+   38 Body_1: Statement END
+   39       | Statement ';' Body_1
 
-   53 Statement_1_1: /* empty */
-   54              | ELSE Statement
+   40 Statement: Name ASSIGNMENT Expression
+   41          | OUTPUT '(' Statement_1
+   42          | IF Expression THEN Statement Statement_1_1
+   43          | WHILE Expression DO Statement
+   44          | REPEAT Statement_1_1_1
+   45          | LOOP Statement_1_1_1_1
+   46          | EXIT
+   47          | Primary EQSWAP Primary
+   48          | FOR Name ASSIGNMENT Expression TO Expression DO Statement
+   49          | FOR Name ASSIGNMENT Expression DOWNTO Expression DO Statement
+   50          | CASE Expression OF Statement_1_1_1_1_1
+   51          | READ '(' Statement_1_1_1_1_1_1
+   52          | RETURN Statement_1_1_1_1_1_1_1
+   53          | FuncCall
+   54          | Body
+   55          | /* empty */
 
-   55 Statement_1: Expression ')'
-   56            | Expression ',' Statement_1
+   56 Statement_1_1_1_1_1_1_1: /* empty */
+   57                        | Expression
 
-   57 Otherwise: OTHERWISE Statement Otherwise_1
+   58 Statement_1_1_1_1_1_1: Name ')'
+   59                      | Name ',' Statement_1_1_1_1_1_1
 
-   58 Otherwise_1: /* empty */
-   59            | ';'
+   60 Statement_1_1_1_1_1: Statement_1_1_1_1_1_1_1_1
+   61                    | CaseClause Statement_1_1_1_1_1
 
-   60 CaseClause: Clause ':' Statement ';'
+   62 Statement_1_1_1_1_1_1_1_1: END
+   63                          | Otherwise END
 
-   61 Clause: Primary
-   62       | Primary RANGE Primary
+   64 Statement_1_1_1_1: Statement POOL
+   65                  | Statement ';' Statement_1_1_1_1
 
-   63 Expression: Term
-   64           | Term GT Term
-   65           | Term LT Term
-   66           | Term GTE Term
-   67           | Term NE Term
-   68           | Term EQ Term
-   69           | Term LTE Term
+   66 Statement_1_1_1: Statement UNTIL Expression
+   67                | Statement ';' Statement_1_1_1
 
-   70 Term: ModAndMulDiv
-   71     | ModAndMulDiv OR Term
-   72     | ModAndMulDiv '+' Term
-   73     | ModAndMulDiv '-' Term
+   68 Statement_1_1: /* empty */
+   69              | ELSE Statement
 
-   74 ModAndMulDiv: Unary
-   75             | Unary MOD ModAndMulDiv
-   76             | Unary AND ModAndMulDiv
-   77             | Unary '*' ModAndMulDiv
-   78             | Unary '/' ModAndMulDiv
+   70 Statement_1: Expression ')'
+   71            | Expression ',' Statement_1
 
-   79 Unary: Misc
-   80      | NOT Unary
-   81      | '+' Unary
-   82      | '-' Unary
+   72 Otherwise: OTHERWISE Statement Otherwise_1
 
-   83 Misc: Primary
-   84     | Primary POW Misc
+   73 Otherwise_1: /* empty */
+   74            | ';'
 
-   85 Primary: Eof
-   86        | Name
-   87        | INTEGER_NUM
-   88        | CHARACTER_ALPHA
-   89        | PRED '(' Expression ')'
-   90        | SUCC '(' Expression ')'
-   91        | CHR '(' Expression ')'
-   92        | ORD '(' Expression ')'
-   93        | STR_ALPHA
-   94        | '(' Expression ')'
+   75 CaseClause: Clause ':' Statement ';'
 
-   95 Name: IDENTIFIER
-   96     | CAPIDENTIFIER
+   76 Clause: Primary
+   77       | Primary RANGE Primary
+
+   78 Expression: Term
+   79           | Term GT Term
+   80           | Term LT Term
+   81           | Term GTE Term
+   82           | Term NE Term
+   83           | Term EQ Term
+   84           | Term LTE Term
+
+   85 Term: ModAndMulDiv
+   86     | ModAndMulDiv OR Term
+   87     | ModAndMulDiv '+' Term
+   88     | ModAndMulDiv '-' Term
+
+   89 ModAndMulDiv: Unary
+   90             | Unary MOD ModAndMulDiv
+   91             | Unary AND ModAndMulDiv
+   92             | Unary '*' ModAndMulDiv
+   93             | Unary '/' ModAndMulDiv
+
+   94 Unary: Misc
+   95      | NOT Unary
+   96      | '+' Unary
+   97      | '-' Unary
+
+   98 Misc: Primary
+   99     | Primary POW Misc
+
+  100 Primary: Eof
+  101        | Name
+  102        | INTEGER_NUM
+  103        | CHARACTER_ALPHA
+  104        | PRED '(' Expression ')'
+  105        | SUCC '(' Expression ')'
+  106        | CHR '(' Expression ')'
+  107        | ORD '(' Expression ')'
+  108        | STR_ALPHA
+  109        | FuncCall
+  110        | '(' Expression ')'
+
+  111 Name: IDENTIFIER
+  112     | CAPIDENTIFIER
+
+  113 FuncCall: Name '(' FuncCall_1
+
+  114 FuncCall_1: ')'
+  115           | FuncCall_1_1
+
+  116 FuncCall_1_1: Expression ')'
+  117             | Expression ',' FuncCall_1_1
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'(' (40) 8 30 40 89 90 91 92 94
-')' (41) 9 43 55 89 90 91 92 94
-'*' (42) 77
-'+' (43) 72 81
-',' (44) 10 17 44 56
-'-' (45) 73 82
+'(' (40) 8 31 41 51 104 105 106 107 110 113
+')' (41) 9 33 35 58 70 104 105 106 107 110 114 116
+'*' (42) 92
+'+' (43) 87 96
+',' (44) 10 17 59 71 117
+'-' (45) 88 97
 '.' (46) 1
-'/' (47) 78
-':' (58) 1 16 60
-';' (59) 5 14 21 28 50 52 59 60
+'/' (47) 93
+':' (58) 1 16 30 75
+';' (59) 5 14 21 29 30 36 39 65 67 74 75
 error (256)
-END (258) 27 47 48
-TO (259) 37
-EQSWAP (260) 36
+END (258) 38 62 63
+TO (259) 48
+EQSWAP (260) 47
 VAR (261) 11
-IDENTIFIER (262) 95
-CHR (263) 91
-POW (264) 84
-POOL (265) 49
-IF (266) 31
-CHARACTER_ALPHA (267) 24 88
-STR_ALPHA (268) 93
-READ (269) 40
-REPEAT (270) 33
-RANGE (271) 62
-ELSE (272) 54
-CAPIDENTIFIER (273) 96
-UNTIL (274) 51
-FOR (275) 37 38
-THEN (276) 31
-OF (277) 39
-NE (278) 67
-MOD (279) 75
-GT (280) 64
-CASE (281) 39
-WHILE (282) 32
-OUTPUT (283) 30
-EQ (284) 6 7 22 68
-EXIT (285) 35
-CONST (286) 18
-Eof (287) 85
-GTE (288) 66
-PRED (289) 89
-NOT (290) 80
-DO (291) 32 37 38
-BEGINX (292) 26
-ORD (293) 92
-AND (294) 76
-INTEGER_NUM (295) 23 87
-LTE (296) 69
-LOOP (297) 34
-SUCC (298) 90
-TYPE (299) 2
-OR (300) 71
-LT (301) 65
-OTHERWISE (302) 57
-ASSIGNMENT (303) 29 37 38
-PROGRAM (304) 1
-DOWNTO (305) 38
+IDENTIFIER (262) 111
+CHR (263) 106
+POW (264) 99
+POOL (265) 64
+IF (266) 42
+FUNCTION (267) 30
+CHARACTER_ALPHA (268) 24 103
+STR_ALPHA (269) 108
+READ (270) 51
+REPEAT (271) 44
+RANGE (272) 77
+ELSE (273) 69
+RETURN (274) 52
+CAPIDENTIFIER (275) 112
+UNTIL (276) 66
+FOR (277) 48 49
+THEN (278) 42
+OF (279) 50
+NE (280) 82
+MOD (281) 90
+GT (282) 79
+CASE (283) 50
+WHILE (284) 43
+OUTPUT (285) 41
+EQ (286) 6 7 22 83
+EXIT (287) 46
+PROCEDURE (288) 29
+CONST (289) 18
+Eof (290) 100
+GTE (291) 81
+PRED (292) 104
+NOT (293) 95
+DO (294) 43 48 49
+BEGINX (295) 37
+ORD (296) 107
+AND (297) 91
+INTEGER_NUM (298) 23 102
+LTE (299) 84
+LOOP (300) 45
+SUCC (301) 105
+TYPE (302) 2
+OR (303) 86
+LT (304) 80
+OTHERWISE (305) 72
+ASSIGNMENT (306) 40 48 49
+PROGRAM (307) 1
+DOWNTO (308) 49
 
 
 Nonterminals, with rules where they appear
 
-$accept (61)
+$accept (64)
     on left: 0
-Tiny (62)
+Tiny (65)
     on left: 1, on right: 0
-TypesRule (63)
-    on left: 2 3, on right: 1
-TypesRule_1 (64)
+TypesRule (66)
+    on left: 2 3, on right: 1 29 30
+TypesRule_1 (67)
     on left: 4 5, on right: 2 5
-TypeRule (65)
+TypeRule (68)
     on left: 6 7, on right: 5
-LitRule (66)
+LitRule (69)
     on left: 8, on right: 7
-LitRule_1 (67)
+LitRule_1 (70)
     on left: 9 10, on right: 8 10
-Dclns (68)
-    on left: 11 12, on right: 1
-Dclns_1 (69)
+Dclns (71)
+    on left: 11 12, on right: 1 29 30
+Dclns_1 (72)
     on left: 13 14, on right: 11 14
-Dcln (70)
-    on left: 15, on right: 14
-Dcln_1 (71)
+Dcln (73)
+    on left: 15, on right: 14 35 36
+Dcln_1 (74)
     on left: 16 17, on right: 15 17
-Consts (72)
-    on left: 18 19, on right: 1
-Consts_1 (73)
+Consts (75)
+    on left: 18 19, on right: 1 29 30
+Consts_1 (76)
     on left: 20 21, on right: 18 21
-ConstDcln (74)
+ConstDcln (77)
     on left: 22, on right: 21
-ConstVals (75)
+ConstVals (78)
     on left: 23 24 25, on right: 22
-Body (76)
-    on left: 26, on right: 1 41
-Body_1 (77)
+SubProgs (79)
+    on left: 26, on right: 1
+SubProgs_1 (80)
     on left: 27 28, on right: 26 28
-Statement (78)
-    on left: 29 30 31 32 33 34 35 36 37 38 39 40 41 42,
-    on right: 27 28 31 32 37 38 49 50 51 52 54 57 60
-Statement_1_1_1_1_1_1 (79)
-    on left: 43 44, on right: 40 44
-Statement_1_1_1_1_1 (80)
-    on left: 45 46, on right: 39 46
-Statement_1_1_1_1_1_1_1 (81)
-    on left: 47 48, on right: 45
-Statement_1_1_1_1 (82)
-    on left: 49 50, on right: 34 50
-Statement_1_1_1 (83)
-    on left: 51 52, on right: 33 52
-Statement_1_1 (84)
-    on left: 53 54, on right: 31
-Statement_1 (85)
-    on left: 55 56, on right: 30 56
-Otherwise (86)
-    on left: 57, on right: 48
-Otherwise_1 (87)
-    on left: 58 59, on right: 57
-CaseClause (88)
-    on left: 60, on right: 46
-Clause (89)
-    on left: 61 62, on right: 60
-Expression (90)
-    on left: 63 64 65 66 67 68 69, on right: 29 31 32 37 38 39 51 55
-    56 89 90 91 92 94
-Term (91)
-    on left: 70 71 72 73, on right: 63 64 65 66 67 68 69 71 72 73
-ModAndMulDiv (92)
-    on left: 74 75 76 77 78, on right: 70 71 72 73 75 76 77 78
-Unary (93)
-    on left: 79 80 81 82, on right: 74 75 76 77 78 80 81 82
-Misc (94)
-    on left: 83 84, on right: 79 84
-Primary (95)
-    on left: 85 86 87 88 89 90 91 92 93 94, on right: 36 61 62 83 84
-Name (96)
-    on left: 95 96, on right: 1 6 7 9 10 16 17 22 25 29 37 38 43 44
-    86
+FuncsAndProcs (81)
+    on left: 29 30, on right: 28
+OptionalParams (82)
+    on left: 31 32, on right: 29 30
+OptionalParams_1 (83)
+    on left: 33 34, on right: 31
+OptionalParams_1_1 (84)
+    on left: 35 36, on right: 34 36
+Body (85)
+    on left: 37, on right: 1 29 30 54
+Body_1 (86)
+    on left: 38 39, on right: 37 39
+Statement (87)
+    on left: 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55,
+    on right: 38 39 42 43 48 49 64 65 66 67 69 72 75
+Statement_1_1_1_1_1_1_1 (88)
+    on left: 56 57, on right: 52
+Statement_1_1_1_1_1_1 (89)
+    on left: 58 59, on right: 51 59
+Statement_1_1_1_1_1 (90)
+    on left: 60 61, on right: 50 61
+Statement_1_1_1_1_1_1_1_1 (91)
+    on left: 62 63, on right: 60
+Statement_1_1_1_1 (92)
+    on left: 64 65, on right: 45 65
+Statement_1_1_1 (93)
+    on left: 66 67, on right: 44 67
+Statement_1_1 (94)
+    on left: 68 69, on right: 42
+Statement_1 (95)
+    on left: 70 71, on right: 41 71
+Otherwise (96)
+    on left: 72, on right: 63
+Otherwise_1 (97)
+    on left: 73 74, on right: 72
+CaseClause (98)
+    on left: 75, on right: 61
+Clause (99)
+    on left: 76 77, on right: 75
+Expression (100)
+    on left: 78 79 80 81 82 83 84, on right: 40 42 43 48 49 50 57 66
+    70 71 104 105 106 107 110 116 117
+Term (101)
+    on left: 85 86 87 88, on right: 78 79 80 81 82 83 84 86 87 88
+ModAndMulDiv (102)
+    on left: 89 90 91 92 93, on right: 85 86 87 88 90 91 92 93
+Unary (103)
+    on left: 94 95 96 97, on right: 89 90 91 92 93 95 96 97
+Misc (104)
+    on left: 98 99, on right: 94 99
+Primary (105)
+    on left: 100 101 102 103 104 105 106 107 108 109 110,
+    on right: 47 76 77 98 99
+Name (106)
+    on left: 111 112, on right: 1 6 7 9 10 16 17 22 25 29 30 40 48
+    49 58 59 101 113
+FuncCall (107)
+    on left: 113, on right: 53 109
+FuncCall_1 (108)
+    on left: 114 115, on right: 113
+FuncCall_1_1 (109)
+    on left: 116 117, on right: 115 117
 
 
 state 0
@@ -291,7 +346,7 @@ state 0
 
 state 1
 
-    1 Tiny: PROGRAM . Name ':' Consts TypesRule Dclns Body Name '.'
+    1 Tiny: PROGRAM . Name ':' Consts TypesRule Dclns SubProgs Body Name '.'
 
     IDENTIFIER     shift, and go to state 3
     CAPIDENTIFIER  shift, and go to state 4
@@ -308,21 +363,21 @@ state 2
 
 state 3
 
-   95 Name: IDENTIFIER .
+  111 Name: IDENTIFIER .
 
-    $default  reduce using rule 95 (Name)
+    $default  reduce using rule 111 (Name)
 
 
 state 4
 
-   96 Name: CAPIDENTIFIER .
+  112 Name: CAPIDENTIFIER .
 
-    $default  reduce using rule 96 (Name)
+    $default  reduce using rule 112 (Name)
 
 
 state 5
 
-    1 Tiny: PROGRAM Name . ':' Consts TypesRule Dclns Body Name '.'
+    1 Tiny: PROGRAM Name . ':' Consts TypesRule Dclns SubProgs Body Name '.'
 
     ':'  shift, and go to state 7
 
@@ -336,7 +391,7 @@ state 6
 
 state 7
 
-    1 Tiny: PROGRAM Name ':' . Consts TypesRule Dclns Body Name '.'
+    1 Tiny: PROGRAM Name ':' . Consts TypesRule Dclns SubProgs Body Name '.'
 
     CONST  shift, and go to state 8
 
@@ -361,7 +416,7 @@ state 8
 
 state 9
 
-    1 Tiny: PROGRAM Name ':' Consts . TypesRule Dclns Body Name '.'
+    1 Tiny: PROGRAM Name ':' Consts . TypesRule Dclns SubProgs Body Name '.'
 
     TYPE  shift, and go to state 13
 
@@ -407,7 +462,7 @@ state 13
 
 state 14
 
-    1 Tiny: PROGRAM Name ':' Consts TypesRule . Dclns Body Name '.'
+    1 Tiny: PROGRAM Name ':' Consts TypesRule . Dclns SubProgs Body Name '.'
 
     VAR  shift, and go to state 20
 
@@ -482,11 +537,16 @@ state 20
 
 state 21
 
-    1 Tiny: PROGRAM Name ':' Consts TypesRule Dclns . Body Name '.'
+    1 Tiny: PROGRAM Name ':' Consts TypesRule Dclns . SubProgs Body Name '.'
 
-    BEGINX  shift, and go to state 33
+    FUNCTION   shift, and go to state 33
+    PROCEDURE  shift, and go to state 34
 
-    Body  go to state 34
+    $default  reduce using rule 27 (SubProgs_1)
+
+    SubProgs       go to state 35
+    SubProgs_1     go to state 36
+    FuncsAndProcs  go to state 37
 
 
 state 22
@@ -533,7 +593,7 @@ state 27
 
     $default  reduce using rule 4 (TypesRule_1)
 
-    TypesRule_1  go to state 35
+    TypesRule_1  go to state 38
     TypeRule     go to state 18
     Name         go to state 19
 
@@ -545,10 +605,10 @@ state 28
 
     IDENTIFIER     shift, and go to state 3
     CAPIDENTIFIER  shift, and go to state 4
-    '('            shift, and go to state 36
+    '('            shift, and go to state 39
 
-    LitRule  go to state 37
-    Name     go to state 38
+    LitRule  go to state 40
+    Name     go to state 41
 
 
 state 29
@@ -562,7 +622,7 @@ state 30
 
    14 Dclns_1: Dcln . ';' Dclns_1
 
-    ';'  shift, and go to state 39
+    ';'  shift, and go to state 42
 
 
 state 31
@@ -577,88 +637,92 @@ state 32
    16 Dcln_1: Name . ':' Name
    17       | Name . ',' Dcln_1
 
-    ':'  shift, and go to state 40
-    ','  shift, and go to state 41
+    ':'  shift, and go to state 43
+    ','  shift, and go to state 44
 
 
 state 33
 
-   26 Body: BEGINX . Body_1
-
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    IF               shift, and go to state 43
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    READ             shift, and go to state 46
-    REPEAT           shift, and go to state 47
-    CAPIDENTIFIER    shift, and go to state 4
-    FOR              shift, and go to state 48
-    CASE             shift, and go to state 49
-    WHILE            shift, and go to state 50
-    OUTPUT           shift, and go to state 51
-    EXIT             shift, and go to state 52
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    BEGINX           shift, and go to state 33
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    LOOP             shift, and go to state 57
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-
-    $default  reduce using rule 42 (Statement)
-
-    Body       go to state 60
-    Body_1     go to state 61
-    Statement  go to state 62
-    Primary    go to state 63
-    Name       go to state 64
-
-
-state 34
-
-    1 Tiny: PROGRAM Name ':' Consts TypesRule Dclns Body . Name '.'
+   30 FuncsAndProcs: FUNCTION . Name OptionalParams ':' Name ';' Consts TypesRule Dclns Body Name ';'
 
     IDENTIFIER     shift, and go to state 3
     CAPIDENTIFIER  shift, and go to state 4
 
-    Name  go to state 65
+    Name  go to state 45
+
+
+state 34
+
+   29 FuncsAndProcs: PROCEDURE . Name OptionalParams ';' Consts TypesRule Dclns Body Name ';'
+
+    IDENTIFIER     shift, and go to state 3
+    CAPIDENTIFIER  shift, and go to state 4
+
+    Name  go to state 46
 
 
 state 35
+
+    1 Tiny: PROGRAM Name ':' Consts TypesRule Dclns SubProgs . Body Name '.'
+
+    BEGINX  shift, and go to state 47
+
+    Body  go to state 48
+
+
+state 36
+
+   26 SubProgs: SubProgs_1 .
+
+    $default  reduce using rule 26 (SubProgs)
+
+
+state 37
+
+   28 SubProgs_1: FuncsAndProcs . SubProgs_1
+
+    FUNCTION   shift, and go to state 33
+    PROCEDURE  shift, and go to state 34
+
+    $default  reduce using rule 27 (SubProgs_1)
+
+    SubProgs_1     go to state 49
+    FuncsAndProcs  go to state 37
+
+
+state 38
 
     5 TypesRule_1: TypeRule ';' TypesRule_1 .
 
     $default  reduce using rule 5 (TypesRule_1)
 
 
-state 36
+state 39
 
     8 LitRule: '(' . LitRule_1
 
     IDENTIFIER     shift, and go to state 3
     CAPIDENTIFIER  shift, and go to state 4
 
-    LitRule_1  go to state 66
-    Name       go to state 67
+    LitRule_1  go to state 50
+    Name       go to state 51
 
 
-state 37
+state 40
 
     7 TypeRule: Name EQ LitRule .
 
     $default  reduce using rule 7 (TypeRule)
 
 
-state 38
+state 41
 
     6 TypeRule: Name EQ Name .
 
     $default  reduce using rule 6 (TypeRule)
 
 
-state 39
+state 42
 
    14 Dclns_1: Dcln ';' . Dclns_1
 
@@ -667,2242 +731,2786 @@ state 39
 
     $default  reduce using rule 13 (Dclns_1)
 
-    Dclns_1  go to state 68
+    Dclns_1  go to state 52
     Dcln     go to state 30
     Dcln_1   go to state 31
     Name     go to state 32
 
 
-state 40
+state 43
 
    16 Dcln_1: Name ':' . Name
 
     IDENTIFIER     shift, and go to state 3
     CAPIDENTIFIER  shift, and go to state 4
 
-    Name  go to state 69
+    Name  go to state 53
 
 
-state 41
+state 44
 
    17 Dcln_1: Name ',' . Dcln_1
 
     IDENTIFIER     shift, and go to state 3
     CAPIDENTIFIER  shift, and go to state 4
 
-    Dcln_1  go to state 70
+    Dcln_1  go to state 54
     Name    go to state 32
-
-
-state 42
-
-   91 Primary: CHR . '(' Expression ')'
-
-    '('  shift, and go to state 71
-
-
-state 43
-
-   31 Statement: IF . Expression THEN Statement Statement_1_1
-
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Expression    go to state 75
-    Term          go to state 76
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
-
-
-state 44
-
-   88 Primary: CHARACTER_ALPHA .
-
-    $default  reduce using rule 88 (Primary)
 
 
 state 45
 
-   93 Primary: STR_ALPHA .
+   30 FuncsAndProcs: FUNCTION Name . OptionalParams ':' Name ';' Consts TypesRule Dclns Body Name ';'
 
-    $default  reduce using rule 93 (Primary)
+    '('  shift, and go to state 55
+
+    $default  reduce using rule 32 (OptionalParams)
+
+    OptionalParams  go to state 56
 
 
 state 46
 
-   40 Statement: READ . '(' Statement_1_1_1_1_1_1
+   29 FuncsAndProcs: PROCEDURE Name . OptionalParams ';' Consts TypesRule Dclns Body Name ';'
 
-    '('  shift, and go to state 82
+    '('  shift, and go to state 55
+
+    $default  reduce using rule 32 (OptionalParams)
+
+    OptionalParams  go to state 57
 
 
 state 47
 
-   33 Statement: REPEAT . Statement_1_1_1
+   37 Body: BEGINX . Body_1
 
     IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    IF               shift, and go to state 43
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    READ             shift, and go to state 46
-    REPEAT           shift, and go to state 47
+    CHR              shift, and go to state 58
+    IF               shift, and go to state 59
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    READ             shift, and go to state 62
+    REPEAT           shift, and go to state 63
+    RETURN           shift, and go to state 64
     CAPIDENTIFIER    shift, and go to state 4
-    FOR              shift, and go to state 48
-    CASE             shift, and go to state 49
-    WHILE            shift, and go to state 50
-    OUTPUT           shift, and go to state 51
-    EXIT             shift, and go to state 52
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    BEGINX           shift, and go to state 33
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    LOOP             shift, and go to state 57
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
+    FOR              shift, and go to state 65
+    CASE             shift, and go to state 66
+    WHILE            shift, and go to state 67
+    OUTPUT           shift, and go to state 68
+    EXIT             shift, and go to state 69
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    BEGINX           shift, and go to state 47
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    LOOP             shift, and go to state 74
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
 
-    $default  reduce using rule 42 (Statement)
+    $default  reduce using rule 55 (Statement)
 
-    Body             go to state 60
-    Statement        go to state 83
-    Statement_1_1_1  go to state 84
-    Primary          go to state 63
-    Name             go to state 64
+    Body       go to state 77
+    Body_1     go to state 78
+    Statement  go to state 79
+    Primary    go to state 80
+    Name       go to state 81
+    FuncCall   go to state 82
 
 
 state 48
 
-   37 Statement: FOR . Name ASSIGNMENT Expression TO Expression DO Statement
-   38          | FOR . Name ASSIGNMENT Expression DOWNTO Expression DO Statement
+    1 Tiny: PROGRAM Name ':' Consts TypesRule Dclns SubProgs Body . Name '.'
 
     IDENTIFIER     shift, and go to state 3
     CAPIDENTIFIER  shift, and go to state 4
 
-    Name  go to state 85
+    Name  go to state 83
 
 
 state 49
 
-   39 Statement: CASE . Expression OF Statement_1_1_1_1_1
+   28 SubProgs_1: FuncsAndProcs SubProgs_1 .
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Expression    go to state 86
-    Term          go to state 76
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
+    $default  reduce using rule 28 (SubProgs_1)
 
 
 state 50
-
-   32 Statement: WHILE . Expression DO Statement
-
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Expression    go to state 87
-    Term          go to state 76
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
-
-
-state 51
-
-   30 Statement: OUTPUT . '(' Statement_1
-
-    '('  shift, and go to state 88
-
-
-state 52
-
-   35 Statement: EXIT .
-
-    $default  reduce using rule 35 (Statement)
-
-
-state 53
-
-   85 Primary: Eof .
-
-    $default  reduce using rule 85 (Primary)
-
-
-state 54
-
-   89 Primary: PRED . '(' Expression ')'
-
-    '('  shift, and go to state 89
-
-
-state 55
-
-   92 Primary: ORD . '(' Expression ')'
-
-    '('  shift, and go to state 90
-
-
-state 56
-
-   87 Primary: INTEGER_NUM .
-
-    $default  reduce using rule 87 (Primary)
-
-
-state 57
-
-   34 Statement: LOOP . Statement_1_1_1_1
-
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    IF               shift, and go to state 43
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    READ             shift, and go to state 46
-    REPEAT           shift, and go to state 47
-    CAPIDENTIFIER    shift, and go to state 4
-    FOR              shift, and go to state 48
-    CASE             shift, and go to state 49
-    WHILE            shift, and go to state 50
-    OUTPUT           shift, and go to state 51
-    EXIT             shift, and go to state 52
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    BEGINX           shift, and go to state 33
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    LOOP             shift, and go to state 57
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-
-    $default  reduce using rule 42 (Statement)
-
-    Body               go to state 60
-    Statement          go to state 91
-    Statement_1_1_1_1  go to state 92
-    Primary            go to state 63
-    Name               go to state 64
-
-
-state 58
-
-   90 Primary: SUCC . '(' Expression ')'
-
-    '('  shift, and go to state 93
-
-
-state 59
-
-   94 Primary: '(' . Expression ')'
-
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Expression    go to state 94
-    Term          go to state 76
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
-
-
-state 60
-
-   41 Statement: Body .
-
-    $default  reduce using rule 41 (Statement)
-
-
-state 61
-
-   26 Body: BEGINX Body_1 .
-
-    $default  reduce using rule 26 (Body)
-
-
-state 62
-
-   27 Body_1: Statement . END
-   28       | Statement . ';' Body_1
-
-    END  shift, and go to state 95
-    ';'  shift, and go to state 96
-
-
-state 63
-
-   36 Statement: Primary . EQSWAP Primary
-
-    EQSWAP  shift, and go to state 97
-
-
-state 64
-
-   29 Statement: Name . ASSIGNMENT Expression
-   86 Primary: Name .
-
-    ASSIGNMENT  shift, and go to state 98
-
-    $default  reduce using rule 86 (Primary)
-
-
-state 65
-
-    1 Tiny: PROGRAM Name ':' Consts TypesRule Dclns Body Name . '.'
-
-    '.'  shift, and go to state 99
-
-
-state 66
 
     8 LitRule: '(' LitRule_1 .
 
     $default  reduce using rule 8 (LitRule)
 
 
-state 67
+state 51
 
     9 LitRule_1: Name . ')'
    10          | Name . ',' LitRule_1
 
-    ')'  shift, and go to state 100
-    ','  shift, and go to state 101
+    ')'  shift, and go to state 84
+    ','  shift, and go to state 85
 
 
-state 68
+state 52
 
    14 Dclns_1: Dcln ';' Dclns_1 .
 
     $default  reduce using rule 14 (Dclns_1)
 
 
-state 69
+state 53
 
    16 Dcln_1: Name ':' Name .
 
     $default  reduce using rule 16 (Dcln_1)
 
 
-state 70
+state 54
 
    17 Dcln_1: Name ',' Dcln_1 .
 
     $default  reduce using rule 17 (Dcln_1)
 
 
-state 71
+state 55
 
-   91 Primary: CHR '(' . Expression ')'
+   31 OptionalParams: '(' . OptionalParams_1
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
+    IDENTIFIER     shift, and go to state 3
+    CAPIDENTIFIER  shift, and go to state 4
+    ')'            shift, and go to state 86
 
-    Expression    go to state 102
-    Term          go to state 76
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
+    Dcln                go to state 87
+    Dcln_1              go to state 31
+    OptionalParams_1    go to state 88
+    OptionalParams_1_1  go to state 89
+    Name                go to state 32
 
 
-state 72
+state 56
 
-   80 Unary: NOT . Unary
+   30 FuncsAndProcs: FUNCTION Name OptionalParams . ':' Name ';' Consts TypesRule Dclns Body Name ';'
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Unary    go to state 103
-    Misc     go to state 79
-    Primary  go to state 80
-    Name     go to state 81
+    ':'  shift, and go to state 90
 
 
-state 73
+state 57
 
-   81 Unary: '+' . Unary
+   29 FuncsAndProcs: PROCEDURE Name OptionalParams . ';' Consts TypesRule Dclns Body Name ';'
+
+    ';'  shift, and go to state 91
+
+
+state 58
+
+  106 Primary: CHR . '(' Expression ')'
+
+    '('  shift, and go to state 92
+
+
+state 59
+
+   42 Statement: IF . Expression THEN Statement Statement_1_1
 
     IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
     CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
 
-    Unary    go to state 104
-    Misc     go to state 79
-    Primary  go to state 80
-    Name     go to state 81
+    Expression    go to state 96
+    Term          go to state 97
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
 
 
-state 74
+state 60
 
-   82 Unary: '-' . Unary
+  103 Primary: CHARACTER_ALPHA .
+
+    $default  reduce using rule 103 (Primary)
+
+
+state 61
+
+  108 Primary: STR_ALPHA .
+
+    $default  reduce using rule 108 (Primary)
+
+
+state 62
+
+   51 Statement: READ . '(' Statement_1_1_1_1_1_1
+
+    '('  shift, and go to state 104
+
+
+state 63
+
+   44 Statement: REPEAT . Statement_1_1_1
 
     IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
+    CHR              shift, and go to state 58
+    IF               shift, and go to state 59
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    READ             shift, and go to state 62
+    REPEAT           shift, and go to state 63
+    RETURN           shift, and go to state 64
     CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
+    FOR              shift, and go to state 65
+    CASE             shift, and go to state 66
+    WHILE            shift, and go to state 67
+    OUTPUT           shift, and go to state 68
+    EXIT             shift, and go to state 69
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    BEGINX           shift, and go to state 47
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    LOOP             shift, and go to state 74
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
 
-    Unary    go to state 105
-    Misc     go to state 79
-    Primary  go to state 80
-    Name     go to state 81
+    $default  reduce using rule 55 (Statement)
 
-
-state 75
-
-   31 Statement: IF Expression . THEN Statement Statement_1_1
-
-    THEN  shift, and go to state 106
-
-
-state 76
-
-   63 Expression: Term .
-   64           | Term . GT Term
-   65           | Term . LT Term
-   66           | Term . GTE Term
-   67           | Term . NE Term
-   68           | Term . EQ Term
-   69           | Term . LTE Term
-
-    NE   shift, and go to state 107
-    GT   shift, and go to state 108
-    EQ   shift, and go to state 109
-    GTE  shift, and go to state 110
-    LTE  shift, and go to state 111
-    LT   shift, and go to state 112
-
-    $default  reduce using rule 63 (Expression)
+    Body             go to state 77
+    Statement        go to state 105
+    Statement_1_1_1  go to state 106
+    Primary          go to state 80
+    Name             go to state 81
+    FuncCall         go to state 82
 
 
-state 77
+state 64
 
-   70 Term: ModAndMulDiv .
-   71     | ModAndMulDiv . OR Term
-   72     | ModAndMulDiv . '+' Term
-   73     | ModAndMulDiv . '-' Term
+   52 Statement: RETURN . Statement_1_1_1_1_1_1_1
 
-    OR   shift, and go to state 113
-    '+'  shift, and go to state 114
-    '-'  shift, and go to state 115
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
 
-    $default  reduce using rule 70 (Term)
+    $default  reduce using rule 56 (Statement_1_1_1_1_1_1_1)
 
-
-state 78
-
-   74 ModAndMulDiv: Unary .
-   75             | Unary . MOD ModAndMulDiv
-   76             | Unary . AND ModAndMulDiv
-   77             | Unary . '*' ModAndMulDiv
-   78             | Unary . '/' ModAndMulDiv
-
-    MOD  shift, and go to state 116
-    AND  shift, and go to state 117
-    '*'  shift, and go to state 118
-    '/'  shift, and go to state 119
-
-    $default  reduce using rule 74 (ModAndMulDiv)
-
-
-state 79
-
-   79 Unary: Misc .
-
-    $default  reduce using rule 79 (Unary)
+    Statement_1_1_1_1_1_1_1  go to state 107
+    Expression               go to state 108
+    Term                     go to state 97
+    ModAndMulDiv             go to state 98
+    Unary                    go to state 99
+    Misc                     go to state 100
+    Primary                  go to state 101
+    Name                     go to state 102
+    FuncCall                 go to state 103
 
 
-state 80
+state 65
 
-   83 Misc: Primary .
-   84     | Primary . POW Misc
-
-    POW  shift, and go to state 120
-
-    $default  reduce using rule 83 (Misc)
-
-
-state 81
-
-   86 Primary: Name .
-
-    $default  reduce using rule 86 (Primary)
-
-
-state 82
-
-   40 Statement: READ '(' . Statement_1_1_1_1_1_1
+   48 Statement: FOR . Name ASSIGNMENT Expression TO Expression DO Statement
+   49          | FOR . Name ASSIGNMENT Expression DOWNTO Expression DO Statement
 
     IDENTIFIER     shift, and go to state 3
     CAPIDENTIFIER  shift, and go to state 4
 
-    Statement_1_1_1_1_1_1  go to state 121
-    Name                   go to state 122
+    Name  go to state 109
+
+
+state 66
+
+   50 Statement: CASE . Expression OF Statement_1_1_1_1_1
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Expression    go to state 110
+    Term          go to state 97
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 67
+
+   43 Statement: WHILE . Expression DO Statement
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Expression    go to state 111
+    Term          go to state 97
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 68
+
+   41 Statement: OUTPUT . '(' Statement_1
+
+    '('  shift, and go to state 112
+
+
+state 69
+
+   46 Statement: EXIT .
+
+    $default  reduce using rule 46 (Statement)
+
+
+state 70
+
+  100 Primary: Eof .
+
+    $default  reduce using rule 100 (Primary)
+
+
+state 71
+
+  104 Primary: PRED . '(' Expression ')'
+
+    '('  shift, and go to state 113
+
+
+state 72
+
+  107 Primary: ORD . '(' Expression ')'
+
+    '('  shift, and go to state 114
+
+
+state 73
+
+  102 Primary: INTEGER_NUM .
+
+    $default  reduce using rule 102 (Primary)
+
+
+state 74
+
+   45 Statement: LOOP . Statement_1_1_1_1
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    IF               shift, and go to state 59
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    READ             shift, and go to state 62
+    REPEAT           shift, and go to state 63
+    RETURN           shift, and go to state 64
+    CAPIDENTIFIER    shift, and go to state 4
+    FOR              shift, and go to state 65
+    CASE             shift, and go to state 66
+    WHILE            shift, and go to state 67
+    OUTPUT           shift, and go to state 68
+    EXIT             shift, and go to state 69
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    BEGINX           shift, and go to state 47
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    LOOP             shift, and go to state 74
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+
+    $default  reduce using rule 55 (Statement)
+
+    Body               go to state 77
+    Statement          go to state 115
+    Statement_1_1_1_1  go to state 116
+    Primary            go to state 80
+    Name               go to state 81
+    FuncCall           go to state 82
+
+
+state 75
+
+  105 Primary: SUCC . '(' Expression ')'
+
+    '('  shift, and go to state 117
+
+
+state 76
+
+  110 Primary: '(' . Expression ')'
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Expression    go to state 118
+    Term          go to state 97
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 77
+
+   54 Statement: Body .
+
+    $default  reduce using rule 54 (Statement)
+
+
+state 78
+
+   37 Body: BEGINX Body_1 .
+
+    $default  reduce using rule 37 (Body)
+
+
+state 79
+
+   38 Body_1: Statement . END
+   39       | Statement . ';' Body_1
+
+    END  shift, and go to state 119
+    ';'  shift, and go to state 120
+
+
+state 80
+
+   47 Statement: Primary . EQSWAP Primary
+
+    EQSWAP  shift, and go to state 121
+
+
+state 81
+
+   40 Statement: Name . ASSIGNMENT Expression
+  101 Primary: Name .
+  113 FuncCall: Name . '(' FuncCall_1
+
+    ASSIGNMENT  shift, and go to state 122
+    '('         shift, and go to state 123
+
+    $default  reduce using rule 101 (Primary)
+
+
+state 82
+
+   53 Statement: FuncCall .
+  109 Primary: FuncCall .
+
+    EQSWAP    reduce using rule 109 (Primary)
+    $default  reduce using rule 53 (Statement)
 
 
 state 83
 
-   51 Statement_1_1_1: Statement . UNTIL Expression
-   52                | Statement . ';' Statement_1_1_1
+    1 Tiny: PROGRAM Name ':' Consts TypesRule Dclns SubProgs Body Name . '.'
 
-    UNTIL  shift, and go to state 123
-    ';'    shift, and go to state 124
+    '.'  shift, and go to state 124
 
 
 state 84
-
-   33 Statement: REPEAT Statement_1_1_1 .
-
-    $default  reduce using rule 33 (Statement)
-
-
-state 85
-
-   37 Statement: FOR Name . ASSIGNMENT Expression TO Expression DO Statement
-   38          | FOR Name . ASSIGNMENT Expression DOWNTO Expression DO Statement
-
-    ASSIGNMENT  shift, and go to state 125
-
-
-state 86
-
-   39 Statement: CASE Expression . OF Statement_1_1_1_1_1
-
-    OF  shift, and go to state 126
-
-
-state 87
-
-   32 Statement: WHILE Expression . DO Statement
-
-    DO  shift, and go to state 127
-
-
-state 88
-
-   30 Statement: OUTPUT '(' . Statement_1
-
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Statement_1   go to state 128
-    Expression    go to state 129
-    Term          go to state 76
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
-
-
-state 89
-
-   89 Primary: PRED '(' . Expression ')'
-
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Expression    go to state 130
-    Term          go to state 76
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
-
-
-state 90
-
-   92 Primary: ORD '(' . Expression ')'
-
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Expression    go to state 131
-    Term          go to state 76
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
-
-
-state 91
-
-   49 Statement_1_1_1_1: Statement . POOL
-   50                  | Statement . ';' Statement_1_1_1_1
-
-    POOL  shift, and go to state 132
-    ';'   shift, and go to state 133
-
-
-state 92
-
-   34 Statement: LOOP Statement_1_1_1_1 .
-
-    $default  reduce using rule 34 (Statement)
-
-
-state 93
-
-   90 Primary: SUCC '(' . Expression ')'
-
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Expression    go to state 134
-    Term          go to state 76
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
-
-
-state 94
-
-   94 Primary: '(' Expression . ')'
-
-    ')'  shift, and go to state 135
-
-
-state 95
-
-   27 Body_1: Statement END .
-
-    $default  reduce using rule 27 (Body_1)
-
-
-state 96
-
-   28 Body_1: Statement ';' . Body_1
-
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    IF               shift, and go to state 43
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    READ             shift, and go to state 46
-    REPEAT           shift, and go to state 47
-    CAPIDENTIFIER    shift, and go to state 4
-    FOR              shift, and go to state 48
-    CASE             shift, and go to state 49
-    WHILE            shift, and go to state 50
-    OUTPUT           shift, and go to state 51
-    EXIT             shift, and go to state 52
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    BEGINX           shift, and go to state 33
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    LOOP             shift, and go to state 57
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-
-    $default  reduce using rule 42 (Statement)
-
-    Body       go to state 60
-    Body_1     go to state 136
-    Statement  go to state 62
-    Primary    go to state 63
-    Name       go to state 64
-
-
-state 97
-
-   36 Statement: Primary EQSWAP . Primary
-
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-
-    Primary  go to state 137
-    Name     go to state 81
-
-
-state 98
-
-   29 Statement: Name ASSIGNMENT . Expression
-
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Expression    go to state 138
-    Term          go to state 76
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
-
-
-state 99
-
-    1 Tiny: PROGRAM Name ':' Consts TypesRule Dclns Body Name '.' .
-
-    $default  reduce using rule 1 (Tiny)
-
-
-state 100
 
     9 LitRule_1: Name ')' .
 
     $default  reduce using rule 9 (LitRule_1)
 
 
-state 101
+state 85
 
    10 LitRule_1: Name ',' . LitRule_1
 
     IDENTIFIER     shift, and go to state 3
     CAPIDENTIFIER  shift, and go to state 4
 
-    LitRule_1  go to state 139
-    Name       go to state 67
+    LitRule_1  go to state 125
+    Name       go to state 51
+
+
+state 86
+
+   33 OptionalParams_1: ')' .
+
+    $default  reduce using rule 33 (OptionalParams_1)
+
+
+state 87
+
+   35 OptionalParams_1_1: Dcln . ')'
+   36                   | Dcln . ';' OptionalParams_1_1
+
+    ';'  shift, and go to state 126
+    ')'  shift, and go to state 127
+
+
+state 88
+
+   31 OptionalParams: '(' OptionalParams_1 .
+
+    $default  reduce using rule 31 (OptionalParams)
+
+
+state 89
+
+   34 OptionalParams_1: OptionalParams_1_1 .
+
+    $default  reduce using rule 34 (OptionalParams_1)
+
+
+state 90
+
+   30 FuncsAndProcs: FUNCTION Name OptionalParams ':' . Name ';' Consts TypesRule Dclns Body Name ';'
+
+    IDENTIFIER     shift, and go to state 3
+    CAPIDENTIFIER  shift, and go to state 4
+
+    Name  go to state 128
+
+
+state 91
+
+   29 FuncsAndProcs: PROCEDURE Name OptionalParams ';' . Consts TypesRule Dclns Body Name ';'
+
+    CONST  shift, and go to state 8
+
+    $default  reduce using rule 19 (Consts)
+
+    Consts  go to state 129
+
+
+state 92
+
+  106 Primary: CHR '(' . Expression ')'
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Expression    go to state 130
+    Term          go to state 97
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 93
+
+   95 Unary: NOT . Unary
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Unary     go to state 131
+    Misc      go to state 100
+    Primary   go to state 101
+    Name      go to state 102
+    FuncCall  go to state 103
+
+
+state 94
+
+   96 Unary: '+' . Unary
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Unary     go to state 132
+    Misc      go to state 100
+    Primary   go to state 101
+    Name      go to state 102
+    FuncCall  go to state 103
+
+
+state 95
+
+   97 Unary: '-' . Unary
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Unary     go to state 133
+    Misc      go to state 100
+    Primary   go to state 101
+    Name      go to state 102
+    FuncCall  go to state 103
+
+
+state 96
+
+   42 Statement: IF Expression . THEN Statement Statement_1_1
+
+    THEN  shift, and go to state 134
+
+
+state 97
+
+   78 Expression: Term .
+   79           | Term . GT Term
+   80           | Term . LT Term
+   81           | Term . GTE Term
+   82           | Term . NE Term
+   83           | Term . EQ Term
+   84           | Term . LTE Term
+
+    NE   shift, and go to state 135
+    GT   shift, and go to state 136
+    EQ   shift, and go to state 137
+    GTE  shift, and go to state 138
+    LTE  shift, and go to state 139
+    LT   shift, and go to state 140
+
+    $default  reduce using rule 78 (Expression)
+
+
+state 98
+
+   85 Term: ModAndMulDiv .
+   86     | ModAndMulDiv . OR Term
+   87     | ModAndMulDiv . '+' Term
+   88     | ModAndMulDiv . '-' Term
+
+    OR   shift, and go to state 141
+    '+'  shift, and go to state 142
+    '-'  shift, and go to state 143
+
+    $default  reduce using rule 85 (Term)
+
+
+state 99
+
+   89 ModAndMulDiv: Unary .
+   90             | Unary . MOD ModAndMulDiv
+   91             | Unary . AND ModAndMulDiv
+   92             | Unary . '*' ModAndMulDiv
+   93             | Unary . '/' ModAndMulDiv
+
+    MOD  shift, and go to state 144
+    AND  shift, and go to state 145
+    '*'  shift, and go to state 146
+    '/'  shift, and go to state 147
+
+    $default  reduce using rule 89 (ModAndMulDiv)
+
+
+state 100
+
+   94 Unary: Misc .
+
+    $default  reduce using rule 94 (Unary)
+
+
+state 101
+
+   98 Misc: Primary .
+   99     | Primary . POW Misc
+
+    POW  shift, and go to state 148
+
+    $default  reduce using rule 98 (Misc)
 
 
 state 102
 
-   91 Primary: CHR '(' Expression . ')'
+  101 Primary: Name .
+  113 FuncCall: Name . '(' FuncCall_1
 
-    ')'  shift, and go to state 140
+    '('  shift, and go to state 123
+
+    $default  reduce using rule 101 (Primary)
 
 
 state 103
 
-   80 Unary: NOT Unary .
+  109 Primary: FuncCall .
 
-    $default  reduce using rule 80 (Unary)
+    $default  reduce using rule 109 (Primary)
 
 
 state 104
 
-   81 Unary: '+' Unary .
+   51 Statement: READ '(' . Statement_1_1_1_1_1_1
 
-    $default  reduce using rule 81 (Unary)
+    IDENTIFIER     shift, and go to state 3
+    CAPIDENTIFIER  shift, and go to state 4
+
+    Statement_1_1_1_1_1_1  go to state 149
+    Name                   go to state 150
 
 
 state 105
 
-   82 Unary: '-' Unary .
+   66 Statement_1_1_1: Statement . UNTIL Expression
+   67                | Statement . ';' Statement_1_1_1
 
-    $default  reduce using rule 82 (Unary)
+    UNTIL  shift, and go to state 151
+    ';'    shift, and go to state 152
 
 
 state 106
 
-   31 Statement: IF Expression THEN . Statement Statement_1_1
+   44 Statement: REPEAT Statement_1_1_1 .
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    IF               shift, and go to state 43
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    READ             shift, and go to state 46
-    REPEAT           shift, and go to state 47
-    CAPIDENTIFIER    shift, and go to state 4
-    FOR              shift, and go to state 48
-    CASE             shift, and go to state 49
-    WHILE            shift, and go to state 50
-    OUTPUT           shift, and go to state 51
-    EXIT             shift, and go to state 52
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    BEGINX           shift, and go to state 33
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    LOOP             shift, and go to state 57
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-
-    $default  reduce using rule 42 (Statement)
-
-    Body       go to state 60
-    Statement  go to state 141
-    Primary    go to state 63
-    Name       go to state 64
+    $default  reduce using rule 44 (Statement)
 
 
 state 107
 
-   67 Expression: Term NE . Term
+   52 Statement: RETURN Statement_1_1_1_1_1_1_1 .
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Term          go to state 142
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
+    $default  reduce using rule 52 (Statement)
 
 
 state 108
 
-   64 Expression: Term GT . Term
+   57 Statement_1_1_1_1_1_1_1: Expression .
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Term          go to state 143
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
+    $default  reduce using rule 57 (Statement_1_1_1_1_1_1_1)
 
 
 state 109
 
-   68 Expression: Term EQ . Term
+   48 Statement: FOR Name . ASSIGNMENT Expression TO Expression DO Statement
+   49          | FOR Name . ASSIGNMENT Expression DOWNTO Expression DO Statement
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Term          go to state 144
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
+    ASSIGNMENT  shift, and go to state 153
 
 
 state 110
 
-   66 Expression: Term GTE . Term
+   50 Statement: CASE Expression . OF Statement_1_1_1_1_1
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Term          go to state 145
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
+    OF  shift, and go to state 154
 
 
 state 111
 
-   69 Expression: Term LTE . Term
+   43 Statement: WHILE Expression . DO Statement
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Term          go to state 146
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
+    DO  shift, and go to state 155
 
 
 state 112
 
-   65 Expression: Term LT . Term
+   41 Statement: OUTPUT '(' . Statement_1
 
     IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
     CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
 
-    Term          go to state 147
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
+    Statement_1   go to state 156
+    Expression    go to state 157
+    Term          go to state 97
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
 
 
 state 113
 
-   71 Term: ModAndMulDiv OR . Term
+  104 Primary: PRED '(' . Expression ')'
 
     IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
     CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
 
-    Term          go to state 148
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
+    Expression    go to state 158
+    Term          go to state 97
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
 
 
 state 114
 
-   72 Term: ModAndMulDiv '+' . Term
+  107 Primary: ORD '(' . Expression ')'
 
     IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
     CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
 
-    Term          go to state 149
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
+    Expression    go to state 159
+    Term          go to state 97
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
 
 
 state 115
 
-   73 Term: ModAndMulDiv '-' . Term
+   64 Statement_1_1_1_1: Statement . POOL
+   65                  | Statement . ';' Statement_1_1_1_1
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Term          go to state 150
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
+    POOL  shift, and go to state 160
+    ';'   shift, and go to state 161
 
 
 state 116
 
-   75 ModAndMulDiv: Unary MOD . ModAndMulDiv
+   45 Statement: LOOP Statement_1_1_1_1 .
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    ModAndMulDiv  go to state 151
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
+    $default  reduce using rule 45 (Statement)
 
 
 state 117
 
-   76 ModAndMulDiv: Unary AND . ModAndMulDiv
+  105 Primary: SUCC '(' . Expression ')'
 
     IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
     CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
 
-    ModAndMulDiv  go to state 152
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
+    Expression    go to state 162
+    Term          go to state 97
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
 
 
 state 118
 
-   77 ModAndMulDiv: Unary '*' . ModAndMulDiv
+  110 Primary: '(' Expression . ')'
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    ModAndMulDiv  go to state 153
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
+    ')'  shift, and go to state 163
 
 
 state 119
 
-   78 ModAndMulDiv: Unary '/' . ModAndMulDiv
+   38 Body_1: Statement END .
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    ModAndMulDiv  go to state 154
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
+    $default  reduce using rule 38 (Body_1)
 
 
 state 120
 
-   84 Misc: Primary POW . Misc
+   39 Body_1: Statement ';' . Body_1
 
     IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
+    CHR              shift, and go to state 58
+    IF               shift, and go to state 59
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    READ             shift, and go to state 62
+    REPEAT           shift, and go to state 63
+    RETURN           shift, and go to state 64
     CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
+    FOR              shift, and go to state 65
+    CASE             shift, and go to state 66
+    WHILE            shift, and go to state 67
+    OUTPUT           shift, and go to state 68
+    EXIT             shift, and go to state 69
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    BEGINX           shift, and go to state 47
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    LOOP             shift, and go to state 74
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
 
-    Misc     go to state 155
-    Primary  go to state 80
-    Name     go to state 81
+    $default  reduce using rule 55 (Statement)
+
+    Body       go to state 77
+    Body_1     go to state 164
+    Statement  go to state 79
+    Primary    go to state 80
+    Name       go to state 81
+    FuncCall   go to state 82
 
 
 state 121
 
-   40 Statement: READ '(' Statement_1_1_1_1_1_1 .
+   47 Statement: Primary EQSWAP . Primary
 
-    $default  reduce using rule 40 (Statement)
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+
+    Primary   go to state 165
+    Name      go to state 102
+    FuncCall  go to state 103
 
 
 state 122
 
-   43 Statement_1_1_1_1_1_1: Name . ')'
-   44                      | Name . ',' Statement_1_1_1_1_1_1
+   40 Statement: Name ASSIGNMENT . Expression
 
-    ')'  shift, and go to state 156
-    ','  shift, and go to state 157
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Expression    go to state 166
+    Term          go to state 97
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
 
 
 state 123
 
-   51 Statement_1_1_1: Statement UNTIL . Expression
+  113 FuncCall: Name '(' . FuncCall_1
 
     IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
     CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    ')'              shift, and go to state 167
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
 
-    Expression    go to state 158
-    Term          go to state 76
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
+    Expression    go to state 168
+    Term          go to state 97
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+    FuncCall_1    go to state 169
+    FuncCall_1_1  go to state 170
 
 
 state 124
 
-   52 Statement_1_1_1: Statement ';' . Statement_1_1_1
+    1 Tiny: PROGRAM Name ':' Consts TypesRule Dclns SubProgs Body Name '.' .
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    IF               shift, and go to state 43
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    READ             shift, and go to state 46
-    REPEAT           shift, and go to state 47
-    CAPIDENTIFIER    shift, and go to state 4
-    FOR              shift, and go to state 48
-    CASE             shift, and go to state 49
-    WHILE            shift, and go to state 50
-    OUTPUT           shift, and go to state 51
-    EXIT             shift, and go to state 52
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    BEGINX           shift, and go to state 33
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    LOOP             shift, and go to state 57
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-
-    $default  reduce using rule 42 (Statement)
-
-    Body             go to state 60
-    Statement        go to state 83
-    Statement_1_1_1  go to state 159
-    Primary          go to state 63
-    Name             go to state 64
+    $default  reduce using rule 1 (Tiny)
 
 
 state 125
-
-   37 Statement: FOR Name ASSIGNMENT . Expression TO Expression DO Statement
-   38          | FOR Name ASSIGNMENT . Expression DOWNTO Expression DO Statement
-
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Expression    go to state 160
-    Term          go to state 76
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
-
-
-state 126
-
-   39 Statement: CASE Expression OF . Statement_1_1_1_1_1
-
-    END              shift, and go to state 161
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    OTHERWISE        shift, and go to state 162
-    '('              shift, and go to state 59
-
-    Statement_1_1_1_1_1      go to state 163
-    Statement_1_1_1_1_1_1_1  go to state 164
-    Otherwise                go to state 165
-    CaseClause               go to state 166
-    Clause                   go to state 167
-    Primary                  go to state 168
-    Name                     go to state 81
-
-
-state 127
-
-   32 Statement: WHILE Expression DO . Statement
-
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    IF               shift, and go to state 43
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    READ             shift, and go to state 46
-    REPEAT           shift, and go to state 47
-    CAPIDENTIFIER    shift, and go to state 4
-    FOR              shift, and go to state 48
-    CASE             shift, and go to state 49
-    WHILE            shift, and go to state 50
-    OUTPUT           shift, and go to state 51
-    EXIT             shift, and go to state 52
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    BEGINX           shift, and go to state 33
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    LOOP             shift, and go to state 57
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-
-    $default  reduce using rule 42 (Statement)
-
-    Body       go to state 60
-    Statement  go to state 169
-    Primary    go to state 63
-    Name       go to state 64
-
-
-state 128
-
-   30 Statement: OUTPUT '(' Statement_1 .
-
-    $default  reduce using rule 30 (Statement)
-
-
-state 129
-
-   55 Statement_1: Expression . ')'
-   56            | Expression . ',' Statement_1
-
-    ')'  shift, and go to state 170
-    ','  shift, and go to state 171
-
-
-state 130
-
-   89 Primary: PRED '(' Expression . ')'
-
-    ')'  shift, and go to state 172
-
-
-state 131
-
-   92 Primary: ORD '(' Expression . ')'
-
-    ')'  shift, and go to state 173
-
-
-state 132
-
-   49 Statement_1_1_1_1: Statement POOL .
-
-    $default  reduce using rule 49 (Statement_1_1_1_1)
-
-
-state 133
-
-   50 Statement_1_1_1_1: Statement ';' . Statement_1_1_1_1
-
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    IF               shift, and go to state 43
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    READ             shift, and go to state 46
-    REPEAT           shift, and go to state 47
-    CAPIDENTIFIER    shift, and go to state 4
-    FOR              shift, and go to state 48
-    CASE             shift, and go to state 49
-    WHILE            shift, and go to state 50
-    OUTPUT           shift, and go to state 51
-    EXIT             shift, and go to state 52
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    BEGINX           shift, and go to state 33
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    LOOP             shift, and go to state 57
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-
-    $default  reduce using rule 42 (Statement)
-
-    Body               go to state 60
-    Statement          go to state 91
-    Statement_1_1_1_1  go to state 174
-    Primary            go to state 63
-    Name               go to state 64
-
-
-state 134
-
-   90 Primary: SUCC '(' Expression . ')'
-
-    ')'  shift, and go to state 175
-
-
-state 135
-
-   94 Primary: '(' Expression ')' .
-
-    $default  reduce using rule 94 (Primary)
-
-
-state 136
-
-   28 Body_1: Statement ';' Body_1 .
-
-    $default  reduce using rule 28 (Body_1)
-
-
-state 137
-
-   36 Statement: Primary EQSWAP Primary .
-
-    $default  reduce using rule 36 (Statement)
-
-
-state 138
-
-   29 Statement: Name ASSIGNMENT Expression .
-
-    $default  reduce using rule 29 (Statement)
-
-
-state 139
 
    10 LitRule_1: Name ',' LitRule_1 .
 
     $default  reduce using rule 10 (LitRule_1)
 
 
-state 140
+state 126
 
-   91 Primary: CHR '(' Expression ')' .
-
-    $default  reduce using rule 91 (Primary)
-
-
-state 141
-
-   31 Statement: IF Expression THEN Statement . Statement_1_1
-
-    ELSE  shift, and go to state 176
-
-    ELSE      [reduce using rule 53 (Statement_1_1)]
-    $default  reduce using rule 53 (Statement_1_1)
-
-    Statement_1_1  go to state 177
-
-
-state 142
-
-   67 Expression: Term NE Term .
-
-    $default  reduce using rule 67 (Expression)
-
-
-state 143
-
-   64 Expression: Term GT Term .
-
-    $default  reduce using rule 64 (Expression)
-
-
-state 144
-
-   68 Expression: Term EQ Term .
-
-    $default  reduce using rule 68 (Expression)
-
-
-state 145
-
-   66 Expression: Term GTE Term .
-
-    $default  reduce using rule 66 (Expression)
-
-
-state 146
-
-   69 Expression: Term LTE Term .
-
-    $default  reduce using rule 69 (Expression)
-
-
-state 147
-
-   65 Expression: Term LT Term .
-
-    $default  reduce using rule 65 (Expression)
-
-
-state 148
-
-   71 Term: ModAndMulDiv OR Term .
-
-    $default  reduce using rule 71 (Term)
-
-
-state 149
-
-   72 Term: ModAndMulDiv '+' Term .
-
-    $default  reduce using rule 72 (Term)
-
-
-state 150
-
-   73 Term: ModAndMulDiv '-' Term .
-
-    $default  reduce using rule 73 (Term)
-
-
-state 151
-
-   75 ModAndMulDiv: Unary MOD ModAndMulDiv .
-
-    $default  reduce using rule 75 (ModAndMulDiv)
-
-
-state 152
-
-   76 ModAndMulDiv: Unary AND ModAndMulDiv .
-
-    $default  reduce using rule 76 (ModAndMulDiv)
-
-
-state 153
-
-   77 ModAndMulDiv: Unary '*' ModAndMulDiv .
-
-    $default  reduce using rule 77 (ModAndMulDiv)
-
-
-state 154
-
-   78 ModAndMulDiv: Unary '/' ModAndMulDiv .
-
-    $default  reduce using rule 78 (ModAndMulDiv)
-
-
-state 155
-
-   84 Misc: Primary POW Misc .
-
-    $default  reduce using rule 84 (Misc)
-
-
-state 156
-
-   43 Statement_1_1_1_1_1_1: Name ')' .
-
-    $default  reduce using rule 43 (Statement_1_1_1_1_1_1)
-
-
-state 157
-
-   44 Statement_1_1_1_1_1_1: Name ',' . Statement_1_1_1_1_1_1
+   36 OptionalParams_1_1: Dcln ';' . OptionalParams_1_1
 
     IDENTIFIER     shift, and go to state 3
     CAPIDENTIFIER  shift, and go to state 4
 
-    Statement_1_1_1_1_1_1  go to state 178
-    Name                   go to state 122
+    Dcln                go to state 87
+    Dcln_1              go to state 31
+    OptionalParams_1_1  go to state 171
+    Name                go to state 32
+
+
+state 127
+
+   35 OptionalParams_1_1: Dcln ')' .
+
+    $default  reduce using rule 35 (OptionalParams_1_1)
+
+
+state 128
+
+   30 FuncsAndProcs: FUNCTION Name OptionalParams ':' Name . ';' Consts TypesRule Dclns Body Name ';'
+
+    ';'  shift, and go to state 172
+
+
+state 129
+
+   29 FuncsAndProcs: PROCEDURE Name OptionalParams ';' Consts . TypesRule Dclns Body Name ';'
+
+    TYPE  shift, and go to state 13
+
+    $default  reduce using rule 3 (TypesRule)
+
+    TypesRule  go to state 173
+
+
+state 130
+
+  106 Primary: CHR '(' Expression . ')'
+
+    ')'  shift, and go to state 174
+
+
+state 131
+
+   95 Unary: NOT Unary .
+
+    $default  reduce using rule 95 (Unary)
+
+
+state 132
+
+   96 Unary: '+' Unary .
+
+    $default  reduce using rule 96 (Unary)
+
+
+state 133
+
+   97 Unary: '-' Unary .
+
+    $default  reduce using rule 97 (Unary)
+
+
+state 134
+
+   42 Statement: IF Expression THEN . Statement Statement_1_1
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    IF               shift, and go to state 59
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    READ             shift, and go to state 62
+    REPEAT           shift, and go to state 63
+    RETURN           shift, and go to state 64
+    CAPIDENTIFIER    shift, and go to state 4
+    FOR              shift, and go to state 65
+    CASE             shift, and go to state 66
+    WHILE            shift, and go to state 67
+    OUTPUT           shift, and go to state 68
+    EXIT             shift, and go to state 69
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    BEGINX           shift, and go to state 47
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    LOOP             shift, and go to state 74
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+
+    $default  reduce using rule 55 (Statement)
+
+    Body       go to state 77
+    Statement  go to state 175
+    Primary    go to state 80
+    Name       go to state 81
+    FuncCall   go to state 82
+
+
+state 135
+
+   82 Expression: Term NE . Term
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Term          go to state 176
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 136
+
+   79 Expression: Term GT . Term
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Term          go to state 177
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 137
+
+   83 Expression: Term EQ . Term
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Term          go to state 178
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 138
+
+   81 Expression: Term GTE . Term
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Term          go to state 179
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 139
+
+   84 Expression: Term LTE . Term
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Term          go to state 180
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 140
+
+   80 Expression: Term LT . Term
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Term          go to state 181
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 141
+
+   86 Term: ModAndMulDiv OR . Term
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Term          go to state 182
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 142
+
+   87 Term: ModAndMulDiv '+' . Term
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Term          go to state 183
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 143
+
+   88 Term: ModAndMulDiv '-' . Term
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Term          go to state 184
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 144
+
+   90 ModAndMulDiv: Unary MOD . ModAndMulDiv
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    ModAndMulDiv  go to state 185
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 145
+
+   91 ModAndMulDiv: Unary AND . ModAndMulDiv
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    ModAndMulDiv  go to state 186
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 146
+
+   92 ModAndMulDiv: Unary '*' . ModAndMulDiv
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    ModAndMulDiv  go to state 187
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 147
+
+   93 ModAndMulDiv: Unary '/' . ModAndMulDiv
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    ModAndMulDiv  go to state 188
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 148
+
+   99 Misc: Primary POW . Misc
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+
+    Misc      go to state 189
+    Primary   go to state 101
+    Name      go to state 102
+    FuncCall  go to state 103
+
+
+state 149
+
+   51 Statement: READ '(' Statement_1_1_1_1_1_1 .
+
+    $default  reduce using rule 51 (Statement)
+
+
+state 150
+
+   58 Statement_1_1_1_1_1_1: Name . ')'
+   59                      | Name . ',' Statement_1_1_1_1_1_1
+
+    ')'  shift, and go to state 190
+    ','  shift, and go to state 191
+
+
+state 151
+
+   66 Statement_1_1_1: Statement UNTIL . Expression
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Expression    go to state 192
+    Term          go to state 97
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 152
+
+   67 Statement_1_1_1: Statement ';' . Statement_1_1_1
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    IF               shift, and go to state 59
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    READ             shift, and go to state 62
+    REPEAT           shift, and go to state 63
+    RETURN           shift, and go to state 64
+    CAPIDENTIFIER    shift, and go to state 4
+    FOR              shift, and go to state 65
+    CASE             shift, and go to state 66
+    WHILE            shift, and go to state 67
+    OUTPUT           shift, and go to state 68
+    EXIT             shift, and go to state 69
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    BEGINX           shift, and go to state 47
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    LOOP             shift, and go to state 74
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+
+    $default  reduce using rule 55 (Statement)
+
+    Body             go to state 77
+    Statement        go to state 105
+    Statement_1_1_1  go to state 193
+    Primary          go to state 80
+    Name             go to state 81
+    FuncCall         go to state 82
+
+
+state 153
+
+   48 Statement: FOR Name ASSIGNMENT . Expression TO Expression DO Statement
+   49          | FOR Name ASSIGNMENT . Expression DOWNTO Expression DO Statement
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Expression    go to state 194
+    Term          go to state 97
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 154
+
+   50 Statement: CASE Expression OF . Statement_1_1_1_1_1
+
+    END              shift, and go to state 195
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    OTHERWISE        shift, and go to state 196
+    '('              shift, and go to state 76
+
+    Statement_1_1_1_1_1        go to state 197
+    Statement_1_1_1_1_1_1_1_1  go to state 198
+    Otherwise                  go to state 199
+    CaseClause                 go to state 200
+    Clause                     go to state 201
+    Primary                    go to state 202
+    Name                       go to state 102
+    FuncCall                   go to state 103
+
+
+state 155
+
+   43 Statement: WHILE Expression DO . Statement
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    IF               shift, and go to state 59
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    READ             shift, and go to state 62
+    REPEAT           shift, and go to state 63
+    RETURN           shift, and go to state 64
+    CAPIDENTIFIER    shift, and go to state 4
+    FOR              shift, and go to state 65
+    CASE             shift, and go to state 66
+    WHILE            shift, and go to state 67
+    OUTPUT           shift, and go to state 68
+    EXIT             shift, and go to state 69
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    BEGINX           shift, and go to state 47
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    LOOP             shift, and go to state 74
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+
+    $default  reduce using rule 55 (Statement)
+
+    Body       go to state 77
+    Statement  go to state 203
+    Primary    go to state 80
+    Name       go to state 81
+    FuncCall   go to state 82
+
+
+state 156
+
+   41 Statement: OUTPUT '(' Statement_1 .
+
+    $default  reduce using rule 41 (Statement)
+
+
+state 157
+
+   70 Statement_1: Expression . ')'
+   71            | Expression . ',' Statement_1
+
+    ')'  shift, and go to state 204
+    ','  shift, and go to state 205
 
 
 state 158
 
-   51 Statement_1_1_1: Statement UNTIL Expression .
+  104 Primary: PRED '(' Expression . ')'
 
-    $default  reduce using rule 51 (Statement_1_1_1)
+    ')'  shift, and go to state 206
 
 
 state 159
 
-   52 Statement_1_1_1: Statement ';' Statement_1_1_1 .
+  107 Primary: ORD '(' Expression . ')'
 
-    $default  reduce using rule 52 (Statement_1_1_1)
+    ')'  shift, and go to state 207
 
 
 state 160
 
-   37 Statement: FOR Name ASSIGNMENT Expression . TO Expression DO Statement
-   38          | FOR Name ASSIGNMENT Expression . DOWNTO Expression DO Statement
+   64 Statement_1_1_1_1: Statement POOL .
 
-    TO      shift, and go to state 179
-    DOWNTO  shift, and go to state 180
+    $default  reduce using rule 64 (Statement_1_1_1_1)
 
 
 state 161
 
-   47 Statement_1_1_1_1_1_1_1: END .
+   65 Statement_1_1_1_1: Statement ';' . Statement_1_1_1_1
 
-    $default  reduce using rule 47 (Statement_1_1_1_1_1_1_1)
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    IF               shift, and go to state 59
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    READ             shift, and go to state 62
+    REPEAT           shift, and go to state 63
+    RETURN           shift, and go to state 64
+    CAPIDENTIFIER    shift, and go to state 4
+    FOR              shift, and go to state 65
+    CASE             shift, and go to state 66
+    WHILE            shift, and go to state 67
+    OUTPUT           shift, and go to state 68
+    EXIT             shift, and go to state 69
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    BEGINX           shift, and go to state 47
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    LOOP             shift, and go to state 74
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+
+    $default  reduce using rule 55 (Statement)
+
+    Body               go to state 77
+    Statement          go to state 115
+    Statement_1_1_1_1  go to state 208
+    Primary            go to state 80
+    Name               go to state 81
+    FuncCall           go to state 82
 
 
 state 162
 
-   57 Otherwise: OTHERWISE . Statement Otherwise_1
+  105 Primary: SUCC '(' Expression . ')'
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    IF               shift, and go to state 43
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    READ             shift, and go to state 46
-    REPEAT           shift, and go to state 47
-    CAPIDENTIFIER    shift, and go to state 4
-    FOR              shift, and go to state 48
-    CASE             shift, and go to state 49
-    WHILE            shift, and go to state 50
-    OUTPUT           shift, and go to state 51
-    EXIT             shift, and go to state 52
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    BEGINX           shift, and go to state 33
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    LOOP             shift, and go to state 57
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-
-    $default  reduce using rule 42 (Statement)
-
-    Body       go to state 60
-    Statement  go to state 181
-    Primary    go to state 63
-    Name       go to state 64
+    ')'  shift, and go to state 209
 
 
 state 163
 
-   39 Statement: CASE Expression OF Statement_1_1_1_1_1 .
+  110 Primary: '(' Expression ')' .
 
-    $default  reduce using rule 39 (Statement)
+    $default  reduce using rule 110 (Primary)
 
 
 state 164
 
-   45 Statement_1_1_1_1_1: Statement_1_1_1_1_1_1_1 .
+   39 Body_1: Statement ';' Body_1 .
 
-    $default  reduce using rule 45 (Statement_1_1_1_1_1)
+    $default  reduce using rule 39 (Body_1)
 
 
 state 165
 
-   48 Statement_1_1_1_1_1_1_1: Otherwise . END
+   47 Statement: Primary EQSWAP Primary .
 
-    END  shift, and go to state 182
+    $default  reduce using rule 47 (Statement)
 
 
 state 166
 
-   46 Statement_1_1_1_1_1: CaseClause . Statement_1_1_1_1_1
+   40 Statement: Name ASSIGNMENT Expression .
 
-    END              shift, and go to state 161
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    OTHERWISE        shift, and go to state 162
-    '('              shift, and go to state 59
-
-    Statement_1_1_1_1_1      go to state 183
-    Statement_1_1_1_1_1_1_1  go to state 164
-    Otherwise                go to state 165
-    CaseClause               go to state 166
-    Clause                   go to state 167
-    Primary                  go to state 168
-    Name                     go to state 81
+    $default  reduce using rule 40 (Statement)
 
 
 state 167
 
-   60 CaseClause: Clause . ':' Statement ';'
+  114 FuncCall_1: ')' .
 
-    ':'  shift, and go to state 184
+    $default  reduce using rule 114 (FuncCall_1)
 
 
 state 168
 
-   61 Clause: Primary .
-   62       | Primary . RANGE Primary
+  116 FuncCall_1_1: Expression . ')'
+  117             | Expression . ',' FuncCall_1_1
 
-    RANGE  shift, and go to state 185
-
-    $default  reduce using rule 61 (Clause)
+    ')'  shift, and go to state 210
+    ','  shift, and go to state 211
 
 
 state 169
 
-   32 Statement: WHILE Expression DO Statement .
+  113 FuncCall: Name '(' FuncCall_1 .
 
-    $default  reduce using rule 32 (Statement)
+    $default  reduce using rule 113 (FuncCall)
 
 
 state 170
 
-   55 Statement_1: Expression ')' .
+  115 FuncCall_1: FuncCall_1_1 .
 
-    $default  reduce using rule 55 (Statement_1)
+    $default  reduce using rule 115 (FuncCall_1)
 
 
 state 171
 
-   56 Statement_1: Expression ',' . Statement_1
+   36 OptionalParams_1_1: Dcln ';' OptionalParams_1_1 .
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Statement_1   go to state 186
-    Expression    go to state 129
-    Term          go to state 76
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
+    $default  reduce using rule 36 (OptionalParams_1_1)
 
 
 state 172
 
-   89 Primary: PRED '(' Expression ')' .
+   30 FuncsAndProcs: FUNCTION Name OptionalParams ':' Name ';' . Consts TypesRule Dclns Body Name ';'
 
-    $default  reduce using rule 89 (Primary)
+    CONST  shift, and go to state 8
+
+    $default  reduce using rule 19 (Consts)
+
+    Consts  go to state 212
 
 
 state 173
 
-   92 Primary: ORD '(' Expression ')' .
+   29 FuncsAndProcs: PROCEDURE Name OptionalParams ';' Consts TypesRule . Dclns Body Name ';'
 
-    $default  reduce using rule 92 (Primary)
+    VAR  shift, and go to state 20
+
+    $default  reduce using rule 12 (Dclns)
+
+    Dclns  go to state 213
 
 
 state 174
 
-   50 Statement_1_1_1_1: Statement ';' Statement_1_1_1_1 .
+  106 Primary: CHR '(' Expression ')' .
 
-    $default  reduce using rule 50 (Statement_1_1_1_1)
+    $default  reduce using rule 106 (Primary)
 
 
 state 175
 
-   90 Primary: SUCC '(' Expression ')' .
+   42 Statement: IF Expression THEN Statement . Statement_1_1
 
-    $default  reduce using rule 90 (Primary)
+    ELSE  shift, and go to state 214
+
+    ELSE      [reduce using rule 68 (Statement_1_1)]
+    $default  reduce using rule 68 (Statement_1_1)
+
+    Statement_1_1  go to state 215
 
 
 state 176
 
-   54 Statement_1_1: ELSE . Statement
+   82 Expression: Term NE Term .
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    IF               shift, and go to state 43
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    READ             shift, and go to state 46
-    REPEAT           shift, and go to state 47
-    CAPIDENTIFIER    shift, and go to state 4
-    FOR              shift, and go to state 48
-    CASE             shift, and go to state 49
-    WHILE            shift, and go to state 50
-    OUTPUT           shift, and go to state 51
-    EXIT             shift, and go to state 52
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    BEGINX           shift, and go to state 33
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    LOOP             shift, and go to state 57
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-
-    $default  reduce using rule 42 (Statement)
-
-    Body       go to state 60
-    Statement  go to state 187
-    Primary    go to state 63
-    Name       go to state 64
+    $default  reduce using rule 82 (Expression)
 
 
 state 177
 
-   31 Statement: IF Expression THEN Statement Statement_1_1 .
+   79 Expression: Term GT Term .
 
-    $default  reduce using rule 31 (Statement)
+    $default  reduce using rule 79 (Expression)
 
 
 state 178
 
-   44 Statement_1_1_1_1_1_1: Name ',' Statement_1_1_1_1_1_1 .
+   83 Expression: Term EQ Term .
 
-    $default  reduce using rule 44 (Statement_1_1_1_1_1_1)
+    $default  reduce using rule 83 (Expression)
 
 
 state 179
 
-   37 Statement: FOR Name ASSIGNMENT Expression TO . Expression DO Statement
+   81 Expression: Term GTE Term .
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Expression    go to state 188
-    Term          go to state 76
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
+    $default  reduce using rule 81 (Expression)
 
 
 state 180
 
-   38 Statement: FOR Name ASSIGNMENT Expression DOWNTO . Expression DO Statement
+   84 Expression: Term LTE Term .
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    NOT              shift, and go to state 72
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-    '+'              shift, and go to state 73
-    '-'              shift, and go to state 74
-
-    Expression    go to state 189
-    Term          go to state 76
-    ModAndMulDiv  go to state 77
-    Unary         go to state 78
-    Misc          go to state 79
-    Primary       go to state 80
-    Name          go to state 81
+    $default  reduce using rule 84 (Expression)
 
 
 state 181
 
-   57 Otherwise: OTHERWISE Statement . Otherwise_1
+   80 Expression: Term LT Term .
 
-    ';'  shift, and go to state 190
-
-    $default  reduce using rule 58 (Otherwise_1)
-
-    Otherwise_1  go to state 191
+    $default  reduce using rule 80 (Expression)
 
 
 state 182
 
-   48 Statement_1_1_1_1_1_1_1: Otherwise END .
+   86 Term: ModAndMulDiv OR Term .
 
-    $default  reduce using rule 48 (Statement_1_1_1_1_1_1_1)
+    $default  reduce using rule 86 (Term)
 
 
 state 183
 
-   46 Statement_1_1_1_1_1: CaseClause Statement_1_1_1_1_1 .
+   87 Term: ModAndMulDiv '+' Term .
 
-    $default  reduce using rule 46 (Statement_1_1_1_1_1)
+    $default  reduce using rule 87 (Term)
 
 
 state 184
 
-   60 CaseClause: Clause ':' . Statement ';'
+   88 Term: ModAndMulDiv '-' Term .
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    IF               shift, and go to state 43
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    READ             shift, and go to state 46
-    REPEAT           shift, and go to state 47
-    CAPIDENTIFIER    shift, and go to state 4
-    FOR              shift, and go to state 48
-    CASE             shift, and go to state 49
-    WHILE            shift, and go to state 50
-    OUTPUT           shift, and go to state 51
-    EXIT             shift, and go to state 52
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    BEGINX           shift, and go to state 33
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    LOOP             shift, and go to state 57
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-
-    $default  reduce using rule 42 (Statement)
-
-    Body       go to state 60
-    Statement  go to state 192
-    Primary    go to state 63
-    Name       go to state 64
+    $default  reduce using rule 88 (Term)
 
 
 state 185
 
-   62 Clause: Primary RANGE . Primary
+   90 ModAndMulDiv: Unary MOD ModAndMulDiv .
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    CAPIDENTIFIER    shift, and go to state 4
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-
-    Primary  go to state 193
-    Name     go to state 81
+    $default  reduce using rule 90 (ModAndMulDiv)
 
 
 state 186
 
-   56 Statement_1: Expression ',' Statement_1 .
+   91 ModAndMulDiv: Unary AND ModAndMulDiv .
 
-    $default  reduce using rule 56 (Statement_1)
+    $default  reduce using rule 91 (ModAndMulDiv)
 
 
 state 187
 
-   54 Statement_1_1: ELSE Statement .
+   92 ModAndMulDiv: Unary '*' ModAndMulDiv .
 
-    $default  reduce using rule 54 (Statement_1_1)
+    $default  reduce using rule 92 (ModAndMulDiv)
 
 
 state 188
 
-   37 Statement: FOR Name ASSIGNMENT Expression TO Expression . DO Statement
+   93 ModAndMulDiv: Unary '/' ModAndMulDiv .
 
-    DO  shift, and go to state 194
+    $default  reduce using rule 93 (ModAndMulDiv)
 
 
 state 189
 
-   38 Statement: FOR Name ASSIGNMENT Expression DOWNTO Expression . DO Statement
+   99 Misc: Primary POW Misc .
 
-    DO  shift, and go to state 195
+    $default  reduce using rule 99 (Misc)
 
 
 state 190
 
-   59 Otherwise_1: ';' .
+   58 Statement_1_1_1_1_1_1: Name ')' .
 
-    $default  reduce using rule 59 (Otherwise_1)
+    $default  reduce using rule 58 (Statement_1_1_1_1_1_1)
 
 
 state 191
 
-   57 Otherwise: OTHERWISE Statement Otherwise_1 .
+   59 Statement_1_1_1_1_1_1: Name ',' . Statement_1_1_1_1_1_1
 
-    $default  reduce using rule 57 (Otherwise)
+    IDENTIFIER     shift, and go to state 3
+    CAPIDENTIFIER  shift, and go to state 4
+
+    Statement_1_1_1_1_1_1  go to state 216
+    Name                   go to state 150
 
 
 state 192
 
-   60 CaseClause: Clause ':' Statement . ';'
+   66 Statement_1_1_1: Statement UNTIL Expression .
 
-    ';'  shift, and go to state 196
+    $default  reduce using rule 66 (Statement_1_1_1)
 
 
 state 193
 
-   62 Clause: Primary RANGE Primary .
+   67 Statement_1_1_1: Statement ';' Statement_1_1_1 .
 
-    $default  reduce using rule 62 (Clause)
+    $default  reduce using rule 67 (Statement_1_1_1)
 
 
 state 194
 
-   37 Statement: FOR Name ASSIGNMENT Expression TO Expression DO . Statement
+   48 Statement: FOR Name ASSIGNMENT Expression . TO Expression DO Statement
+   49          | FOR Name ASSIGNMENT Expression . DOWNTO Expression DO Statement
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    IF               shift, and go to state 43
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    READ             shift, and go to state 46
-    REPEAT           shift, and go to state 47
-    CAPIDENTIFIER    shift, and go to state 4
-    FOR              shift, and go to state 48
-    CASE             shift, and go to state 49
-    WHILE            shift, and go to state 50
-    OUTPUT           shift, and go to state 51
-    EXIT             shift, and go to state 52
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    BEGINX           shift, and go to state 33
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    LOOP             shift, and go to state 57
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-
-    $default  reduce using rule 42 (Statement)
-
-    Body       go to state 60
-    Statement  go to state 197
-    Primary    go to state 63
-    Name       go to state 64
+    TO      shift, and go to state 217
+    DOWNTO  shift, and go to state 218
 
 
 state 195
 
-   38 Statement: FOR Name ASSIGNMENT Expression DOWNTO Expression DO . Statement
+   62 Statement_1_1_1_1_1_1_1_1: END .
 
-    IDENTIFIER       shift, and go to state 3
-    CHR              shift, and go to state 42
-    IF               shift, and go to state 43
-    CHARACTER_ALPHA  shift, and go to state 44
-    STR_ALPHA        shift, and go to state 45
-    READ             shift, and go to state 46
-    REPEAT           shift, and go to state 47
-    CAPIDENTIFIER    shift, and go to state 4
-    FOR              shift, and go to state 48
-    CASE             shift, and go to state 49
-    WHILE            shift, and go to state 50
-    OUTPUT           shift, and go to state 51
-    EXIT             shift, and go to state 52
-    Eof              shift, and go to state 53
-    PRED             shift, and go to state 54
-    BEGINX           shift, and go to state 33
-    ORD              shift, and go to state 55
-    INTEGER_NUM      shift, and go to state 56
-    LOOP             shift, and go to state 57
-    SUCC             shift, and go to state 58
-    '('              shift, and go to state 59
-
-    $default  reduce using rule 42 (Statement)
-
-    Body       go to state 60
-    Statement  go to state 198
-    Primary    go to state 63
-    Name       go to state 64
+    $default  reduce using rule 62 (Statement_1_1_1_1_1_1_1_1)
 
 
 state 196
 
-   60 CaseClause: Clause ':' Statement ';' .
+   72 Otherwise: OTHERWISE . Statement Otherwise_1
 
-    $default  reduce using rule 60 (CaseClause)
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    IF               shift, and go to state 59
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    READ             shift, and go to state 62
+    REPEAT           shift, and go to state 63
+    RETURN           shift, and go to state 64
+    CAPIDENTIFIER    shift, and go to state 4
+    FOR              shift, and go to state 65
+    CASE             shift, and go to state 66
+    WHILE            shift, and go to state 67
+    OUTPUT           shift, and go to state 68
+    EXIT             shift, and go to state 69
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    BEGINX           shift, and go to state 47
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    LOOP             shift, and go to state 74
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+
+    $default  reduce using rule 55 (Statement)
+
+    Body       go to state 77
+    Statement  go to state 219
+    Primary    go to state 80
+    Name       go to state 81
+    FuncCall   go to state 82
 
 
 state 197
 
-   37 Statement: FOR Name ASSIGNMENT Expression TO Expression DO Statement .
+   50 Statement: CASE Expression OF Statement_1_1_1_1_1 .
 
-    $default  reduce using rule 37 (Statement)
+    $default  reduce using rule 50 (Statement)
 
 
 state 198
 
-   38 Statement: FOR Name ASSIGNMENT Expression DOWNTO Expression DO Statement .
+   60 Statement_1_1_1_1_1: Statement_1_1_1_1_1_1_1_1 .
 
-    $default  reduce using rule 38 (Statement)
+    $default  reduce using rule 60 (Statement_1_1_1_1_1)
+
+
+state 199
+
+   63 Statement_1_1_1_1_1_1_1_1: Otherwise . END
+
+    END  shift, and go to state 220
+
+
+state 200
+
+   61 Statement_1_1_1_1_1: CaseClause . Statement_1_1_1_1_1
+
+    END              shift, and go to state 195
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    OTHERWISE        shift, and go to state 196
+    '('              shift, and go to state 76
+
+    Statement_1_1_1_1_1        go to state 221
+    Statement_1_1_1_1_1_1_1_1  go to state 198
+    Otherwise                  go to state 199
+    CaseClause                 go to state 200
+    Clause                     go to state 201
+    Primary                    go to state 202
+    Name                       go to state 102
+    FuncCall                   go to state 103
+
+
+state 201
+
+   75 CaseClause: Clause . ':' Statement ';'
+
+    ':'  shift, and go to state 222
+
+
+state 202
+
+   76 Clause: Primary .
+   77       | Primary . RANGE Primary
+
+    RANGE  shift, and go to state 223
+
+    $default  reduce using rule 76 (Clause)
+
+
+state 203
+
+   43 Statement: WHILE Expression DO Statement .
+
+    $default  reduce using rule 43 (Statement)
+
+
+state 204
+
+   70 Statement_1: Expression ')' .
+
+    $default  reduce using rule 70 (Statement_1)
+
+
+state 205
+
+   71 Statement_1: Expression ',' . Statement_1
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Statement_1   go to state 224
+    Expression    go to state 157
+    Term          go to state 97
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 206
+
+  104 Primary: PRED '(' Expression ')' .
+
+    $default  reduce using rule 104 (Primary)
+
+
+state 207
+
+  107 Primary: ORD '(' Expression ')' .
+
+    $default  reduce using rule 107 (Primary)
+
+
+state 208
+
+   65 Statement_1_1_1_1: Statement ';' Statement_1_1_1_1 .
+
+    $default  reduce using rule 65 (Statement_1_1_1_1)
+
+
+state 209
+
+  105 Primary: SUCC '(' Expression ')' .
+
+    $default  reduce using rule 105 (Primary)
+
+
+state 210
+
+  116 FuncCall_1_1: Expression ')' .
+
+    $default  reduce using rule 116 (FuncCall_1_1)
+
+
+state 211
+
+  117 FuncCall_1_1: Expression ',' . FuncCall_1_1
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Expression    go to state 168
+    Term          go to state 97
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+    FuncCall_1_1  go to state 225
+
+
+state 212
+
+   30 FuncsAndProcs: FUNCTION Name OptionalParams ':' Name ';' Consts . TypesRule Dclns Body Name ';'
+
+    TYPE  shift, and go to state 13
+
+    $default  reduce using rule 3 (TypesRule)
+
+    TypesRule  go to state 226
+
+
+state 213
+
+   29 FuncsAndProcs: PROCEDURE Name OptionalParams ';' Consts TypesRule Dclns . Body Name ';'
+
+    BEGINX  shift, and go to state 47
+
+    Body  go to state 227
+
+
+state 214
+
+   69 Statement_1_1: ELSE . Statement
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    IF               shift, and go to state 59
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    READ             shift, and go to state 62
+    REPEAT           shift, and go to state 63
+    RETURN           shift, and go to state 64
+    CAPIDENTIFIER    shift, and go to state 4
+    FOR              shift, and go to state 65
+    CASE             shift, and go to state 66
+    WHILE            shift, and go to state 67
+    OUTPUT           shift, and go to state 68
+    EXIT             shift, and go to state 69
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    BEGINX           shift, and go to state 47
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    LOOP             shift, and go to state 74
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+
+    $default  reduce using rule 55 (Statement)
+
+    Body       go to state 77
+    Statement  go to state 228
+    Primary    go to state 80
+    Name       go to state 81
+    FuncCall   go to state 82
+
+
+state 215
+
+   42 Statement: IF Expression THEN Statement Statement_1_1 .
+
+    $default  reduce using rule 42 (Statement)
+
+
+state 216
+
+   59 Statement_1_1_1_1_1_1: Name ',' Statement_1_1_1_1_1_1 .
+
+    $default  reduce using rule 59 (Statement_1_1_1_1_1_1)
+
+
+state 217
+
+   48 Statement: FOR Name ASSIGNMENT Expression TO . Expression DO Statement
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Expression    go to state 229
+    Term          go to state 97
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 218
+
+   49 Statement: FOR Name ASSIGNMENT Expression DOWNTO . Expression DO Statement
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    NOT              shift, and go to state 93
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+    '+'              shift, and go to state 94
+    '-'              shift, and go to state 95
+
+    Expression    go to state 230
+    Term          go to state 97
+    ModAndMulDiv  go to state 98
+    Unary         go to state 99
+    Misc          go to state 100
+    Primary       go to state 101
+    Name          go to state 102
+    FuncCall      go to state 103
+
+
+state 219
+
+   72 Otherwise: OTHERWISE Statement . Otherwise_1
+
+    ';'  shift, and go to state 231
+
+    $default  reduce using rule 73 (Otherwise_1)
+
+    Otherwise_1  go to state 232
+
+
+state 220
+
+   63 Statement_1_1_1_1_1_1_1_1: Otherwise END .
+
+    $default  reduce using rule 63 (Statement_1_1_1_1_1_1_1_1)
+
+
+state 221
+
+   61 Statement_1_1_1_1_1: CaseClause Statement_1_1_1_1_1 .
+
+    $default  reduce using rule 61 (Statement_1_1_1_1_1)
+
+
+state 222
+
+   75 CaseClause: Clause ':' . Statement ';'
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    IF               shift, and go to state 59
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    READ             shift, and go to state 62
+    REPEAT           shift, and go to state 63
+    RETURN           shift, and go to state 64
+    CAPIDENTIFIER    shift, and go to state 4
+    FOR              shift, and go to state 65
+    CASE             shift, and go to state 66
+    WHILE            shift, and go to state 67
+    OUTPUT           shift, and go to state 68
+    EXIT             shift, and go to state 69
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    BEGINX           shift, and go to state 47
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    LOOP             shift, and go to state 74
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+
+    $default  reduce using rule 55 (Statement)
+
+    Body       go to state 77
+    Statement  go to state 233
+    Primary    go to state 80
+    Name       go to state 81
+    FuncCall   go to state 82
+
+
+state 223
+
+   77 Clause: Primary RANGE . Primary
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    CAPIDENTIFIER    shift, and go to state 4
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+
+    Primary   go to state 234
+    Name      go to state 102
+    FuncCall  go to state 103
+
+
+state 224
+
+   71 Statement_1: Expression ',' Statement_1 .
+
+    $default  reduce using rule 71 (Statement_1)
+
+
+state 225
+
+  117 FuncCall_1_1: Expression ',' FuncCall_1_1 .
+
+    $default  reduce using rule 117 (FuncCall_1_1)
+
+
+state 226
+
+   30 FuncsAndProcs: FUNCTION Name OptionalParams ':' Name ';' Consts TypesRule . Dclns Body Name ';'
+
+    VAR  shift, and go to state 20
+
+    $default  reduce using rule 12 (Dclns)
+
+    Dclns  go to state 235
+
+
+state 227
+
+   29 FuncsAndProcs: PROCEDURE Name OptionalParams ';' Consts TypesRule Dclns Body . Name ';'
+
+    IDENTIFIER     shift, and go to state 3
+    CAPIDENTIFIER  shift, and go to state 4
+
+    Name  go to state 236
+
+
+state 228
+
+   69 Statement_1_1: ELSE Statement .
+
+    $default  reduce using rule 69 (Statement_1_1)
+
+
+state 229
+
+   48 Statement: FOR Name ASSIGNMENT Expression TO Expression . DO Statement
+
+    DO  shift, and go to state 237
+
+
+state 230
+
+   49 Statement: FOR Name ASSIGNMENT Expression DOWNTO Expression . DO Statement
+
+    DO  shift, and go to state 238
+
+
+state 231
+
+   74 Otherwise_1: ';' .
+
+    $default  reduce using rule 74 (Otherwise_1)
+
+
+state 232
+
+   72 Otherwise: OTHERWISE Statement Otherwise_1 .
+
+    $default  reduce using rule 72 (Otherwise)
+
+
+state 233
+
+   75 CaseClause: Clause ':' Statement . ';'
+
+    ';'  shift, and go to state 239
+
+
+state 234
+
+   77 Clause: Primary RANGE Primary .
+
+    $default  reduce using rule 77 (Clause)
+
+
+state 235
+
+   30 FuncsAndProcs: FUNCTION Name OptionalParams ':' Name ';' Consts TypesRule Dclns . Body Name ';'
+
+    BEGINX  shift, and go to state 47
+
+    Body  go to state 240
+
+
+state 236
+
+   29 FuncsAndProcs: PROCEDURE Name OptionalParams ';' Consts TypesRule Dclns Body Name . ';'
+
+    ';'  shift, and go to state 241
+
+
+state 237
+
+   48 Statement: FOR Name ASSIGNMENT Expression TO Expression DO . Statement
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    IF               shift, and go to state 59
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    READ             shift, and go to state 62
+    REPEAT           shift, and go to state 63
+    RETURN           shift, and go to state 64
+    CAPIDENTIFIER    shift, and go to state 4
+    FOR              shift, and go to state 65
+    CASE             shift, and go to state 66
+    WHILE            shift, and go to state 67
+    OUTPUT           shift, and go to state 68
+    EXIT             shift, and go to state 69
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    BEGINX           shift, and go to state 47
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    LOOP             shift, and go to state 74
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+
+    $default  reduce using rule 55 (Statement)
+
+    Body       go to state 77
+    Statement  go to state 242
+    Primary    go to state 80
+    Name       go to state 81
+    FuncCall   go to state 82
+
+
+state 238
+
+   49 Statement: FOR Name ASSIGNMENT Expression DOWNTO Expression DO . Statement
+
+    IDENTIFIER       shift, and go to state 3
+    CHR              shift, and go to state 58
+    IF               shift, and go to state 59
+    CHARACTER_ALPHA  shift, and go to state 60
+    STR_ALPHA        shift, and go to state 61
+    READ             shift, and go to state 62
+    REPEAT           shift, and go to state 63
+    RETURN           shift, and go to state 64
+    CAPIDENTIFIER    shift, and go to state 4
+    FOR              shift, and go to state 65
+    CASE             shift, and go to state 66
+    WHILE            shift, and go to state 67
+    OUTPUT           shift, and go to state 68
+    EXIT             shift, and go to state 69
+    Eof              shift, and go to state 70
+    PRED             shift, and go to state 71
+    BEGINX           shift, and go to state 47
+    ORD              shift, and go to state 72
+    INTEGER_NUM      shift, and go to state 73
+    LOOP             shift, and go to state 74
+    SUCC             shift, and go to state 75
+    '('              shift, and go to state 76
+
+    $default  reduce using rule 55 (Statement)
+
+    Body       go to state 77
+    Statement  go to state 243
+    Primary    go to state 80
+    Name       go to state 81
+    FuncCall   go to state 82
+
+
+state 239
+
+   75 CaseClause: Clause ':' Statement ';' .
+
+    $default  reduce using rule 75 (CaseClause)
+
+
+state 240
+
+   30 FuncsAndProcs: FUNCTION Name OptionalParams ':' Name ';' Consts TypesRule Dclns Body . Name ';'
+
+    IDENTIFIER     shift, and go to state 3
+    CAPIDENTIFIER  shift, and go to state 4
+
+    Name  go to state 244
+
+
+state 241
+
+   29 FuncsAndProcs: PROCEDURE Name OptionalParams ';' Consts TypesRule Dclns Body Name ';' .
+
+    $default  reduce using rule 29 (FuncsAndProcs)
+
+
+state 242
+
+   48 Statement: FOR Name ASSIGNMENT Expression TO Expression DO Statement .
+
+    $default  reduce using rule 48 (Statement)
+
+
+state 243
+
+   49 Statement: FOR Name ASSIGNMENT Expression DOWNTO Expression DO Statement .
+
+    $default  reduce using rule 49 (Statement)
+
+
+state 244
+
+   30 FuncsAndProcs: FUNCTION Name OptionalParams ':' Name ';' Consts TypesRule Dclns Body Name . ';'
+
+    ';'  shift, and go to state 245
+
+
+state 245
+
+   30 FuncsAndProcs: FUNCTION Name OptionalParams ':' Name ';' Consts TypesRule Dclns Body Name ';' .
+
+    $default  reduce using rule 30 (FuncsAndProcs)

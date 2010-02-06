@@ -7,7 +7,7 @@ puts Dir.glob($PATH + format).sort
 
 #ugly hack check wat the problem with gets
 ARGV.clear
-tiny_binary = "./tc"
+tiny_binary = ARGV[1] || "./tc"
 
 manual_verification = false
 

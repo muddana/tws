@@ -60,6 +60,10 @@ STR     \"[^\"]*\"
 ".."		{ return rule(RANGE); }
 "otherwise"	{ return rule(OTHERWISE); }
 
+"function"      { return rule(FUNCTION); }
+"procedure"     { return rule(PROCEDURE); }
+"return"        { return rule(RETURN); }
+
 ">"		{ return rule(GT); }
 "<"		{ return rule(LT); }
 ">=" 		{ return rule(GTE); }
