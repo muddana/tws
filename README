@@ -8,6 +8,7 @@ To install the TWS:
 2. While in 'tws' directory, simply type 'make'.
 
 About Tiny:
+Tiny is a language implemented over TWS. Tiny runs on a stack based TWS virutal machine.
 The Tiny folder contains four main files:
 CodeGenerator.c: This is the source file for the code generator.
 
